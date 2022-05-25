@@ -1,0 +1,7952 @@
+CREATE OR REPLACE PACKAGE PKG_LAFT_GESTION_ALERTAS AS
+  TYPE CURLIST_TYPE IS REF CURSOR;
+  --LTV
+
+  PROCEDURE SP_INS_INFO_CLIENTE_ALERTA(P_NPERIODO_PROCESO  TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                       P_NIDALERTA         TBL_LAFT_ALERTA.NIDALERTA%TYPE,
+                                       P_NINDDETQUERY      TBL_LAFT_ALERTA.NINDDETQUERY%TYPE,
+                                       P_DFEEJECUTAPROCINI TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                       P_DFEEJECUTAPROCFIN TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                       P_NCODE             OUT NUMBER,
+                                       P_SMESSAGE          OUT VARCHAR2);
+
+  PROCEDURE SP_INS_FORMULARIO_USUARIO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                      P_NCODE            OUT NUMBER,
+                                      P_SMESSAGE         OUT VARCHAR2);
+
+  PROCEDURE SP_GET_DETALLE_RESPUESTAS(P_NIDALERTA_CABECERA TBL_LAFT_ALERTA_DET_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+                                      RC1                  OUT SYS_REFCURSOR,
+                                      P_NCODE              OUT NUMBER,
+                                      P_SMESSAGE           OUT VARCHAR2);
+
+  PROCEDURE SP_GET_CABECERA_RESPUESTAS(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                       P_NIDUSUARIO_ASIGNADO TBL_LAFT_ALERTA_CAB_USUARIO.NIDUSUARIO_ASIGNADO%TYPE,
+                                       P_NIDAGRUPA           TBL_LAFT_ALERTA_CAB_USUARIO.NIDAGRUPA%TYPE,
+                                       P_NIDALERTA           TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR,
+                                       --RC2                   OUT SYS_REFCURSOR,
+                                       P_NCODE    OUT NUMBER,
+                                       P_SMESSAGE OUT VARCHAR2);
+
+  /* PROCEDURE SP_GET_CABECERA_RESPUESTAS(P_NPERIODO_PROCESO      TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+  P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+  P_NIDAGRUPA             TBL_LAFT_ALERTA_CAB_USUARIO.NIDAGRUPA%TYPE,
+  P_NIDALERTA             TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+  RC1                     OUT SYS_REFCURSOR,
+  P_NCODE                 OUT NUMBER,
+  P_SMESSAGE              OUT VARCHAR2);*/
+
+  PROCEDURE SP_UPD_RESPUESTA_CAB(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_PREG.NIDALERTA_CAB_USUARIO%TYPE,
+                                 P_NIDPREGUNTA           TBL_LAFT_ALERTA_CAB_USU_PREG.NIDPREGUNTA%TYPE,
+                                 P_NIDORIGEN             TBL_LAFT_ALERTA_CAB_USU_PREG.NIDORIGEN%TYPE,
+                                 P_NIDALERTA             TBL_LAFT_ALERTA_CAB_USU_PREG.NIDALERTA%TYPE,
+                                 P_NIDAGRUPA             TBL_LAFT_ALERTA_CAB_USU_PREG.NIDAGRUPA%TYPE,
+                                 P_NIND_RESPUESTA        TBL_LAFT_ALERTA_CAB_USU_PREG.NIND_RESPUESTA%TYPE,
+                                 P_SCOMENTARIO           TBL_LAFT_ALERTA_CAB_USU_PREG.SCOMENTARIO%TYPE,
+                                 P_SRUTA_PDF             TBL_LAFT_ALERTA_CAB_USUARIO.SRUTA_PDF%TYPE,
+                                 P_NCODE                 OUT NUMBER,
+                                 P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_RESPUESTA_DET(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA_CAB_USUARIO%TYPE,
+                                 P_NIDALERTA_DET_USUARIO TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA_DET_USUARIO%TYPE,
+                                 P_NPERIODO_PROCESO      TBL_LAFT_ALERTA_DET_USU_PREG.NPERIODO_PROCESO%TYPE,
+                                 P_NIDALERTA             TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA%TYPE,
+                                 P_NIDALERTA_DET         TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA_DET%TYPE,
+                                 P_NIDPREGUNTA           TBL_LAFT_ALERTA_DET_USU_PREG.NIDPREGUNTA%TYPE,
+                                 P_NIDORIGEN             TBL_LAFT_ALERTA_DET_USU_PREG.NIDORIGEN%TYPE,
+                                 P_NIND_RESPUESTA        TBL_LAFT_ALERTA_DET_USU_PREG.NIND_RESPUESTA%TYPE,
+                                 P_SCOMENTARIO           TBL_LAFT_ALERTA_DET_USU_PREG.SCOMENTARIO%TYPE,
+                                 P_NCODE                 OUT NUMBER,
+                                 P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_GET_USUARIO_PERF_ALERTA(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_BANDEJA_USUARIO(P_NIDUSUARIO_ASIGNADO TBL_LAFT_ALERTA_CAB_USUARIO.NIDUSUARIO_ASIGNADO%TYPE,
+                                   P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                   RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_BANDEJA_OFICIAL(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                   P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                   RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_MODULO_TRABAJO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO.NPERIODO_PROCESO%TYPE,
+                                  P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                  RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_DETALLE_MODULO_TRABAJO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO.NPERIODO_PROCESO%TYPE,
+                                          P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO.NIDALERTA%TYPE,
+                                          P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                          RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_GESTION_ALERTAS(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_FRECUENCIA(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_FRECUENCIA_ACTIVO(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_GAFI(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_TIPO_FRECUENCIA(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_PRODUCTOS(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_ADJ.STIPO_USUARIO%TYPE,
+                                    RC1                     OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_COMENTARIO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDALERTA_CAB_USUARIO%TYPE,
+                                       P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_COMENT.STIPO_USUARIO%TYPE,
+                                       RC1                     OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_ALERTA_X_PERFIL(P_ID_ROL        TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE,
+                                   P_NIDGRUPOSENAL TBL_LAFT_ALERTA.NIDGRUPOSENAL%TYPE,
+                                   P_NIDREGIMEN    TBL_LAFT_ALERTA_PERFIL.NIDREGIMEN%TYPE,
+                                   RC1             OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERFIL(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_GRUPO_SENAL(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERFIL_ALERTA(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERFIL_X_USUARIO(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_ACCIONES(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_ADJUNTO_ALERTA(P_NIDALERTA TBL_LAFT_ALERTA_ADJUNTO.NIDALERTA%TYPE,
+                                        RC1         OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_CARGO(P_NIDPROFILE TBL_LAFT_CARGO.NIDCARGO%TYPE,
+                         RC1          OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_CONFIG_CORREO_DEF(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_REGIMEN(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_REGIMEN_PERFIL(P_ID_ROL TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE,
+                                  RC1      OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERFIL_USUARIO(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERIODO_VIGENTE(P_NPERIODO_PROCESO  OUT TBL_LAFT_ALERTA_FRECUENCIA.NPERIODO_PROCESO%TYPE,
+                                   P_DFEEJECUTAPROCFIN OUT VARCHAR2,
+                                   P_NCODE             OUT NUMBER,
+                                   P_SMESSAGE          OUT VARCHAR2);
+
+  /*  PROCEDURE SP_GET_COMENTARIO_COMP(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDALERTA_CAB_USUARIO%TYPE,
+  RC1                     OUT SYS_REFCURSOR);*/
+
+  PROCEDURE SP_GET_USUARIOS_X_PERFIL(P_ID_PERFIL TBL_LAFT_PROFILES.NIDPROFILE%TYPE,
+                                     RC1         OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_ALERTA(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_INS_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_ADJ.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_SRUTA_ADJUNTO         TBL_LAFT_ALERTA_CAB_USU_ADJ.SRUTA_ADJUNTO%TYPE,
+                                    P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_ADJ.STIPO_USUARIO%TYPE,
+                                    P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                    P_NCODE                 OUT NUMBER,
+                                    P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_ADJ.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_NIDADJUNTO            TBL_LAFT_ALERTA_CAB_USU_ADJ.NIDADJUNTO%TYPE,
+                                    P_SRUTA_ADJUNTO         TBL_LAFT_ALERTA_CAB_USU_ADJ.SRUTA_ADJUNTO%TYPE,
+                                    P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_ADJ.STIPO_USUARIO%TYPE,
+                                    P_SESTADO               VARCHAR2,
+                                    P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                    P_NCODE                 OUT NUMBER,
+                                    P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_ALERTA(P_NIDALERTA           TBL_LAFT_ALERTA.NIDALERTA%TYPE,
+                          P_SNOMBRE_ALERTA      TBL_LAFT_ALERTA.SNOMBRE_ALERTA%TYPE,
+                          P_SDESCRIPCION_ALERTA TBL_LAFT_ALERTA.SDESCRIPCION_ALERTA%TYPE,
+                          P_SESTADO             TBL_LAFT_ALERTA.SESTADO%TYPE,
+                          --P_NIDAGRUPA           TBL_LAFT_ALERTA.NIDAGRUPA%TYPE,
+                          P_NIDUSUARIO_MODIFICA  TBL_LAFT_ALERTA.NIDUSUARIO_MODIFICA%TYPE,
+                          P_NDIASUTILREENVIO     TBL_LAFT_ALERTA.NDIASUTILREENVIO%TYPE,
+                          P_SACTIVA_REENVIO      TBL_LAFT_ALERTA.SACTIVA_REENVIO%TYPE,
+                          P_STIPO_OPE            VARCHAR2,
+                          P_NIDGRUPOSENAL        TBL_LAFT_ALERTA.NIDGRUPOSENAL%TYPE,
+                          P_NINDICA_REGIMEN_SIMP TBL_LAFT_ALERTA.NINDICA_REGIMEN_SIMP%TYPE,
+                          P_NINDICA_REGIMEN_GRAL TBL_LAFT_ALERTA.NINDICA_REGIMEN_GRAL%TYPE,
+                          P_OUT_NIDALERTA        OUT NUMBER,
+                          P_NCODE                OUT NUMBER,
+                          P_SMESSAGE             OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_ADJUNTO_ALERTA(P_NIDALERTA     TBL_LAFT_ALERTA_ADJUNTO.NIDALERTA%TYPE,
+                                  P_NIDADJUNTO    TBL_LAFT_ALERTA_ADJUNTO.NIDADJUNTO%TYPE,
+                                  P_SRUTA_ADJUNTO TBL_LAFT_ALERTA_ADJUNTO.SRUTA_ADJUNTO%TYPE,
+                                  P_STIPO         VARCHAR2,
+                                  P_NCODE         OUT NUMBER,
+                                  P_SMESSAGE      OUT VARCHAR2);
+
+  PROCEDURE SP_INS_ADJ_ALR_INFORM_PERIODO(P_NIDALERTA           TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO    TBL_LAFT_ALR_PROC_ADJUN_INFORM.NPERIODO_PROCESO%TYPE,
+                                          P_SRUTA_ADJUNTO       TBL_LAFT_ALR_PROC_ADJUN_INFORM.SRUTA_ADJUNTO%TYPE,
+                                          P_NIDUSUARIO_MODIFICA TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDUSUARIO_MODIFICA%TYPE,
+                                          P_STIPO_CARGA         TBL_LAFT_ALR_PROC_ADJUN_INFORM.STIPO_CARGA%TYPE,
+                                          P_NREGIMEN            TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                          P_NIDALERTA_CABECERA  TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA_CABECERA%TYPE,
+                                          P_NCODE               OUT NUMBER,
+                                          P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_GET_ADJ_INFORM_ALR_PERIODO_CAB(P_NIDALERTA          TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE,
+                                              P_NPERIODO_PROCESO   TBL_LAFT_ALR_PROC_ADJUN_INFORM.NPERIODO_PROCESO%TYPE,
+                                              P_STIPO_CARGA        TBL_LAFT_ALR_PROC_ADJUN_INFORM.STIPO_CARGA%TYPE,
+                                              P_NREGIMEN           TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                              P_NIDALERTA_CABECERA TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA_CABECERA%TYPE,
+                                              RC1                  OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_UPD_PREGUNTA_X_ALERTA(P_NIDALERTA           TBL_LAFT_ALERTA_PREGUNTA.NIDALERTA%TYPE,
+                                     P_NIDPREGUNTA         TBL_LAFT_ALERTA_PREGUNTA.NIDPREGUNTA%TYPE,
+                                     P_NIDORIGEN           TBL_LAFT_ALERTA_PREGUNTA.NIDORIGEN%TYPE,
+                                     P_SPREGUNTA           TBL_LAFT_ALERTA_PREGUNTA.SPREGUNTA%TYPE,
+                                     P_SESTADO             TBL_LAFT_ALERTA_PREGUNTA.SESTADO%TYPE,
+                                     P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_PREGUNTA.NIDUSUARIO_MODIFICA%TYPE,
+                                     P_STIPO_OPE           VARCHAR2,
+                                     P_NIDINDICAOBLCOMEN   TBL_LAFT_ALERTA_PREGUNTA.NIDINDICAOBLCOMEN%TYPE,
+                                     P_NCODE               OUT NUMBER,
+                                     P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_CONFIG_CORREO(P_NIDCORREO           TBL_LAFT_CONFIGURACION_CORREO.NIDCORREO%TYPE,
+                                 P_NIDGRUPOSENAL       TBL_LAFT_CONFIGURACION_CORREO.NIDGRUPOSENAL%TYPE,
+                                 P_NIDPROFILE          TBL_LAFT_CONFIGURACION_CORREO.NIDPROFILE%TYPE,
+                                 P_SASUNTO_CORREO      TBL_LAFT_CONFIGURACION_CORREO.SASUNTO_CORREO%TYPE,
+                                 P_SCUERPO_CORREO      TBL_LAFT_CONFIGURACION_CORREO.SCUERPO_CORREO%TYPE,
+                                 P_SCUERPO_CORREO_DEF  TBL_LAFT_CONFIGURACION_CORREO.SCUERPO_CORREO_DEF%TYPE,
+                                 P_NIDUSUARIO_MODIFICA TBL_LAFT_CONFIGURACION_CORREO.NIDUSUARIO_MODIFICA%TYPE,
+                                 P_NIDACCION           TBL_LAFT_CONFIGURACION_CORREO.NIDACCION%TYPE,
+                                 P_SCUERPO_TEXTO       TBL_LAFT_CONFIGURACION_CORREO.SCUERPO_TEXTO%TYPE,
+                                 P_NCODE               OUT NUMBER,
+                                 P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_GET_LISTA_PREGUNTA_X_ALERTA(P_NIDALERTA TBL_LAFT_ALERTA_PREGUNTA.NIDALERTA%TYPE,
+                                           RC1         OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_ALERTA_INFORME(P_NIDALERTA        TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+                                        P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                        P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                        RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_NC_EMPRESAS(P_NIDALERTA        TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+                                     P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                     P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                     RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_UPD_NC_EMPRESAS(P_NIDALERTA        TBL_LAFT_NOTAS_CREDITO_TMP.NIDALERTA%TYPE,
+                               P_NPERIODO_PROCESO TBL_LAFT_NOTAS_CREDITO_TMP.NPERIODO_PROCESO%TYPE,
+                               P_NDEVOLUCION      TBL_LAFT_NOTAS_CREDITO_TMP.NDEVOLUCION%TYPE,
+                               P_NIDREGIMEN       TBL_LAFT_NOTAS_CREDITO_TMP.NIDREGIMEN%TYPE,
+                               P_SESTADOPAGEFEC   TBL_LAFT_NOTAS_CREDITO_TMP.SESTADOPAGEFEC%TYPE,
+                               P_DESMOTIVO        TBL_LAFT_NOTAS_CREDITO_TMP.DESMOTIVO%TYPE,
+                               P_NCODE            OUT NUMBER,
+                               P_SMESSAGE         OUT VARCHAR2);
+
+  PROCEDURE SP_GET_LISTA_HIST_DIRECCCIONES(P_NIDDOC_TYPE INSUDB.CLIENT_IDDOC.NIDDOC_TYPE%TYPE,
+                                           P_SIDDOC      INSUDB.CLIENT_IDDOC.SIDDOC%TYPE,
+                                           RC1           OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_POLIZAS_VIGENTES(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                          P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                          P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                          P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                          P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                          P_NTIPOCARGA          TBL_LAFT_ALERTA_RESULTADOS.NTIPOCARGA%TYPE,
+                                          RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_MOVIMIENTO(P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                    P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                    P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                    RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_UPD_EST_REVISADO_CAB(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_SESTADO_REVISADO      TBL_LAFT_ALERTA_CAB_USUARIO.SESTADO_REVISADO%TYPE,
+                                    P_DFECHA_REVISADO       OUT TBL_LAFT_ALERTA_CAB_USUARIO.DFECHA_REVISADO%TYPE,
+                                    P_NCODE                 OUT NUMBER,
+                                    P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_EST_REVISADO_RES(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                    P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                    P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                    P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                    P_SESTADO_REVISADO    TBL_LAFT_ALERTA_RESULTADOS.SESTADO_REVISADO%TYPE,
+                                    P_NIDUSUARIO_REVISADO TBL_LAFT_ALERTA_RESULTADOS.NIDUSUARIO_REVISADO%TYPE,
+                                    P_DFECHA_REVISADO     OUT TBL_LAFT_ALERTA_RESULTADOS.DFECHA_REVISADO%TYPE,
+                                    P_NCODE               OUT NUMBER,
+                                    P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_ALERTA_PERIODO(P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO.NIDALERTA%TYPE,
+                                  P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO.NPERIODO_PROCESO%TYPE,
+                                  P_SESTADO          TBL_LAFT_ALERTA_PROCESO.SESTADO%TYPE,
+                                  P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                  P_NCODE            OUT NUMBER,
+                                  P_SMESSAGE         OUT VARCHAR2);
+
+  PROCEDURE SP_INS_COMENT_ALERTA_PERIODO(P_NIDALERTA           TBL_LAFT_ALERTA_PROCESO_COMENT.NIDALERTA%TYPE,
+                                         P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_PROCESO_COMENT.NPERIODO_PROCESO%TYPE,
+                                         P_SCOMENTARIO         TBL_LAFT_ALERTA_PROCESO_COMENT.SCOMENTARIO%TYPE,
+                                         P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_PROCESO_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                         P_NCODE               OUT NUMBER,
+                                         P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_INS_ADJUNTO_ALERTA_PERIODO(P_NIDALERTA           TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_PROCESO_ADJUN.NPERIODO_PROCESO%TYPE,
+                                          P_SRUTA_ADJUNTO       TBL_LAFT_ALERTA_PROCESO_ADJUN.SRUTA_ADJUNTO%TYPE,
+                                          P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDUSUARIO_MODIFICA%TYPE,
+                                          P_NCODE               OUT NUMBER,
+                                          P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_INS_EMPRESA_DETALLE_USUARIO(P_NIDALERTA             TBL_LAFT_ALERTA_DETALLE.NIDALERTA%TYPE,
+                                           P_NPERIODO_PROCESO      TBL_LAFT_ALERTA_CAB_USU_ADJ.SRUTA_ADJUNTO%TYPE,
+                                           P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_PREG.NIDALERTA_CAB_USUARIO%TYPE,
+                                           P_STIPO_DOC             TBL_LAFT_ALERTA_DETALLE.STIPO_DOC%TYPE,
+                                           P_SNUMERO_DOC           TBL_LAFT_ALERTA_DETALLE.SNUMERO_DOC%TYPE,
+                                           P_SPRIMER_NOMBRE        TBL_LAFT_ALERTA_DETALLE.SPRIMER_NOMBRE%TYPE,
+                                           P_SSEGUNDO_NOMBRE       TBL_LAFT_ALERTA_DETALLE.SSEGUNDO_NOMBRE%TYPE,
+                                           P_SAPE_PATERNO          TBL_LAFT_ALERTA_DETALLE.SAPE_PATERNO%TYPE,
+                                           P_SAPE_MATERNO          TBL_LAFT_ALERTA_DETALLE.SAPE_MATERNO%TYPE,
+                                           P_SRAZON_SOCIAL         TBL_LAFT_ALERTA_DETALLE.SRAZON_SOCIAL%TYPE,
+                                           P_SDIRECCION            TBL_LAFT_ALERTA_DETALLE.SDIRECCION%TYPE,
+                                           P_SPAIS                 TBL_LAFT_ALERTA_DETALLE.SPAIS%TYPE,
+                                           P_NPRODUCT              TBL_LAFT_ALERTA_DETALLE.NPRODUCT%TYPE,
+                                           P_NIDREGIMEN            TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                           RC1                     OUT SYS_REFCURSOR,
+                                           P_NCODE                 OUT NUMBER,
+                                           P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_INS_MONITOREO_ALERTA(P_SID               OUT TBL_LAFT_MONITOREO_ALERTA.SID%TYPE,
+                                    P_NPERIODO_PROCESO  OUT TBL_LAFT_MONITOREO_ALERTA.NPERIODO_PROCESO%TYPE,
+                                    P_DFEEJECUTAPROCINI OUT TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                    P_DFEEJECUTAPROCFIN OUT TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                    P_NCODE             OUT NUMBER,
+                                    P_SMESSAGE          OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_MONITOREO_ALERTA(P_SID TBL_LAFT_MONITOREO_ALERTA.SID%TYPE,
+                                    --P_NPERIODO_PROCESO TBL_LAFT_MONITOREO_ALERTA.NPERIODO_PROCESO%TYPE,
+                                    P_NSTATUSPROC TBL_LAFT_MONITOREO_ALERTA.NSTATUSPROC%TYPE,
+                                    P_SMENSAJE    TBL_LAFT_MONITOREO_ALERTA.SMENSAJE%TYPE,
+                                    P_NCODE       OUT NUMBER,
+                                    P_SMESSAGE    OUT VARCHAR2);
+
+  /*PROCEDURE SP_INS_COMPLEMENTO_CAB_USU(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDALERTA_CAB_USUARIO%TYPE,
+  P_SCOMENTARIO           TBL_LAFT_ALERTA_CAB_USU_COMPLE.SCOMENTARIO%TYPE,
+  P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDUSUARIO_MODIFICA%TYPE,
+  P_NCODE                 OUT NUMBER,
+  P_SMESSAGE              OUT VARCHAR2);*/
+
+  PROCEDURE SP_INS_COMENTARIO_CAB_USU(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDALERTA_CAB_USUARIO%TYPE,
+                                      P_SCOMENTARIO           TBL_LAFT_ALERTA_CAB_USU_COMENT.SCOMENTARIO%TYPE,
+                                      P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                      P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_COMENT.STIPO_USUARIO%TYPE,
+                                      P_NCODE                 OUT NUMBER,
+                                      P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_PAIS_GAFI(P_NIDGAFI             TBL_LAFT_LISTA_GAFI.NIDGAFI%TYPE,
+                             P_SNOMBRE_PAIS_GAFI   TBL_LAFT_LISTA_GAFI.SNOMBRE_PAIS_GAFI%TYPE,
+                             P_SESTADO             TBL_LAFT_LISTA_GAFI.SESTADO%TYPE,
+                             P_NIDUSUARIO_REGISTRO TBL_LAFT_LISTA_GAFI.NIDUSUARIO_REGISTRO%TYPE,
+                             P_STIPO_OPE           CHAR,
+                             P_NCODE               OUT NUMBER,
+                             P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_FRECUENCIA_PROCESO(P_NIDFRECUENCIA       TBL_LAFT_ALERTA_FRECUENCIA.NIDFRECUENCIA%TYPE,
+                                      P_NTIPOFRECUENCIA     TBL_LAFT_ALERTA_FRECUENCIA.NTIPOFRECUENCIA%TYPE,
+                                      P_DFECINI             VARCHAR2,
+                                      P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_FRECUENCIA.NIDUSUARIO_MODIFICA%TYPE,
+                                      P_NCODE               OUT NUMBER,
+                                      P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_FRECUENCIA_SUSPENSION(P_NIDFRECUENCIA  TBL_LAFT_ALERTA_FRECUENCIA.NIDFRECUENCIA%TYPE,
+                                         P_SINDSUSPENSION TBL_LAFT_ALERTA_FRECUENCIA.SINDSUSPENSION%TYPE,
+                                         P_NCODE          OUT NUMBER,
+                                         P_SMESSAGE       OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_ALERTA_X_PERFIL(P_ID_ROL     TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE,
+                                   P_NIDREGIMEN TBL_LAFT_ALERTA_PERFIL.NIDREGIMEN%TYPE,
+                                   P_NIDALERTA  TBL_LAFT_ALERTA_PERFIL.NIDALERTA%TYPE,
+                                   P_SESTADO    TBL_LAFT_ALERTA_PERFIL.SESTADO%TYPE,
+                                   P_NCODE      OUT NUMBER,
+                                   P_SMESSAGE   OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_RESULTADO_COINCIDENCIA(P_NPERIODO_PROCESO     TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                          P_NIDALERTA            TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                          P_NIDRESULTADO         TBL_LAFT_ALERTA_RESULTADOS.NIDRESULTADO%TYPE,
+                                          P_NIDREGIMEN           TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                          P_NIDTIPOLISTA         TBL_LAFT_ALERTA_RESULTADOS.NIDTIPOLISTA%TYPE,
+                                          P_NIDPROVEEDOR         TBL_LAFT_ALERTA_RESULTADOS.NIDPROVEEDOR%TYPE,
+                                          P_NACEPTA_COINCIDENCIA TBL_LAFT_ALERTA_RESULTADOS.NACEPTA_COINCIDENCIA%TYPE,
+                                          P_SCLIENT              TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                          P_NIDUSUARIO_REVISADO  TBL_LAFT_ALERTA_RESULTADOS.NIDUSUARIO_REVISADO%TYPE,
+                                          P_SESTADO_TRAT         TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE,
+                                          P_NTIPOCARGA           TBL_LAFT_ALERTA_RESULTADOS.NTIPOCARGA%TYPE,
+                                          P_STIPO_BUSQUEDA       TBL_LAFT_ALERTA_RESULTADOS.STIPO_BUSQUEDA%TYPE,
+                                          P_NCODE                OUT NUMBER,
+                                          P_SMESSAGE             OUT VARCHAR2);
+
+  PROCEDURE SP_UPD_ANULAR_RESULTADO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                    P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                    P_SCLIENT          TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                    P_NCODE            OUT NUMBER,
+                                    P_SMESSAGE         OUT VARCHAR2);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                   P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                   P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                   RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_TRAT(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                        P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                        P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                        P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE DEFAULT NULL,
+                                        RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_TRATAMIENTO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                               P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                               P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                               P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE DEFAULT NULL,
+                                               RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_GC(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                      P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                      P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                      P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                      P_SNOM_COMPLETO_BUSQ  TBL_LAFT_ALERTA_RESULTADOS.SNOM_COMPLETO_BUSQ%TYPE,
+                                      RC1                   OUT SYS_REFCURSOR,
+                                      P_NCODE               OUT NUMBER,
+                                      P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_COINC_GC(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                            P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                            P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                            P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                            RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_UPD_TRATAMIENTO_CLIENTE(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_TRATAM_CLIENTE.NPERIODO_PROCESO%TYPE,
+                                       P_NIDALERTA           TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDALERTA%TYPE,
+                                       P_SCLIENT             TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCLIENT%TYPE,
+                                       P_SESTADO_TRAT        TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE,
+                                       P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDUSUARIO_MODIFICA%TYPE,
+                                       P_NTIPOCLIENTE        NUMBER DEFAULT NULL,
+                                       P_STIPOACTRESULTADO   VARCHAR2,
+                                       P_DBIRTHDAT           TBL_LAFT_ALERTA_TRATAM_CLIENTE.DBIRTHDAT%TYPE DEFAULT NULL,
+                                       P_SCLIENAME           TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCLIENAME%TYPE DEFAULT NULL,
+                                       P_STIPOIDEN           TBL_LAFT_ALERTA_TRATAM_CLIENTE.STIPOIDEN%TYPE DEFAULT NULL,
+                                       P_STIPO_PEP           TBL_LAFT_ALERTA_TRATAM_CLIENTE.STIPO_PEP%TYPE,
+                                       P_SDES_PEP            TBL_LAFT_ALERTA_TRATAM_CLIENTE.SDES_PEP%TYPE,
+                                       P_SCOMENTARIO         TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCOMENTARIO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDREGIMEN%TYPE,
+                                       P_NIDTRATCLIEHIS      TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDTRATCLIEHIS%TYPE,
+                                       P_NTIPOCARGA          TBL_LAFT_ALERTA_RESULTADOS.NTIPOCARGA%TYPE,
+                                       P_TIPOACCION          VARCHAR2,
+                                       P_NCODE               OUT NUMBER,
+                                       P_SMESSAGE            OUT VARCHAR2);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_LI(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                      P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                      P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                      P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                      P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                      RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_PEP(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                       P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                       P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_FPEP(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                        P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                        P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                        P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                        P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                        RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_SAC(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                       P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                       P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_ESP(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                       P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                       P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_HISTORIAL_ESTADO_CLI(P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                              P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                              P_SCLIENT          TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                              RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_COINCIDENCIA_PEN(P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                          P_SCLIENT          TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                          RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_INFO(P_NIDALERTA        TBL_LAFT_ALERTA_LISTA_EXTERNO.NIDALERTA%TYPE,
+                              P_NPERIODO_PROCESO TBL_LAFT_ALERTA_LISTA_EXTERNO.NPERIODO_PROCESO%TYPE,
+                              P_NIDTIPOLISTA     TBL_LAFT_ALERTA_LISTA_EXTERNO.NIDTIPOLISTA%TYPE,
+                              RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_TIPOS_LISTA(P_NIDALERTA        TBL_LAFT_ALERTA_LISTAS_PERIODO.NIDALERTA%TYPE,
+                               P_NPERIODO_PROCESO TBL_LAFT_ALERTA_LISTAS_PERIODO.NPERIODO_PROCESO%TYPE,
+                               P_NIDREGIMEN       TBL_LAFT_ALERTA_LISTAS_PERIODO.NIDREGIMEN%TYPE,
+                               RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_DIR_PAIS_GAFI(P_NIDALERTA        TBL_LAFT_DIRECCION_GAFI_TMP.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO TBL_LAFT_DIRECCION_GAFI_TMP.NPERIODO_PROCESO%TYPE,
+                                       RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_CORREO_OFICIAL(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_NOTAS_CREDITO(P_NIDALERTA        TBL_LAFT_NOTAS_CREDITO_TMP.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO TBL_LAFT_NOTAS_CREDITO_TMP.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN       TBL_LAFT_NOTAS_CREDITO_TMP.NIDREGIMEN%TYPE,
+                                       RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_TIPOS_LISTA_ALL(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_DIR_DUPL(P_NIDALERTA        TBL_LAFT_DIRECCION_DUPL_TMP.NIDALERTA%TYPE,
+                                  P_NPERIODO_PROCESO TBL_LAFT_DIRECCION_DUPL_TMP.NPERIODO_PROCESO%TYPE,
+                                  RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_LISTA_CLI_ALERT_RENTA(P_NIDALERTA        TBL_LAFT_ALERTA_RENTAS.NIDALERTA%TYPE,
+                                         P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RENTAS.NPERIODO_PROCESO%TYPE,
+                                         RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_MONI_GESTION_ALERTA(P_FECEJE_INI  VARCHAR2,
+                                       P_FECEJE_FIN  VARCHAR2,
+                                       P_SID         VARCHAR,
+                                       P_TI_BUSQUEDA VARCHAR2,
+                                       P_NCODE       OUT NUMBER,
+                                       P_SMESSAGE    OUT VARCHAR2,
+                                       RC1           OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_COMENT_ALERTA_PERIODO(P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO_COMENT.NIDALERTA%TYPE,
+                                         P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO_COMENT.NPERIODO_PROCESO%TYPE,
+                                         RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_ADJUNTO_ALERTA_PERIODO(P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO_ADJUN.NPERIODO_PROCESO%TYPE,
+                                          RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_ADJ_INFORM_ALR_PERIODO(P_NIDALERTA        TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO TBL_LAFT_ALR_PROC_ADJUN_INFORM.NPERIODO_PROCESO%TYPE,
+                                          P_STIPO_CARGA      TBL_LAFT_ALR_PROC_ADJUN_INFORM.STIPO_CARGA%TYPE,
+                                          P_NREGIMEN         TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                          RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_DEL_ADJ_INFORM_ALERTA(P_NIDALERTA TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE, --P_NPERIODO_PROCESO TBL_LAFT_MONITOREO_ALERTA.NPERIODO_PROCESO%TYPE,
+                                     P_NREGIMEN  TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                     P_NCODE     OUT NUMBER,
+                                     P_SMESSAGE  OUT VARCHAR2);
+
+  PROCEDURE SP_GET_DOCUMENTO_IDENTIDAD(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_CLIENTE_TRAT_HIS(P_NPERIODO_PROCESO TBL_LAFT_TRATAM_CLIENTE_HIS.NPERIODO_PROCESO%TYPE,
+                                    P_SCLIENT          TBL_LAFT_TRATAM_CLIENTE_HIS.SCLIENT%TYPE,
+                                    RC1                OUT SYS_REFCURSOR);
+
+  --FUNCTION FN_OBT_PARAM(P_TIPO_PARAM VARCHAR2) RETURN VARCHAR2;
+
+  PROCEDURE SP_INS_MAE_ALERTA(P_SNOMBRE_ALERTA TBL_LAFT_MAE_ALERTA.SNOMBRE_ALERTA%TYPE,
+                              P_NCODE          OUT NUMBER,
+                              P_SMESSAGE       OUT VARCHAR2);
+
+  PROCEDURE SP_GET_HISTORIAL_USUARIO(P_USUARIO TBL_LAFT_USUARIO.USUARIO%TYPE,
+                                     RC1       OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_CONFIG_CORREO(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_CORREO_CUSTOM(P_NIDPROFILE     TBL_LAFT_CONFIGURACION_CORREO.NIDPROFILE%TYPE,
+                                 P_NIDGRUPOSENAL  TBL_LAFT_CONFIGURACION_CORREO.NIDGRUPOSENAL%TYPE,
+                                 P_NIDACCION      TBL_LAFT_CONFIGURACION_CORREO.NIDACCION%TYPE,
+                                 P_SASUNTO_CORREO OUT VARCHAR2,
+                                 P_SCUERPO_CORREO OUT VARCHAR2);
+
+  PROCEDURE SP_GET_DATA_USUARIO(P_NIDPROFILE TBL_LAFT_CONFIGURACION_CORREO.NIDPROFILE%TYPE,
+                                P_NIDUSUARIO TBL_LAFT_USUARIO.ID_USUARIO%TYPE,
+                                RC1          OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_ALERTAS_VIG(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERFILES(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_PERFIL_X_GRUPO_SENAL(P_NIDGRUPOSENAL TBL_LAFT_PROFILES_X_GRUPO_SENAL.NIDGRUPOSENAL%TYPE,
+                                        RC1             OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_GET_GRUPO_SENAL_X_PERFIL(P_NIDPROFILE TBL_LAFT_PROFILES_X_GRUPO_SENAL.NIDPROFILE%TYPE,
+                                        RC1          OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_REENVIAR_CORREO(P_NPERIODO_PROCESO NUMBER,
+                               P_NIDALERTA        NUMBER,
+                               RC1                OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_UPD_FECHAREENVIO(P_NIDALERTA_CAB_USUARIO NUMBER,
+                                P_NCODE                 OUT NUMBER,
+                                P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_GET_USUARIO_ALERTA(RC1 OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_UPD_STATE_CAB_USU(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDALERTA_CAB_USUARIO%TYPE,
+                                 P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                 P_SESTADO               TBL_LAFT_ALERTA_CAB_USUARIO.SESTADO%TYPE,
+                                 P_SESTADO_REV_TOTAL     OUT VARCHAR2,
+                                 P_NCODE                 OUT NUMBER,
+                                 P_SMESSAGE              OUT VARCHAR2);
+
+  PROCEDURE SP_GET_LIST_RESOURCE_PROFILE(P_LIST     OUT SYS_REFCURSOR,
+                                         P_NCODE    OUT NUMBER,
+                                         P_SMESSAGE OUT VARCHAR2);
+  PROCEDURE SP_GET_HISTORIAL_RESOURCE_PROFILE(P_NIDPROFILE IN NUMBER,
+                                              RC1          OUT SYS_REFCURSOR);
+
+  PROCEDURE SP_INS_RESOURCE_PROFILE(P_NIDPROFILE     IN NUMBER,
+                                    P_NIDPROFILEUSER IN NUMBER,
+                                    P_NIDRESOURCE    IN NUMBER,
+                                    P_NIDUSER        IN NUMBER,
+                                    P_SMENU          IN VARCHAR2,
+                                    P_SSUBMENU       IN VARCHAR2,
+                                    P_SOPCION        IN VARCHAR2,
+                                    P_SACCION        IN VARCHAR2,
+                                    P_ISCHECK        IN NUMBER,
+                                    P_NCODE          OUT NUMBER,
+                                    P_SMESSAGE       OUT VARCHAR2);
+
+  FUNCTION FN_OBT_PRODUCTO(P_SCLIENT VARCHAR2) RETURN VARCHAR2;
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY PKG_LAFT_GESTION_ALERTAS IS
+
+  PROCEDURE INI__________ IS
+  BEGIN
+    NULL;
+  END;
+
+  PROCEDURE SP_INS_INFO_CLIENTE_ALERTA(P_NPERIODO_PROCESO  TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                       P_NIDALERTA         TBL_LAFT_ALERTA.NIDALERTA%TYPE,
+                                       P_NINDDETQUERY      TBL_LAFT_ALERTA.NINDDETQUERY%TYPE,
+                                       P_DFEEJECUTAPROCINI TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                       P_DFEEJECUTAPROCFIN TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                       P_NCODE             OUT NUMBER,
+                                       P_SMESSAGE          OUT VARCHAR2) IS
+  
+    CUR_ SYS_REFCURSOR;
+  
+    CURSOR PEP IS
+      SELECT DISTINCT PEP.NIDCLIENTE_PEP,
+                      PEP.STIP_ENTIDAD,
+                      PEP.SNOM_ENTIDAD,
+                      PEP.SCARGO,
+                      PEP.SNOM_COMPLETO,
+                      PEP.STIPO_DOCUMENTO,
+                      PEP.SNUM_DOCUMENTO
+        FROM TBL_LAFT_TMP_CLIENTES_PEP PEP;
+  
+    CURSOR FPEP IS
+      SELECT DISTINCT PEP.NIDCLIENTE_FPEP,
+                      PEP.SNOM_COMPLETO,
+                      PEP.STIPO_DOCUMENTO,
+                      PEP.SNUM_DOCUMENTO
+        FROM TBL_LAFT_TMP_CLIENTES_FAM_PEP PEP;
+  
+    CURSOR CONSULADO_PEP IS
+      SELECT DISTINCT CONS.NID,
+                      CONS.ITEM,
+                      CONS.CARGO,
+                      CONS.NOMBRE_COMPLETO
+        FROM TBL_LAFT_CLI_CONSULADO_PEP CONS
+       WHERE TIPO = 'PEP'; -- IS NOT NULL;
+  
+    CURSOR CONSULADO_FPEP IS
+      SELECT DISTINCT CONS.NID,
+                      CONS.ITEM,
+                      CONS.CARGO,
+                      CONS.NOMBRE_COMPLETO
+        FROM TBL_LAFT_CLI_CONSULADO_PEP CONS
+       WHERE TIPO = 'FPEP'; --IS NOT NULL;
+  
+    CURSOR EMBAJADA_PEP IS
+      SELECT DISTINCT EMB.NID,
+                      EMB.ITEM,
+                      EMB.CARGO,
+                      EMB.NOMBRE_COMPLETO
+        FROM TBL_LAFT_CLI_EMBAJADA_PEP EMB
+       WHERE TIPO = 'PEP'; --IS NOT NULL;
+  
+    CURSOR EMBAJADA_FPEP IS
+      SELECT DISTINCT EMB.NID,
+                      EMB.ITEM,
+                      EMB.CARGO,
+                      EMB.NOMBRE_COMPLETO
+        FROM TBL_LAFT_CLI_EMBAJADA_PEP EMB
+       WHERE TIPO = 'FPEP'; -- IS NOT NULL;
+  
+    CURSOR ORG_INTER_PEP IS
+      SELECT DISTINCT ORG.NID,
+                      ORG.ITEM,
+                      ORG.NOMBRE_ENTIDAD,
+                      ORG.CARGO,
+                      ORG.NOMBRE_COMPLETO
+        FROM TBL_LAFT_CLI_ORG_INTER_PEP ORG
+       WHERE TIPO = 'PEP'; --IS NOT NULL;
+  
+    CURSOR ORG_INTER_FPEP IS
+      SELECT DISTINCT ORG.NID,
+                      ORG.ITEM,
+                      ORG.NOMBRE_ENTIDAD,
+                      ORG.CARGO,
+                      ORG.NOMBRE_COMPLETO
+        FROM TBL_LAFT_CLI_ORG_INTER_PEP ORG
+       WHERE TIPO = 'FPEP'; --IS NOT NULL;
+  
+    CURSOR OFAC IS
+      SELECT DISTINCT NID,
+                      SNOMBRE,
+                      STIPO,
+                      SORIGEN
+        FROM TBL_LAFT_LISTA_INTER_OFAC OFAC;
+  
+    CURSOR ONU IS
+      SELECT DISTINCT NID,
+                      LISTA,
+                      TIPO,
+                      TIPO_ONU
+        FROM TBL_LAFT_LISTA_INTER_ONU O;
+  
+    CURSOR LISTA_INTER_EU_PN IS
+      SELECT EU.NID,
+             NUMERO,
+             EU.NOMBRE_APELLIDOS,
+             EU.TIPO_PERSONA
+        FROM TBL_LAFT_LISTA_INTER_EU EU
+       WHERE EU.TIPO_PERSONA = 'Natural';
+  
+    CURSOR LISTA_INTER_EU_PJ IS
+      SELECT EU.NID,
+             NUMERO,
+             EU.NOMBRE_APELLIDOS,
+             EU.TIPO_PERSONA
+        FROM TBL_LAFT_LISTA_INTER_EU EU
+       WHERE EU.TIPO_PERSONA = 'Jur�dica';
+  
+    CURSOR DIRECCIONES_DUPLICADAS IS
+    --SELECT DIRECCION || NMUNICIPALITY || NCOUNTRY AS DIRECCION_TMP,
+    --       SCLIENT,
+    --       DIRECCION,
+    --       NMUNICIPALITY,
+    --       NCOUNTRY
+    --  FROM (SELECT DISTINCT INSUDB.PKG_REPORTES_TABLERO_CONTROL.FN_DIRE_CORREO_CLIENTE(P_NRECOWNER   => AD.NRECOWNER,
+    --                                                                                   P_SKEYADDRESS => AD.SKEYADDRESS,
+    --                                                                                  P_DEFFECDATE  => AD.DEFFECDATE,
+    --                                                                                   P_SRECTYPE    => AD.SRECTYPE,
+    --                                                                                   P_SCLIENT     => AD.SCLIENT,
+    --                                                                                   --P_NRECOWNER => 2,
+    --                                                                                  P_STIPO_DATO      => 'D',
+    --                                                                                   P_SIND_INDIVIDUAL => 'S') AS DIRECCION,
+    --                        AD.NMUNICIPALITY,
+    --                        AD.NCOUNTRY,
+    --                        AD.SCLIENT
+    --          FROM LAFT.TBL_LAFT_CLIENTES_VIGENTES PV,
+    --               ADDRESS                         AD
+    --         WHERE AD.SCLIENT = PV.SIDCLIENTE
+    --           AND AD.DNULLDATE IS NULL
+    --           AND AD.SRECTYPE NOT IN ('4', '5') --AND cl.sclient ='01020601223521' 
+    --        )
+    -- ORDER BY 1;
+    
+      SELECT DISTINCT PV.SDIRECCION AS DIRECCION_TMP,
+                      PV.SIDCLIENTE AS SCLIENT,
+                      ROWID         AS ROWID_
+        FROM LAFT.TBL_LAFT_CLIENTES_VIGENTES PV
+       WHERE PV.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND PV.NIDALERTA = P_NIDALERTA
+         AND SUBSTR(PV.SIDCLIENTE, 1, 2) = '01'
+       ORDER BY 1;
+  
+    CURSOR TRX_REGISTRO IS
+    --SELECT DISTINCT NID,
+    --                UPPER(TRIM(DECODE(TRIM(TTR.SAPEPAT), NULL, '', TRIM(TTR.SAPEPAT) || ' ') || DECODE(TRIM(TTR.SAPEMAT), NULL, '', TRIM(TTR.SAPEMAT) || ' ') ||
+    --                           DECODE(TRIM(TTR.SNOMBRE), NULL, '', TRIM(TTR.SNOMBRE) || ' '))) AS SNOM_COMPLETO,
+    --                TTR.SNUMDOC AS SNUM_DOCUMENTO
+    --  FROM LAFT.TBL_TRX_REGISTRO TTR
+    -- WHERE TTR.NIDCARGA IN (SELECT MAX(NID)
+    --                          FROM LAFT.TBL_TRX_CARGA C
+    --                         WHERE C.NESTADO = 1)
+    --   AND ROWNUM < 3;
+      SELECT ROWNUM AS SNID,
+             STIPOPERSONA,
+             STIPODOC_PAIS,
+             DECODE(SNUMIDENTIDAD, 'NO REGISTRA', NULL, SNUMIDENTIDAD) AS SNUMIDENTIDAD,
+             SAPE_PATERNO,
+             SAPE_MATERNO,
+             SNOMBRES_RS,
+             SSENAL_LAFT,
+             SFILTRO1,
+             SFEDESCUBRIMIENTO,
+             SDOCREFERENCIA,
+             STIPOLISTA,
+             SNUMDOCUMENTO,
+             SNOM_COMPLETO,
+             DCOMPDATE
+        FROM TBL_LAFT_CLIENTE_REG_NEGATIVO;
+  
+    CURSOR PORTAL_SAC IS
+      SELECT *
+        FROM TBL_LAFT_CLIENTE_PORTAL_SAC
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+  
+    V_SDIRECCION_TMP VARCHAR2(1000) := 'X';
+    V_SCLIENT        CLIENT.SCLIENT%TYPE;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    /*BEGIN
+      SELECT DFEEJECUTAPROCINI,
+             DFEEJECUTAPROCFIN
+        INTO P_DFEEJECUTAPROCINI,
+             P_DFEEJECUTAPROCFIN
+        FROM TBL_LAFT_ALERTA_FRECUENCIA TLAF
+       WHERE TLAF.DNULLDATE IS NULL
+         AND TLAF.SESTADO = 1;
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'Existe m�s de una frecuencia de ejecuci�n activa';
+        ROLLBACK;
+        RETURN;
+      WHEN NO_DATA_FOUND THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'No existe una frecuencia de ejecuci�n activa';
+        ROLLBACK;
+        RETURN;
+    END;*/
+  
+    DELETE FROM TBL_LAFT_ALERTA_PROCESO
+     WHERE NIDALERTA = P_NIDALERTA
+       AND NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+  
+    INSERT INTO TBL_LAFT_ALERTA_PROCESO
+      (NIDALERTA,
+       NPERIODO_PROCESO,
+       DFECHA_ESTADO_MOVIMIENTO,
+       SCOMENTARIO,
+       SESTADO,
+       SESTADO_REVISADO,
+       DFECHA_REVISADO)
+    VALUES
+      (P_NIDALERTA,
+       P_NPERIODO_PROCESO,
+       SYSDATE,
+       NULL,
+       1,
+       NULL,
+       NULL);
+  
+    IF NVL(P_NINDDETQUERY, 0) = 1 THEN
+    
+      IF P_NIDALERTA = 1 THEN
+      
+        DELETE FROM TBL_LAFT_ALERTA_DETALLE
+         WHERE NIDALERTA = P_NIDALERTA
+           AND NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+      
+        INSERT INTO TBL_LAFT_ALERTA_DETALLE
+          (NIDALERTA,
+           NIDALERTA_DET,
+           NPERIODO_PROCESO,
+           DFECHA_REGISTRO,
+           STIPO_DOC,
+           SNUMERO_DOC,
+           SPRIMER_NOMBRE,
+           SSEGUNDO_NOMBRE,
+           SAPE_PATERNO,
+           SAPE_MATERNO,
+           SRAZON_SOCIAL,
+           SDIRECCION,
+           SPAIS,
+           NPOLICY,
+           NPRODUCT,
+           SDESPRODUCTO,
+           NIDREGIMEN)
+          SELECT P_NIDALERTA,
+                 SEQ_ID_ALERTA_DETALLE.NEXTVAL,
+                 P_NPERIODO_PROCESO,
+                 SYSDATE,
+                 NIDDOC_TYPE,
+                 SIDDOC,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 SCLIENAME,
+                 DIRECCION,
+                 NULL,
+                 NULL,
+                 NPRODUCT,
+                 DES_PRODUCTO,
+                 2
+            FROM (SELECT --MAX(TRIM(PM.SDESCRIPT)) AS DES_PRODUCTO,
+                    MAX(TRIM(RA.SDESCRIPT)) AS DES_PRODUCTO,
+                    TRIM(CL.SCLIENAME) AS SCLIENAME,
+                    CL.SCLIENT,
+                    CI.NTYPCLIENTDOC AS NIDDOC_TYPE,
+                    TRIM(CI.SCLINUMDOCU) AS SIDDOC,
+                    PO.NBRANCH AS NPRODUCT,
+                    /* LI.DSTARTDATE,
+                    LI.DEXPIRDAT,
+                    PO.DSTARTDATE,
+                    PO.DEXPIRDAT,*/
+                    --PO.NPOLICY,
+                    INSUDB.PKG_REPORTES_TABLERO_CONTROL.FN_DIRE_CORREO_CLIENTE(P_SCLIENT => CL.SCLIENT, P_NRECOWNER => 2, P_STIPO_DATO => 'DU', P_SIND_INDIVIDUAL => 'N') AS DIRECCION
+                     FROM POLICY PO,
+                          --LIFE                LI,
+                          CLIENT              CL,
+                          PRODMASTER          PM,
+                          INSUDB.CLIDOCUMENTS CI,
+                          INSUDB.TABLE10      RA
+                   
+                   -------------
+                    WHERE
+                   --PO.SCERTYPE = LI.SCERTYPE                        
+                   --AND PO.NBRANCH = LI.NBRANCH                        
+                   --AND PO.NPRODUCT = LI.NPRODUCT                        
+                   --AND PO.NPOLICY = LI.NPOLICY                        
+                   --AND TRUNC(LI.DEXPIRDAT) >= TRUNC(SYSDATE)                        
+                   --AND NCERTIF > 0
+                   --------------
+                    EXISTS (SELECT 1
+                       FROM LIFE L
+                      WHERE L.SCERTYPE = PO.SCERTYPE
+                        AND L.NBRANCH = PO.NBRANCH
+                        AND L.NPRODUCT = PO.NPRODUCT
+                        AND L.NPOLICY = PO.NPOLICY
+                           --AND INSUDB.PKG_BDU_INFO_CLIENTE.FN_ESTADO_CERTIFICADO(L.DSTARTDATE, L.DEXPIRDAT, L.DNULLDATE) = 2
+                           --AND L.DEXPIRDAT >= SYSDATE
+                        AND L.NCERTIF > 0)
+                 AND CL.SCLIENT = PO.SCLIENT
+                 AND CI.SCLIENT = CL.SCLIENT
+                 AND PM.NBRANCH = PO.NBRANCH
+                 AND PM.NPRODUCT = PO.NPRODUCT
+                 AND RA.NBRANCH = PO.NBRANCH
+                 AND SUBSTR(CL.SCLIENT, 2, 1) = '1'
+                 AND ((UPPER(CL.SCLIENAME) LIKE 'ONG%') OR UPPER(CL.SCLIENAME) LIKE '%O.N.G%' OR UPPER(CL.SCLIENAME) LIKE '%COOP%' OR UPPER(CL.SCLIENAME) LIKE '%CRAC%' OR
+                    UPPER(CL.SCLIENAME) LIKE '%CAJA%')
+                    GROUP BY CL.SCLIENAME,
+                             PO.NBRANCH,
+                             /*LI.DSTARTDATE,
+                             LI.DEXPIRDAT,
+                             PO.DSTARTDATE,
+                             PO.DEXPIRDAT,*/
+                             --PO.NPOLICY,
+                             CL.SCLIENT,
+                             CI.NTYPCLIENTDOC,
+                             CI.SCLINUMDOCU
+                   UNION
+                   SELECT --TRIM(PM.SDESCRIPT) AS DES_PRODUCTO,
+                    TRIM(RA.SDESCRIPT) AS DES_PRODUCTO,
+                    TRIM(CL.SCLIENAME) AS SCLIENAME,
+                    CL.SCLIENT,
+                    CI.NTYPCLIENTDOC AS NIDDOC_TYPE,
+                    TRIM(CI.SCLINUMDOCU) AS SIDDOC,
+                    PO.NBRANCH AS NPRODUCT,
+                    /*PO.DSTARTDATE,
+                    PO.DEXPIRDAT,
+                    PO.DSTARTDATE,
+                    PO.DEXPIRDAT,*/
+                    --PO.NPOLICY,
+                    INSUDB.PKG_REPORTES_TABLERO_CONTROL.FN_DIRE_CORREO_CLIENTE(P_SCLIENT => CL.SCLIENT, P_NRECOWNER => 2, P_STIPO_DATO => 'DU', P_SIND_INDIVIDUAL => 'N') AS DIRECCION
+                     FROM POLICY              PO,
+                          CLIENT              CL,
+                          PRODMASTER          PM,
+                          INSUDB.CLIDOCUMENTS CI,
+                          INSUDB.TABLE10      RA
+                    WHERE PO.NPRODUCT = 1000
+                      AND TRUNC(PO.DEXPIRDAT) >= TRUNC(SYSDATE)
+                      AND CL.SCLIENT = PO.SCLIENT
+                      AND CI.SCLIENT = CL.SCLIENT
+                      AND PM.NBRANCH = PO.NBRANCH
+                      AND PM.NPRODUCT = PO.NPRODUCT
+                      AND RA.NBRANCH = PO.NBRANCH
+                      AND SUBSTR(CL.SCLIENT, 2, 1) = '1'
+                      AND ((UPPER(CL.SCLIENAME) LIKE 'ONG%') OR UPPER(CL.SCLIENAME) LIKE '%O.N.G%' OR UPPER(CL.SCLIENAME) LIKE '%COOP%' OR UPPER(CL.SCLIENAME) LIKE '%CRAC%' OR
+                          UPPER(CL.SCLIENAME) LIKE '%CAJA%'))
+           WHERE ROWNUM <= 5; ---quitar ROWNUM
+      
+      END IF;
+    
+      IF P_NIDALERTA = 2 THEN
+      
+        NULL;
+      
+        DELETE FROM TBL_LAFT_ALERTA_LISTA_EXTERNO
+         WHERE NIDALERTA = P_NIDALERTA
+           AND NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+      
+        FOR C1 IN PEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             STIPO_DOCUMENTO,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             STIP_ENTIDAD,
+             SNOM_ENTIDAD,
+             SCARGO,
+             SORIGENARCHIVO,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NIDCLIENTE_PEP,
+             'PEP',
+             SYSDATE,
+             TRIM(C1.STIPO_DOCUMENTO),
+             TRIM(C1.SNUM_DOCUMENTO),
+             TRIM(C1.SNOM_COMPLETO),
+             C1.STIP_ENTIDAD,
+             C1.SNOM_ENTIDAD,
+             C1.SCARGO,
+             'PEP LATEST',
+             2,
+             1);
+        END LOOP;
+      
+        FOR C1 IN FPEP
+        LOOP
+          NULL;
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             STIPO_DOCUMENTO,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             SORIGENARCHIVO,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NIDCLIENTE_FPEP,
+             'FPEP',
+             SYSDATE,
+             TRIM(C1.STIPO_DOCUMENTO),
+             TRIM(C1.SNUM_DOCUMENTO),
+             TRIM(C1.SNOM_COMPLETO),
+             'PARIENTES LATEST',
+             3,
+             1);
+        END LOOP;
+      
+        FOR C1 IN CONSULADO_PEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'PEP',
+             SYSDATE,
+             TRIM(C1.NOMBRE_COMPLETO),
+             C1.CARGO,
+             'CONSULADO',
+             'IDECON',
+             2,
+             1);
+        END LOOP;
+      
+        FOR C1 IN CONSULADO_FPEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'FPEP',
+             SYSDATE,
+             TRIM(C1.NOMBRE_COMPLETO),
+             C1.CARGO,
+             'CONSULADO',
+             'IDECON',
+             3,
+             1);
+        END LOOP;
+      
+        FOR C1 IN EMBAJADA_PEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'PEP',
+             SYSDATE,
+             TRIM(C1.NOMBRE_COMPLETO),
+             C1.CARGO,
+             'EMBAJADA',
+             'IDECON',
+             2,
+             1);
+        END LOOP;
+      
+        FOR C1 IN EMBAJADA_FPEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'FPEP',
+             SYSDATE,
+             TRIM(C1.NOMBRE_COMPLETO),
+             C1.CARGO,
+             'EMBAJADA',
+             'IDECON',
+             3,
+             1);
+        END LOOP;
+      
+        FOR C1 IN ORG_INTER_PEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'PEP',
+             SYSDATE,
+             TRIM(C1.NOMBRE_COMPLETO),
+             C1.CARGO,
+             'ORGANIZACION INTERNACIONAL',
+             C1.NOMBRE_ENTIDAD,
+             'IDECON',
+             2,
+             1);
+        END LOOP;
+      
+        FOR C1 IN ORG_INTER_FPEP
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'FPEP',
+             SYSDATE,
+             TRIM(C1.NOMBRE_COMPLETO),
+             C1.CARGO,
+             'ORGANIZACION INTERNACIONAL',
+             C1.NOMBRE_ENTIDAD,
+             'IDECON',
+             3,
+             1);
+        END LOOP;
+      
+        FOR C1 IN OFAC
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             C1.SORIGEN,
+             SYSDATE,
+             TRIM(C1.SNOMBRE),
+             NULL,
+             C1.SORIGEN,
+             NULL,
+             'IDECON',
+             1,
+             1);
+        END LOOP;
+      
+        FOR C1 IN ONU
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'ONU',
+             SYSDATE,
+             TRIM(C1.LISTA),
+             NULL,
+             C1.TIPO_ONU,
+             NULL,
+             'IDECON',
+             1,
+             1);
+        END LOOP;
+      
+        FOR C1 IN LISTA_INTER_EU_PN
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'EU',
+             SYSDATE,
+             TRIM(C1.NOMBRE_APELLIDOS),
+             NULL,
+             'EU PERSONA NATURAL',
+             NULL,
+             'IDECON',
+             1,
+             1);
+        END LOOP;
+      
+        FOR C1 IN LISTA_INTER_EU_PJ
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'EU',
+             SYSDATE,
+             TRIM(C1.NOMBRE_APELLIDOS),
+             NULL,
+             'EU PERSONA JUR�DICA',
+             NULL,
+             'IDECON',
+             1,
+             1);
+        END LOOP;
+      
+        FOR C1 IN TRX_REGISTRO
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR,
+             SNUM_DOCUMENTO,
+             STIPO_DOCUMENTO)
+          VALUES
+          /*   (P_NPERIODO_PROCESO,
+          P_NIDALERTA,
+          C1.NID,
+          'LISESP',
+          SYSDATE,
+          C1.SNOM_COMPLETO,
+          NULL,
+          'REGISTRO NEGATIVO',
+          NULL,
+          NULL,
+          5,
+          3,
+          C1.SNUM_DOCUMENTO,
+          NULL);*/
+          
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.SNID,
+             'LISESP',
+             SYSDATE,
+             C1.SNOM_COMPLETO,
+             NULL,
+             'REGISTRO NEGATIVO',
+             NULL,
+             NULL,
+             5,
+             3,
+             C1.SNUMIDENTIDAD,
+             NULL);
+        
+        END LOOP;
+      
+        FOR C1 IN PORTAL_SAC
+        LOOP
+          INSERT INTO TBL_LAFT_ALERTA_LISTA_EXTERNO
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             SORIGEN,
+             DFECHA_CARGA,
+             SNOM_COMPLETO,
+             SCARGO,
+             SORIGENARCHIVO,
+             SNOM_ENTIDAD,
+             SDESPROVEEDOR,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR,
+             SNUM_DOCUMENTO)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             C1.NID,
+             'PORTAL',
+             SYSDATE,
+             NULL, --C1.SNOM_COMPLETO,
+             NULL,
+             NULL, --'EU PERSONA JUR�DICA',
+             NULL,
+             'PORTAL SAC',
+             4,
+             2,
+             C1.NUM_DOCUMENTO);
+        END LOOP;
+      
+        --INSUDB.PKG_BUSQ_COINCIDENCIAS_ALERTAS.SP_INS_COINCID_LISTAS(P_NPERIODO_PROCESO => P_NPERIODO_PROCESO, P_NIDALERTA => P_NIDALERTA, P_NCODE => P_NCODE, P_SMESSAGE => P_SMESSAGE);
+      
+        /*IF P_NCODE = 1 THEN
+          RETURN;
+        END IF;*/
+      
+        --LISTAS
+      END IF;
+    
+      IF P_NIDALERTA = 3 THEN
+        NULL;
+        DELETE FROM TBL_LAFT_DIRECCION_GAFI_TMP
+         WHERE NIDALERTA = P_NIDALERTA
+           AND NPERIODO_PROCESO = NPERIODO_PROCESO;
+      
+        INSERT INTO TBL_LAFT_DIRECCION_GAFI_TMP
+          (NIDALERTA,
+           NPERIODO_PROCESO,
+           DCOMPDATE,
+           DES_PRODUCTO,
+           SCLIENAME,
+           SCLIENT,
+           NIDDOC_TYPE,
+           SIDDOC,
+           NPRODUCT,
+           DSTARTDATE,
+           DEXPIRDAT,
+           NPOLICY,
+           DIRECCION,
+           PAIS,
+           DES_PAIS,
+           DES_TIPO_DOC,
+           NIDREGIMEN)
+          SELECT DISTINCT PV.NIDALERTA,
+                          PV.NPERIODO_PROCESO,
+                          SYSDATE             DCOMPDATE,
+                          PV.SDESPRODUCTO,
+                          PV.SNOM_COMPLETO,
+                          PV.SIDCLIENTE,
+                          PV.NTIPO_DOCUMENTO,
+                          PV.SNUM_DOCUMENTO,
+                          PV.SPRODUCTO,
+                          PV.FEC_INI_POL,
+                          PV.FEC_FIN_POL,
+                          PV.SNUM_POLIZA,
+                          PV.SDIRECCION,
+                          PV.NCOUNTRY,
+                          PA.SDESCRIPT        AS DES_PAIS,
+                          PV.STIPO_DOCUMENTO,
+                          PV.NIDREGIMEN
+            FROM LAFT.TBL_LAFT_CLIENTES_VIGENTES PV,
+                 TABLE66                         PA
+           WHERE PV.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+             AND PV.NIDALERTA = P_NIDALERTA
+                --             AND PV.NIDREGIMEN = P_NI
+             AND PA.NCOUNTRY(+) = PV.NCOUNTRY
+             AND UPPER(TRIM(TRANSLATE(PA.SDESCRIPT, '''��������������������������������������������', ' aeiouaeiouaoaeiooaeiouAEIOUAEIOUAOAEIOUAEIOU'))) IN
+                 (SELECT UPPER(TRIM(TRANSLATE(SNOMBRE_PAIS_GAFI, '''��������������������������������������������', ' aeiouaeiouaoaeiooaeiouAEIOUAEIOUAOAEIOUAEIOU')))
+                    FROM TBL_LAFT_LISTA_GAFI
+                   WHERE SESTADO = '1');
+      
+        --GAFI
+      END IF;
+    
+      IF P_NIDALERTA = -4 THEN
+        -- DE MOMENTO NO VA
+      
+        DELETE FROM TBL_LAFT_NOTAS_CREDITO_TMP
+         WHERE NIDALERTA = P_NIDALERTA
+           AND NPERIODO_PROCESO = NPERIODO_PROCESO;
+      
+        INSERT INTO TBL_LAFT_NOTAS_CREDITO_TMP
+          (NIDALERTA,
+           NPERIODO_PROCESO,
+           NDEVOLUCION,
+           DCOMPDATE,
+           NNULLCODE,
+           NPRODUCT,
+           DESPRODUCTO,
+           DESMOTIVO,
+           SCLIENT,
+           NOMCLIENTE,
+           DESTIPODOC,
+           NRODOC,
+           DESTIPOCOMP,
+           NROCOMP,
+           NAMOUNT,
+           NIVA,
+           NRIGHTISSUE,
+           NPOLICY,
+           NRECEIPT,
+           DBILLDATE,
+           SBILLTYPE,
+           NINSUR_AREA,
+           NIDREGIMEN,
+           NTIPO_MONEDA)
+          SELECT P_NIDALERTA,
+                 P_NPERIODO_PROCESO,
+                 ROWNUM,
+                 SYSDATE DCOMPDATE,
+                 PO.NNULLCODE,
+                 PO.NPRODUCT,
+                 TRIM(PM.SDESCRIPT) AS DESPRODUCTO,
+                 TRIM(MA.SDESCRIPT) AS DESMOTIVO,
+                 PR.SCLIENT,
+                 NVL(CL.SCLIENAME, CL.SLEGALNAME) AS NOMCLIENTE,
+                 TRIM(TD.SDESCRIPT) AS DESTIPODOC,
+                 TRIM(CLI.SCLINUMDOCU) AS NRODOC,
+                 TRIM(TIC.SDESCRIPT) AS DESTIPOCOMP,
+                 B.NBILLNUM AS NROCOMP,
+                 B.NAMOUNT,
+                 B.NIVA,
+                 B.NRIGHTISSUE,
+                 TO_CHAR(PR.NPOLICY),
+                 PR.NRECEIPT,
+                 B.DBILLDATE,
+                 B.SBILLTYPE,
+                 B.NINSUR_AREA,
+                 2,
+                 PR.NCURRENCY
+            FROM PREMIUM         PR,
+                 BILLS           B,
+                 POLICY          PO,
+                 PRODMASTER      PM,
+                 TABLE13         MA,
+                 CLIENT          CL,
+                 CLIDOCUMENTS    CLI,
+                 TABLE5645       TD,
+                 INSUDB.TABLE990 TIC
+           WHERE B.NBILLNUM = PR.NBILLNUM
+             AND B.SBILLTYPE = PR.SBILLTYPE
+             AND B.NINSUR_AREA = PR.NINSUR_AREA
+             AND PO.SCERTYPE = PR.SCERTYPE
+             AND PO.NBRANCH = PR.NBRANCH
+             AND PO.NPRODUCT = PR.NPRODUCT
+             AND PO.NPOLICY = PR.NPOLICY
+             AND PM.NBRANCH = PO.NBRANCH
+             AND PM.NPRODUCT = PR.NPRODUCT
+             AND CL.SCLIENT = B.SCLIENT
+             AND CLI.SCLIENT = CL.SCLIENT
+             AND MA.NNULLCODE(+) = PO.NNULLCODE
+             AND TD.NIDDOC_TYPE = CLI.NTYPCLIENTDOC
+             AND TIC.SBILLTYPE = B.SBILLTYPE
+             AND B.NBILLSTAT = 5
+             AND B.SBILLTYPE IN ('3', '7', '8')
+             AND TRUNC(B.DBILLDATE) BETWEEN TRUNC(P_DFEEJECUTAPROCINI) AND TRUNC(P_DFEEJECUTAPROCFIN)
+          UNION
+          SELECT P_NIDALERTA,
+                 P_NPERIODO_PROCESO,
+                 ROWNUM,
+                 SYSDATE DCOMPDATE,
+                 NULL AS NNULLCODE,
+                 99 AS NPRODUCT,
+                 RES.CONCEPTO AS DESPRODUCTO,
+                 NULL AS DESMOTIVO,
+                 CL.SCLIENT,
+                 NVL(CL.SCLIENAME, CL.SLEGALNAME) AS NOMCLIENTE,
+                 TRIM(TD.SDESCRIPT) AS DESTIPODOC,
+                 TRIM(CLI.SCLINUMDOCU) AS NRODOC,
+                 NULL AS DESTIPOCOMP,
+                 NULL AS NROCOMP,
+                 MONTO AS NAMOUNT,
+                 NULL AS NIVA,
+                 NULL AS NRIGHTISSUE,
+                 RES.NUM_POLIZA AS NPOLICY,
+                 NULL AS NRECEIPT,
+                 NULL AS DBILLDATE,
+                 NULL AS SBILLTYPE,
+                 NULL AS NINSUR_AREA,
+                 1,
+                 DECODE(RES.MONEDA, 'USD', 2, 1) AS NTIPO_MONEDA
+            FROM LAFT.TBL_LAFT_CARGA_RESCATE RES,
+                 CLIENT                      CL,
+                 CLIDOCUMENTS                CLI,
+                 TABLE5645                   TD
+           WHERE CL.SCLIENT = '020000' || RES.DOCUMENTO
+             AND CLI.SCLIENT = CL.SCLIENT
+             AND CLI.NTYPCLIENTDOC = SUBSTR(CL.SCLIENT, 1, 2)
+             AND TD.NIDDOC_TYPE = CLI.NTYPCLIENTDOC
+             AND TO_DATE(RES.FECHA_PAGO, 'DD/MM/YYYY') BETWEEN TRUNC(P_DFEEJECUTAPROCINI) AND TRUNC(P_DFEEJECUTAPROCFIN);
+      
+        --NC
+      END IF; --DE MOMENTO NO VA
+    
+      IF P_NIDALERTA = 5 THEN
+      
+        DELETE FROM TBL_LAFT_DIRECCION_DUPL_TMP
+         WHERE NIDALERTA = P_NIDALERTA
+           AND NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+      
+        /*FOR C1 IN DIRECCIONES_DUPLICADAS
+        LOOP
+          IF V_SDIRECCION_TMP = C1.DIRECCION_TMP THEN*/
+      
+        INSERT INTO TBL_LAFT_DIRECCION_DUPL_TMP
+          (NIDALERTA,
+           NPERIODO_PROCESO,
+           DCOMPDATE,
+           DES_PRODUCTO,
+           SCLIENAME,
+           SCLIENT,
+           NIDDOC_TYPE,
+           SIDDOC,
+           NPRODUCT,
+           DSTARTDATE,
+           DEXPIRDAT,
+           NPOLICY,
+           DIRECCION,
+           SDESRAMO,
+           DES_TIPO_DOC
+           --NMUNICIPALITY,
+           --NCOUNTRY --,
+           --DES_DEPARTAMENTO,
+           --DES_PROVINCIA,
+           --DES_DISTRITO,
+           --DES_PAIS,
+           --DES_TIPO_DOC
+           )
+          SELECT DISTINCT P_NIDALERTA,
+                          P_NPERIODO_PROCESO,
+                          SYSDATE,
+                          PV.SDESPRODUCTO,
+                          PV.SNOM_COMPLETO,
+                          PV.SIDCLIENTE,
+                          PV.NTIPO_DOCUMENTO,
+                          PV.SNUM_DOCUMENTO,
+                          NULL, --PO.NPRODUCT,
+                          PV.FEC_INI_POL,
+                          PV.FEC_FIN_POL,
+                          PV.SNUM_POLIZA,
+                          PV.SDIRECCION,
+                          PV.DESRAMO,
+                          PV.STIPO_DOCUMENTO
+            FROM LAFT.TBL_LAFT_CLIENTES_VIGENTES PV
+           WHERE SDIRECCION IN (SELECT SDIRECCION
+                                  FROM (SELECT DISTINCT PV.SDIRECCION,
+                                                        PV.SIDCLIENTE
+                                          FROM LAFT.TBL_LAFT_CLIENTES_VIGENTES PV
+                                         WHERE PV.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                           AND PV.NIDALERTA = P_NIDALERTA
+                                           AND SUBSTR(PV.SIDCLIENTE, 1, 2) = '01'
+                                           AND SDIRECCION IS NOT NULL)
+                                 GROUP BY SDIRECCION
+                                HAVING COUNT(*) > 1);
+      
+        /*SELECT P_NIDALERTA,
+                 P_NPERIODO_PROCESO,
+                 SYSDATE,
+                 PV.SDESPRODUCTO,
+                 PV.SNOM_COMPLETO,
+                 PV.SIDCLIENTE,
+                 PV.NTIPO_DOCUMENTO,
+                 PV.SNUM_DOCUMENTO,
+                 NULL, --PO.NPRODUCT,
+                 PV.FEC_INI_POL,
+                 PV.FEC_FIN_POL,
+                 PV.SNUM_POLIZA,
+                 PV.SDIRECCION --,
+          --TRIM(TD.SDESCRIPT) --,
+          --C1.NMUNICIPALITY,
+          --C1.NCOUNTRY
+            FROM LAFT.TBL_LAFT_CLIENTES_VIGENTES PV
+           WHERE ROWID = C1.ROWID_;
+        NULL;*/
+        --END IF;
+        /*
+            V_SDIRECCION_TMP := C1.DIRECCION_TMP;
+          
+          END LOOP;
+        */
+        --PJ con la misma direccci�n
+      END IF;
+    
+      IF P_NIDALERTA = 10 THEN
+        NULL;
+      
+        --EXPERIAN RIESGO FINANCIERO RENTAS
+      END IF;
+    
+      IF P_NIDALERTA = 15 THEN
+        NULL;
+      
+        --RESCATE
+      END IF;
+    
+    END IF;
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_FORMULARIO_USUARIO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                      P_NCODE            OUT NUMBER,
+                                      P_SMESSAGE         OUT VARCHAR2) IS
+  
+    CURSOR SENAL_ALERTAS IS
+      SELECT TLA.NIDALERTA,
+             TLA.NIDAGRUPA,
+             TLU.ID_USUARIO,
+             TLAPF.NIDPROFILE AS ID_ROL,
+             TLA.NINDDETQUERY,
+             TLA.NINDCREAFORMULARIO,
+             TLAPF.NIDREGIMEN
+        FROM TBL_LAFT_ALERTA        TLA,
+             TBL_LAFT_ALERTA_PERFIL TLAPF,
+             TBL_LAFT_USUARIO       TLU
+       WHERE TLAPF.NIDALERTA = TLA.NIDALERTA
+         AND TLU.NIDPROFILE = TLAPF.NIDPROFILE
+         AND TLAPF.SESTADO = 1
+         AND TLA.SESTADO = 1
+         AND TLU.ESTADO = 1
+       ORDER BY TLAPF.NIDPROFILE,
+                TLA.NIDALERTA,
+                TLAPF.NIDREGIMEN;
+  
+    CURSOR SENAL_ALERTAS_PREGUNTAS_CAB IS
+      SELECT TLACU.NIDALERTA_CAB_USUARIO,
+             TLA.NIDALERTA,
+             TLA.NIDAGRUPA,
+             TLAP.NIDPREGUNTA,
+             TLAP.NIDORIGEN,
+             TLACU.NIDREGIMEN
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO TLACU,
+             TBL_LAFT_ALERTA             TLA,
+             TBL_LAFT_ALERTA_PREGUNTA    TLAP,
+             TBL_LAFT_ALERTA_PERFIL      TLAPF,
+             TBL_LAFT_USUARIO            TLU
+       WHERE TLAP.NIDALERTA = TLA.NIDALERTA
+         AND TLAPF.NIDALERTA = TLAP.NIDALERTA
+         AND TLU.NIDPROFILE = TLAPF.NIDPROFILE
+         AND TLACU.NIDALERTA = TLA.NIDALERTA
+         AND TLACU.NIDAGRUPA = TLA.NIDAGRUPA
+         AND TLACU.NIDUSUARIO_ASIGNADO = TLU.ID_USUARIO
+         AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLAPF.SESTADO = 1
+         AND TLAPF.NIDREGIMEN = TLACU.NIDREGIMEN
+         AND TLA.SESTADO = 1
+         AND TLAP.SESTADO = 1
+         AND TLU.ESTADO = 1
+         AND TLAP.NIDORIGEN = 1;
+  
+    V_NIDREGIMEN TBL_LAFT_ALERTA_DETALLE.NIDREGIMEN%TYPE;
+  
+    CURSOR SENAL_ALERTAS_DET_USUARIO IS
+      SELECT TLAD.NIDALERTA,
+             TLAD.NIDALERTA_DET,
+             TLAD.NPERIODO_PROCESO
+        FROM TBL_LAFT_ALERTA_DETALLE TLAD,
+             TBL_LAFT_ALERTA         TLA
+       WHERE TLAD.NIDALERTA = TLA.NIDALERTA
+         AND TLAD.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLA.SESTADO = 1
+         AND TLA.NINDDETQUERY = 1
+         AND TLAD.NIDREGIMEN = V_NIDREGIMEN;
+  
+    CURSOR SENAL_ALERTAS_PREGUNTAS_DET IS
+      SELECT TLADU.NIDALERTA_CAB_USUARIO,
+             TLADU.NIDALERTA_DET_USUARIO,
+             TLADU.NIDALERTA,
+             TLADU.NPERIODO_PROCESO,
+             TLADU.NIDALERTA_DET,
+             TLAP.NIDPREGUNTA,
+             TLAP.NIDORIGEN,
+             TLACU.NIDREGIMEN
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO TLACU,
+             TBL_LAFT_ALERTA_DET_USUARIO TLADU,
+             TBL_LAFT_ALERTA_DETALLE     TLAD,
+             TBL_LAFT_ALERTA_PREGUNTA    TLAP,
+             TBL_LAFT_ALERTA             TLA
+       WHERE TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLADU.NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+         AND TLADU.NIDALERTA = TLACU.NIDALERTA
+         AND TLADU.NIDREGIMEN = TLACU.NIDREGIMEN
+         AND TLADU.NPERIODO_PROCESO = TLACU.NPERIODO_PROCESO
+         AND TLADU.NIDALERTA_DET = TLAD.NIDALERTA_DET
+         AND TLAP.NIDALERTA = TLACU.NIDALERTA
+         AND TLAD.NPERIODO_PROCESO = TLACU.NPERIODO_PROCESO
+         AND TLAD.NIDALERTA = TLACU.NIDALERTA
+         AND TLAD.NIDREGIMEN = TLAD.NIDREGIMEN
+         AND TLAP.SESTADO = 1
+         AND TLAP.NIDORIGEN = 2
+         AND TLA.NIDALERTA = TLACU.NIDALERTA
+         AND TLA.SESTADO = 1;
+  
+    V_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA_CAB_USUARIO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    P_SMESSAGE := 'OK';
+  
+    BEGIN
+    
+      DELETE FROM TBL_LAFT_ALERTA_DET_USUARIO
+       WHERE NIDALERTA_CAB_USUARIO IN (SELECT C.NIDALERTA_CAB_USUARIO
+                                         FROM TBL_LAFT_ALERTA_CAB_USUARIO C
+                                        WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO);
+      DELETE FROM TBL_LAFT_ALERTA_CAB_USU_PREG
+       WHERE NIDALERTA_CAB_USUARIO IN (SELECT C.NIDALERTA_CAB_USUARIO
+                                         FROM TBL_LAFT_ALERTA_CAB_USUARIO C
+                                        WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO);
+      DELETE FROM TBL_LAFT_ALERTA_DET_USU_PREG
+       WHERE NIDALERTA_CAB_USUARIO IN (SELECT C.NIDALERTA_CAB_USUARIO
+                                         FROM TBL_LAFT_ALERTA_CAB_USUARIO C
+                                        WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO);
+    
+      DELETE FROM TBL_LAFT_ALERTA_CAB_USUARIO
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+    
+      FOR C1 IN SENAL_ALERTAS
+      LOOP
+        --IF C1.NINDCREAFORMULARIO = 1 THEN
+      
+        SELECT SEQ_ID_ALERTA_CAB_USUARIO.NEXTVAL
+          INTO V_NIDALERTA_CAB_USUARIO
+          FROM DUAL;
+      
+        INSERT INTO TBL_LAFT_ALERTA_CAB_USUARIO
+          (NIDALERTA_CAB_USUARIO,
+           NPERIODO_PROCESO,
+           NIDALERTA,
+           NIDUSUARIO_ASIGNADO,
+           DFECHA_ESTADO_MOVIMIENTO,
+           SESTADO,
+           NIDAGRUPA,
+           NIDREGIMEN,
+           DFECHA_REENVIO)
+        VALUES
+          (V_NIDALERTA_CAB_USUARIO,
+           P_NPERIODO_PROCESO,
+           C1.NIDALERTA,
+           C1.ID_USUARIO,
+           SYSDATE,
+           1,
+           C1.NIDAGRUPA,
+           C1.NIDREGIMEN,
+           SYSDATE);
+        COMMIT;
+        IF NVL(C1.NINDDETQUERY, 0) = 1 THEN
+          V_NIDREGIMEN := C1.NIDREGIMEN;
+          FOR C2 IN SENAL_ALERTAS_DET_USUARIO
+          LOOP
+            INSERT INTO TBL_LAFT_ALERTA_DET_USUARIO
+              (NIDALERTA_CAB_USUARIO,
+               NIDALERTA_DET_USUARIO,
+               NPERIODO_PROCESO,
+               NIDALERTA,
+               NIDALERTA_DET,
+               DFECHA_CREACION,
+               NIDREGIMEN)
+            VALUES
+              (V_NIDALERTA_CAB_USUARIO,
+               SEQ_ID_ALERTA_DET_USUARIO.NEXTVAL,
+               C2.NPERIODO_PROCESO,
+               C2.NIDALERTA,
+               C2.NIDALERTA_DET,
+               SYSDATE,
+               C1.NIDREGIMEN);
+          END LOOP;
+        END IF;
+        --END IF;
+      END LOOP;
+      COMMIT;
+      --COMMIT;
+    
+      /*SELECT SEQ_ID_ALERTA_CAB_USUARIO.NEXTVAL
+        INTO V_NIDALERTA_CAB_USUARIO
+        FROM DUAL;
+      
+      INSERT INTO TBL_LAFT_ALERTA_CAB_USUARIO
+        (NIDALERTA_CAB_USUARIO,
+         NPERIODO_PROCESO,
+         NIDALERTA,
+         NIDUSUARIO_ASIGNADO,
+         DFECHA_ESTADO_MOVIMIENTO,
+         SESTADO,
+         NIDAGRUPA,
+         NIDREGIMEN)
+        SELECT V_NIDALERTA_CAB_USUARIO,
+               P_NPERIODO_PROCESO,
+               NIDALERTA,
+               999,
+               SYSDATE,
+               1,
+               1,
+               NIDREGIMEN
+          FROM (SELECT NIDALERTA,
+                       NIDREGIMEN
+                  FROM TBL_LAFT_ALERTA_PERFIL
+                --WHERE SESTADO = 1
+                MINUS
+                SELECT DISTINCT NIDALERTA,
+                                NIDREGIMEN
+                  FROM TBL_LAFT_ALERTA_CAB_USUARIO
+                 WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO);*/
+    
+      FOR C1 IN SENAL_ALERTAS_PREGUNTAS_CAB
+      LOOP
+        INSERT INTO TBL_LAFT_ALERTA_CAB_USU_PREG
+          (NIDALERTA_CAB_USUARIO,
+           NIDPREGUNTA,
+           NIDORIGEN,
+           NIDALERTA,
+           NIDAGRUPA,
+           NIDREGIMEN)
+        VALUES
+          (C1.NIDALERTA_CAB_USUARIO,
+           C1.NIDPREGUNTA,
+           C1.NIDORIGEN,
+           C1.NIDALERTA,
+           C1.NIDAGRUPA,
+           C1.NIDREGIMEN);
+      END LOOP;
+      COMMIT;
+      FOR C1 IN SENAL_ALERTAS_PREGUNTAS_DET
+      LOOP
+        INSERT INTO TBL_LAFT_ALERTA_DET_USU_PREG
+          (NIDALERTA_CAB_USUARIO,
+           NIDALERTA_DET_USUARIO,
+           NPERIODO_PROCESO,
+           NIDALERTA,
+           NIDALERTA_DET,
+           NIDPREGUNTA,
+           NIDORIGEN,
+           NIDREGIMEN)
+        VALUES
+          (C1.NIDALERTA_CAB_USUARIO,
+           C1.NIDALERTA_DET_USUARIO,
+           C1.NPERIODO_PROCESO,
+           C1.NIDALERTA,
+           C1.NIDALERTA_DET,
+           C1.NIDPREGUNTA,
+           C1.NIDORIGEN,
+           C1.NIDREGIMEN);
+      END LOOP;
+      --COMMIT;
+    EXCEPTION
+      WHEN OTHERS THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+        ROLLBACK;
+    END;
+  END;
+
+  PROCEDURE SP_UPD_RESPUESTA_CAB(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_PREG.NIDALERTA_CAB_USUARIO%TYPE,
+                                 P_NIDPREGUNTA           TBL_LAFT_ALERTA_CAB_USU_PREG.NIDPREGUNTA%TYPE,
+                                 P_NIDORIGEN             TBL_LAFT_ALERTA_CAB_USU_PREG.NIDORIGEN%TYPE,
+                                 P_NIDALERTA             TBL_LAFT_ALERTA_CAB_USU_PREG.NIDALERTA%TYPE,
+                                 P_NIDAGRUPA             TBL_LAFT_ALERTA_CAB_USU_PREG.NIDAGRUPA%TYPE,
+                                 P_NIND_RESPUESTA        TBL_LAFT_ALERTA_CAB_USU_PREG.NIND_RESPUESTA%TYPE,
+                                 P_SCOMENTARIO           TBL_LAFT_ALERTA_CAB_USU_PREG.SCOMENTARIO%TYPE,
+                                 P_SRUTA_PDF             TBL_LAFT_ALERTA_CAB_USUARIO.SRUTA_PDF%TYPE,
+                                 P_NCODE                 OUT NUMBER,
+                                 P_SMESSAGE              OUT VARCHAR2) IS
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    /*    IF P_NIND_RESPUESTA IS NULL THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'Debe seleccionar obligatoriamente la respeusta (Si/No)';
+      RETURN;
+    END IF;
+    
+    IF P_NIND_RESPUESTA = 1 AND TRIM(P_SCOMENTARIO) IS NULL THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'Debe Ingresar el comentario obligatoriamente';
+      RETURN;
+    END IF;*/
+  
+    UPDATE TBL_LAFT_ALERTA_CAB_USUARIO CAB
+       SET CAB.SRUTA_PDF                = P_SRUTA_PDF,
+           CAB.DFECHA_ESTADO_MOVIMIENTO = SYSDATE,
+           CAB.SESTADO                  = 2 --,
+    --CAB.SCOMENTARIO              = P_SCOMENTARIO
+     WHERE CAB.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+  
+    UPDATE TBL_LAFT_ALERTA_CAB_USU_PREG CAB
+       SET CAB.NIND_RESPUESTA = P_NIND_RESPUESTA,
+           CAB.SCOMENTARIO    = P_SCOMENTARIO
+     WHERE CAB.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+       AND CAB.NIDPREGUNTA = P_NIDPREGUNTA
+       AND CAB.NIDORIGEN = P_NIDORIGEN
+       AND CAB.NIDALERTA = P_NIDALERTA
+       AND CAB.NIDAGRUPA = NIDAGRUPA;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_RESPUESTA_DET(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA_CAB_USUARIO%TYPE,
+                                 P_NIDALERTA_DET_USUARIO TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA_DET_USUARIO%TYPE,
+                                 P_NPERIODO_PROCESO      TBL_LAFT_ALERTA_DET_USU_PREG.NPERIODO_PROCESO%TYPE,
+                                 P_NIDALERTA             TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA%TYPE,
+                                 P_NIDALERTA_DET         TBL_LAFT_ALERTA_DET_USU_PREG.NIDALERTA_DET%TYPE,
+                                 P_NIDPREGUNTA           TBL_LAFT_ALERTA_DET_USU_PREG.NIDPREGUNTA%TYPE,
+                                 P_NIDORIGEN             TBL_LAFT_ALERTA_DET_USU_PREG.NIDORIGEN%TYPE,
+                                 P_NIND_RESPUESTA        TBL_LAFT_ALERTA_DET_USU_PREG.NIND_RESPUESTA%TYPE,
+                                 P_SCOMENTARIO           TBL_LAFT_ALERTA_DET_USU_PREG.SCOMENTARIO%TYPE,
+                                 P_NCODE                 OUT NUMBER,
+                                 P_SMESSAGE              OUT VARCHAR2) IS
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    /*    IF P_NIND_RESPUESTA IS NULL THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'Debe seleccionar obligatoriamente la respeusta (Si/No)';
+      RETURN;
+    END IF;
+    
+    IF P_NIND_RESPUESTA = 1 AND TRIM(P_SCOMENTARIO) IS NULL THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'Debe Ingresar el comentario obligatoriamente';
+      RETURN;
+    END IF;*/
+  
+    UPDATE TBL_LAFT_ALERTA_DET_USU_PREG DET
+       SET DET.NIND_RESPUESTA = P_NIND_RESPUESTA,
+           DET.SCOMENTARIO    = P_SCOMENTARIO
+     WHERE DET.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+       AND DET.NIDALERTA_DET_USUARIO = P_NIDALERTA_DET_USUARIO
+       AND DET.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND DET.NIDALERTA = P_NIDALERTA
+       AND DET.NIDALERTA_DET = NIDALERTA_DET
+       AND DET.NIDPREGUNTA = P_NIDPREGUNTA
+       AND DET.NIDORIGEN = P_NIDORIGEN;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_GET_DETALLE_RESPUESTAS(P_NIDALERTA_CABECERA TBL_LAFT_ALERTA_DET_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+                                      RC1                  OUT SYS_REFCURSOR,
+                                      P_NCODE              OUT NUMBER,
+                                      P_SMESSAGE           OUT VARCHAR2) IS
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    BEGIN
+      OPEN RC1 FOR
+        SELECT TLAD.SRAZON_SOCIAL    AS SNOMBRE_CLIENTE,
+               TLAD.SNUMERO_DOC      AS SRUC,
+               TALP.SPREGUNTA,
+               TLADUP.NIND_RESPUESTA AS NRESPUESTA,
+               TLADUP.SCOMENTARIO,
+               TLAD.NPRODUCT         AS SCOD_PRODUCTO,
+               --TRIM(TLAD.SDESPRODUCTO) AS SPRODUCTO,
+               (SELECT TRIM(PM.SDESCRIPT) AS SDESCRIPT
+                  FROM INSUDB.TABLE10 PM
+                 WHERE PM.SSTATREGT = 1
+                   AND NBRANCH = TLAD.NPRODUCT) AS SPRODUCTO,
+               NULL AS NPOLIZA,
+               NULL AS DINICIO_VIG_POLIZA,
+               NULL AS DFIN_VIG_POLIZA,
+               NULL AS SCOD_CLIENTE,
+               TLAD.SDIRECCION AS SDIRECCION_CLIENTE,
+               NULL AS SDEPART_CLIENTE,
+               NULL AS NCANT_CERTIFICADO,
+               NULL AS DINICIO_VIGENCIA,
+               NULL AS DFIN_VIGENCIA,
+               TLADUP.NIDALERTA_CAB_USUARIO,
+               TLADUP.NIDALERTA_DET_USUARIO AS NIDALERTA_DETALLE,
+               TLADUP.NPERIODO_PROCESO,
+               TLADUP.NIDALERTA,
+               TLADUP.NIDALERTA_DET,
+               TLADUP.NIDPREGUNTA AS NIDPREGUNTA_DET_PRE,
+               TLADUP.NIDORIGEN,
+               TALP.NIDINDICAOBLCOMEN
+          FROM TBL_LAFT_ALERTA_DETALLE      TLAD,
+               TBL_LAFT_ALERTA_DET_USUARIO  TLADU,
+               TBL_LAFT_ALERTA_DET_USU_PREG TLADUP,
+               TBL_LAFT_ALERTA_PREGUNTA     TALP
+         WHERE TLADU.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CABECERA
+           AND TLAD.NIDALERTA = TLADU.NIDALERTA
+           AND TLAD.NIDALERTA_DET = TLADU.NIDALERTA_DET
+           AND TLAD.NPERIODO_PROCESO = TLADU.NPERIODO_PROCESO
+           AND TLADUP.NIDALERTA_CAB_USUARIO = TLADU.NIDALERTA_CAB_USUARIO
+           AND TLADUP.NIDALERTA_DET_USUARIO = TLADU.NIDALERTA_DET_USUARIO
+           AND TLADUP.NPERIODO_PROCESO = TLADU.NPERIODO_PROCESO
+           AND TLADUP.NIDALERTA_DET = TLADU.NIDALERTA_DET
+           AND TLADUP.NIDALERTA = TLADU.NIDALERTA
+           AND TALP.NIDPREGUNTA = TLADUP.NIDPREGUNTA
+           AND TALP.NIDORIGEN = TLADUP.NIDORIGEN
+           AND TALP.NIDALERTA = TLAD.NIDALERTA --SE AGREGO 28/04/2021
+           AND TLADUP.NIDREGIMEN = TLADU.NIDREGIMEN;
+    
+    EXCEPTION
+      WHEN OTHERS THEN
+        ROLLBACK;
+        P_NCODE    := 1;
+        P_SMESSAGE := SQLERRM || '  - Comun�quese con el administrador';
+    END;
+  
+    P_SMESSAGE := 'Se consulto los datos correctamente';
+    COMMIT;
+  END;
+
+  PROCEDURE SP_GET_CABECERA_RESPUESTAS(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                       P_NIDUSUARIO_ASIGNADO TBL_LAFT_ALERTA_CAB_USUARIO.NIDUSUARIO_ASIGNADO%TYPE,
+                                       P_NIDAGRUPA           TBL_LAFT_ALERTA_CAB_USUARIO.NIDAGRUPA%TYPE,
+                                       P_NIDALERTA           TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR,
+                                       --RC2                   OUT SYS_REFCURSOR,
+                                       P_NCODE    OUT NUMBER,
+                                       P_SMESSAGE OUT VARCHAR2) IS
+  
+    V_SRANGO_FECHA VARCHAR2(200);
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    BEGIN
+      SELECT MAX(DFEEJECUTAPROCINI || ' al ' || DFEEJECUTAPROCFIN)
+        INTO V_SRANGO_FECHA
+        FROM TBL_LAFT_ALERTA_FRECUENCIA
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND SESTADO = 1;
+    
+      OPEN RC1 FOR
+      
+        SELECT TLACU.NIDALERTA_CAB_USUARIO AS NIDALERTA_CABECERA,
+               TLACUP.NIDPREGUNTA,
+               TLACUP.NIDORIGEN,
+               TLACU.NIDALERTA,
+               TLACU.NIDAGRUPA,
+               TLA.SNOMBRE_ALERTA,
+               TLACU.NPERIODO_PROCESO,
+               TALP.SPREGUNTA,
+               TLACUP.NIND_RESPUESTA,
+               TLACU.SESTADO,
+               TLACU.SRUTA_PDF,
+               TLACUP.SCOMENTARIO,
+               NVL((SELECT MAX(SCOMENTARIO)
+                     FROM TBL_LAFT_ALERTA_CAB_USU_COMENT
+                    WHERE NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+                      AND STIPO_USUARIO = 'OC'
+                      AND NIDCOMENTARIO = (SELECT MAX(NIDCOMENTARIO)
+                                             FROM TBL_LAFT_ALERTA_CAB_USU_COMENT
+                                            WHERE NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+                                              AND STIPO_USUARIO = 'OC')),
+                   '') AS SCOMENTARIO_OC,
+               INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+               LP.SNAME AS PERFIL_RESP,
+               TLC.SDESCARGO AS SCARGO,
+               TLACU.SESTADO_REVISADO,
+               TLU.SEMAIL,
+               TLU.NIDPROFILE AS ID_ROL,
+               INITCAP(TLU_OC.NOMBRECOMPLETO) AS USU_OC,
+               LP_OC.SNAME AS PERFIL_OC,
+               DECODE(TLACU.NIDALERTA, 4, 'Devoluciones que se encuentran en el rango: del ' || V_SRANGO_FECHA, NULL) AS SRANGO_FECHA,
+               TLAECU.SNOMBRE_ESTADO,
+               TLACU.SESTADO_PROC_ALERTA,
+               TALP.NIDINDICAOBLCOMEN
+        --TLACU.SESTADO
+          FROM TBL_LAFT_ALERTA_CAB_USUARIO    TLACU,
+               TBL_LAFT_ALERTA_CAB_USU_PREG   TLACUP,
+               TBL_LAFT_ALERTA_PREGUNTA       TALP,
+               TBL_LAFT_ALERTA                TLA,
+               TBL_LAFT_USUARIO               TLU,
+               TBL_LAFT_USUARIO               TLU_OC,
+               TBL_LAFT_PROFILES              LP,
+               TBL_LAFT_PROFILES              LP_OC,
+               TBL_LAFT_CARGO                 TLC,
+               TBL_LAFT_ALERTA_ESTADO_CAB_USU TLAECU
+         WHERE TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND TLACU.NIDAGRUPA = P_NIDAGRUPA
+           AND TLACU.NIDUSUARIO_ASIGNADO = P_NIDUSUARIO_ASIGNADO
+           AND TLACUP.NIDALERTA_CAB_USUARIO(+) = TLACU.NIDALERTA_CAB_USUARIO
+           AND TLACUP.NIDALERTA(+) = TLACU.NIDALERTA
+           AND TLACUP.NIDAGRUPA(+) = TLACU.NIDAGRUPA
+           AND TALP.NIDALERTA(+) = TLACU.NIDALERTA
+           AND TALP.NIDPREGUNTA(+) = TLACUP.NIDPREGUNTA
+           AND TALP.NIDORIGEN(+) = TLACUP.NIDORIGEN
+           AND TLA.NIDALERTA(+) = TLACU.NIDALERTA
+           AND TLU.ID_USUARIO(+) = TLACU.NIDUSUARIO_ASIGNADO
+           AND TLU_OC.ID_USUARIO(+) = TLACU.NIDUSUARIO_VERIFICADO
+           AND LP.NIDPROFILE(+) = TLU.NIDPROFILE
+           AND LP_OC.NIDPROFILE(+) = TLU_OC.NIDPROFILE
+           AND TLACUP.NIDREGIMEN(+) = TLACU.NIDREGIMEN
+           AND TLAECU.SESTADO = TLACU.SESTADO
+           AND TLC.NIDCARGO(+) = TLU.NIDCARGO
+           AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+           AND (TLACU.NIDALERTA = P_NIDALERTA OR P_NIDALERTA = 0);
+    
+    EXCEPTION
+      WHEN OTHERS THEN
+        ROLLBACK;
+        P_NCODE    := 1;
+        P_SMESSAGE := SQLERRM || '  - Comun�quese con el administrador';
+    END;
+  
+    P_SMESSAGE := 'Se consulto los datos correctamente';
+    COMMIT;
+  END;
+
+  PROCEDURE SP_GET_USUARIO_PERF_ALERTA(RC1 OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DISTINCT TLU.SEMAIL,
+                      INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+                      TLC.SDESCARGO AS SCARGO,
+                      TRIM(LP.SDESCRIPTION) AS SNOMPERFIL,
+                      TLU.ID_USUARIO,
+                      TLU.NIDPROFILE,
+                      LP.NIDGRUPOSENAL,
+                      (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                         FROM TBL_LAFT_ALERTA_FRECUENCIA
+                        WHERE /*NPERIODO_PROCESO = TTC.NPERIODO_PROCESO
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              AND */
+                        SESTADO = 1) AS SPERIODO_PROCESO
+        FROM TBL_LAFT_ALERTA_PERFIL TLAPF,
+             TBL_LAFT_USUARIO       TLU,
+             TBL_LAFT_ALERTA        TLA,
+             TBL_LAFT_PROFILES      LP,
+             TBL_LAFT_CARGO         TLC
+       WHERE TLAPF.NIDALERTA = TLA.NIDALERTA
+         AND TLU.NIDPROFILE(+) = TLAPF.NIDPROFILE
+         AND LP.NIDPROFILE = TLU.NIDPROFILE
+         AND TLC.NIDCARGO(+) = TLU.NIDCARGO
+         AND TLU.ESTADO = 1
+         AND TLA.SESTADO = 1
+         AND LP.SACTIVE = 1
+         AND LP.STIPO_USUARIO = 'RE';
+  
+  END;
+
+  PROCEDURE SP_GET_BANDEJA_USUARIO(P_NIDUSUARIO_ASIGNADO TBL_LAFT_ALERTA_CAB_USUARIO.NIDUSUARIO_ASIGNADO%TYPE,
+                                   P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                   RC1                   OUT SYS_REFCURSOR) IS
+    V_SRANGO_FECHA VARCHAR2(200);
+  
+  BEGIN
+  
+    SELECT MAX(DFEEJECUTAPROCINI || ' al ' || DFEEJECUTAPROCFIN)
+      INTO V_SRANGO_FECHA
+      FROM TBL_LAFT_ALERTA_FRECUENCIA
+     WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND SESTADO = 1;
+  
+    OPEN RC1 FOR
+    
+      SELECT TLACU.NIDALERTA_CAB_USUARIO AS NIDALERTA_CABECERA,
+             TLA.SNOMBRE_ALERTA,
+             SUBSTR(TLA.SDESCRIPCION_ALERTA, 1, 80) || DECODE(LENGTH(TLA.SDESCRIPCION_ALERTA), 80, '', '...') AS SDESCRIPCION_ALERTA1_CORTA,
+             TLA.SDESCRIPCION_ALERTA,
+             TLACU.NIDALERTA,
+             TO_CHAR(TLACU.DFECHA_ESTADO_MOVIMIENTO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_ESTADO_MOVIMIENTO,
+             --TLACU.NPERIODO_PROCESO,
+             /*(SELECT TO_CHAR(DFEEJECUTAPROCFIN, 'DD/MM/YYYY')
+              FROM TBL_LAFT_ALERTA_FRECUENCIA
+             WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+               AND DNULLDATE IS NULL
+               AND SESTADO = '1') AS NPERIODO_PROCESO,*/
+             V_SRANGO_FECHA AS NPERIODO_PROCESO,
+             --TLACU.SESTADO,
+             
+             CASE
+               WHEN NVL((SELECT COUNT(*)
+                          FROM TBL_LAFT_ALERTA_CAB_USUARIO TMP
+                         WHERE TMP.NIDUSUARIO_ASIGNADO = P_NIDUSUARIO_ASIGNADO
+                           AND TMP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                           AND TMP.NIDAGRUPA = TLACU.NIDAGRUPA HAVING COUNT(*) > 1),
+                        0) = 0 THEN
+                TLACU.SESTADO
+               ELSE
+                CASE
+                  WHEN NVL((SELECT COUNT(*)
+                             FROM TBL_LAFT_ALERTA_CAB_USUARIO TMP
+                            WHERE TMP.NIDUSUARIO_ASIGNADO = P_NIDUSUARIO_ASIGNADO
+                              AND TMP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                              AND TMP.NIDAGRUPA = TLACU.NIDAGRUPA
+                              AND TMP.SESTADO <> 3),
+                           0) > 0 THEN
+                   TLACU.SESTADO
+                  ELSE
+                   '3'
+                END
+             END AS SESTADO,
+             
+             TLACU.SRUTA_PDF,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLC.SDESCARGO AS SCARGO,
+             TLACU.NIDAGRUPA,
+             TLACU.NIDUSUARIO_ASIGNADO,
+             --TLAECU.SNOMBRE_ESTADO,
+             CASE
+               WHEN NVL((SELECT COUNT(*)
+                          FROM TBL_LAFT_ALERTA_CAB_USUARIO TMP
+                         WHERE TMP.NIDUSUARIO_ASIGNADO = P_NIDUSUARIO_ASIGNADO
+                           AND TMP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                           AND TMP.NIDAGRUPA = TLACU.NIDAGRUPA HAVING COUNT(*) > 1),
+                        0) = 0 THEN
+                TLAECU.SNOMBRE_ESTADO
+               ELSE
+                CASE
+                  WHEN NVL((SELECT COUNT(*)
+                             FROM TBL_LAFT_ALERTA_CAB_USUARIO TMP
+                            WHERE TMP.NIDUSUARIO_ASIGNADO = P_NIDUSUARIO_ASIGNADO
+                              AND TMP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                              AND TMP.NIDAGRUPA = TLACU.NIDAGRUPA
+                              AND TMP.SESTADO <> 3),
+                           0) > 0 THEN
+                   TLAECU.SNOMBRE_ESTADO
+                  ELSE
+                   'COMPLETADO'
+                END
+             END AS SNOMBRE_ESTADO,
+             TLACU.NIDREGIMEN,
+             (SELECT TO_CHAR(DFEEJECUTAPROCFIN, 'DD/MM/YYYY')
+                FROM TBL_LAFT_ALERTA_FRECUENCIA
+               WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                 AND DNULLDATE IS NULL
+                 AND SESTADO = '1') AS FECHA_EJECUTA,
+             TLR.SDESREGIMEN
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO    TLACU,
+             TBL_LAFT_ALERTA                TLA,
+             TBL_LAFT_USUARIO               TLU,
+             TBL_LAFT_ALERTA_ESTADO_CAB_USU TLAECU,
+             TBL_LAFT_REGIMEN               TLR,
+             TBL_LAFT_CARGO                 TLC
+       WHERE TLACU.NIDUSUARIO_ASIGNADO = P_NIDUSUARIO_ASIGNADO
+         AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLA.NIDALERTA(+) = TLACU.NIDALERTA
+         AND TLU.ID_USUARIO(+) = TLACU.NIDUSUARIO_ASIGNADO
+            --AND TLACU.SESTADO IN (1, 3)
+         AND TLAECU.SESTADO = TLACU.SESTADO
+         AND TLR.NIDREGIMEN = TLACU.NIDREGIMEN
+         AND TLC.NIDCARGO = TLU.NIDCARGO
+       ORDER BY TLACU.NIDALERTA ASC;
+  
+  END;
+
+  PROCEDURE SP_GET_BANDEJA_OFICIAL(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                   P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                   RC1                OUT SYS_REFCURSOR) IS
+  
+    V_SRANGO_FECHA VARCHAR2(200);
+  
+  BEGIN
+  
+    SELECT MAX(DFEEJECUTAPROCINI || ' al ' || DFEEJECUTAPROCFIN)
+      INTO V_SRANGO_FECHA
+      FROM TBL_LAFT_ALERTA_FRECUENCIA
+     WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND SESTADO = 1;
+  
+    OPEN RC1 FOR
+    
+      SELECT TLACU.NIDALERTA_CAB_USUARIO AS NIDALERTA_CABECERA,
+             TLA.SNOMBRE_ALERTA,
+             SUBSTR(TLA.SDESCRIPCION_ALERTA, 1, 50) || DECODE(LENGTH(TLA.SDESCRIPCION_ALERTA), 50, '', '...') AS SDESCRIPCION_ALERTA1_CORTA,
+             TLA.SDESCRIPCION_ALERTA,
+             --TLACU.DFECHA_ESTADO_MOVIMIENTO,
+             TO_CHAR(TLACU.DFECHA_ESTADO_MOVIMIENTO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_ESTADO_MOVIMIENTO,
+             TO_CHAR(TLACU.DFECHA_REVISADO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_REVISADO,
+             --TLACU.NPERIODO_PROCESO,
+             /* (SELECT TO_CHAR(DFEEJECUTAPROCFIN, 'DD/MM/YYYY')
+              FROM TBL_LAFT_ALERTA_FRECUENCIA
+             WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+               AND DNULLDATE IS NULL
+               AND SESTADO = '1') AS NPERIODO_PROCESO,*/
+             V_SRANGO_FECHA AS NPERIODO_PROCESO,
+             TLACU.SESTADO,
+             TLACU.SRUTA_PDF,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLC.SDESCARGO AS SCARGO,
+             TLACU.NIDAGRUPA,
+             TLACU.SESTADO_REVISADO,
+             TLAECU.SNOMBRE_ESTADO,
+             TLACU.NIDALERTA,
+             TLACU.NIDUSUARIO_ASIGNADO,
+             LP.STIPO_USUARIO,
+             LP.SDESCRIPTION AS SDESCRIPTION_RE,
+             INITCAP(TLU_OC.NOMBRECOMPLETO) AS NOMBRECOMPLETO_OC,
+             LP_OC.SDESCRIPTION AS SDESCRIPTION_OC
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO    TLACU,
+             TBL_LAFT_ALERTA                TLA,
+             TBL_LAFT_USUARIO               TLU,
+             TBL_LAFT_ALERTA_ESTADO_CAB_USU TLAECU,
+             TBL_LAFT_PROFILES              LP,
+             TBL_LAFT_USUARIO               TLU_OC,
+             TBL_LAFT_PROFILES              LP_OC,
+             TBL_LAFT_CARGO                 TLC
+       WHERE TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLA.NIDALERTA(+) = TLACU.NIDALERTA
+         AND TLU.ID_USUARIO(+) = TLACU.NIDUSUARIO_ASIGNADO
+         AND TLAECU.SESTADO(+) = TLACU.SESTADO
+         AND LP.NIDPROFILE(+) = TLU.NIDPROFILE
+         AND TLU_OC.ID_USUARIO(+) = TLACU.NIDUSUARIO_VERIFICADO
+         AND LP_OC.NIDPROFILE(+) = TLU_OC.NIDPROFILE
+         AND TLC.NIDCARGO(+) = TLU.NIDCARGO
+         AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+         AND TLACU.NIDALERTA <> 2
+       ORDER BY TLACU.NIDALERTA ASC;
+  
+  END;
+
+  PROCEDURE SP_GET_MODULO_TRABAJO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO.NPERIODO_PROCESO%TYPE,
+                                  P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                  RC1                OUT SYS_REFCURSOR) IS
+    V_SRANGO_FECHA VARCHAR2(200);
+  BEGIN
+  
+    SELECT MAX(DFEEJECUTAPROCINI || ' al ' || DFEEJECUTAPROCFIN)
+      INTO V_SRANGO_FECHA
+      FROM TBL_LAFT_ALERTA_FRECUENCIA
+     WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND SESTADO = 1;
+  
+    OPEN RC1 FOR
+    
+    /*SELECT TLA.SNOMBRE_ALERTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TLA.SDESCRIPCION_ALERTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TLAP.NIDALERTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 --TLAP.NPERIODO_PROCESO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 V_SRANGO_FECHA AS NPERIODO_PROCESO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TLAP.SESTADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TLAP.SESTADO_REVISADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TLAPE.SNOMBRE_ESTADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TLAPR.NIDREGIMEN
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            FROM TBL_LAFT_ALERTA_PROCESO        TLAP,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TBL_LAFT_ALERTA                TLA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TBL_LAFT_ALERTA_PROCESO_ESTADO TLAPE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 TBL_LAFT_ALERTA_PERFIL         TLAPR
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           WHERE TLAP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             AND TLA.NIDALERTA(+) = TLAP.NIDALERTA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             AND TLAPE.SESTADO(+) = TLAP.SESTADO
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             AND TLAPR.NIDALERTA = TLAP.NIDALERTA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             AND TLAPR.NIDREGIMEN = P_NIDREGIMEN
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ORDER BY TLAP.NIDALERTA ASC;*/
+    
+      SELECT DISTINCT TLA.SNOMBRE_ALERTA,
+                      TLA.SDESCRIPCION_ALERTA,
+                      TLACU.NIDALERTA,
+                      --TLAP.NPERIODO_PROCESO,
+                      V_SRANGO_FECHA AS NPERIODO_PROCESO,
+                      TLAP.SESTADO,
+                      TLAP.SESTADO_REVISADO,
+                      TLAPE.SNOMBRE_ESTADO,
+                      TLACU.NIDREGIMEN,
+                      (SELECT TO_CHAR(MAX(CAB.DFECHA_ESTADO_MOVIMIENTO), 'DD/MM/YYYY HH:MI:SS')
+                         FROM TBL_LAFT_ALERTA_CAB_USUARIO CAB
+                        WHERE CAB.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                          AND CAB.NIDREGIMEN = P_NIDREGIMEN
+                          AND CAB.NIDALERTA = TLACU.NIDALERTA
+                          AND CAB.SESTADO = 4) AS ULTFECREV
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO    TLACU,
+             TBL_LAFT_ALERTA                TLA,
+             TBL_LAFT_ALERTA_PROCESO_ESTADO TLAPE,
+             TBL_LAFT_ALERTA_PROCESO        TLAP
+       WHERE TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+         AND TLA.NIDALERTA = TLACU.NIDALERTA
+         AND TLAP.NPERIODO_PROCESO = TLACU.NPERIODO_PROCESO
+         AND TLAP.NIDALERTA = TLACU.NIDALERTA
+         AND TLAPE.SESTADO = TLAP.SESTADO
+         AND (((SELECT COUNT(*)
+                  FROM TBL_LAFT_ALERTA_CAB_USUARIO CAB
+                 WHERE CAB.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                   AND CAB.NIDREGIMEN = P_NIDREGIMEN
+                   AND CAB.NIDALERTA = TLACU.NIDALERTA
+                   AND CAB.SESTADO <> 4) = 0) OR TLACU.NIDALERTA = 2)
+       ORDER BY TLACU.NIDALERTA ASC;
+  
+  END;
+
+  PROCEDURE SP_GET_DETALLE_MODULO_TRABAJO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO.NPERIODO_PROCESO%TYPE,
+                                          P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO.NIDALERTA%TYPE,
+                                          P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                          RC1                OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT TLACU.NIDALERTA_CAB_USUARIO,
+             TLACU.NIDALERTA,
+             --TLACU.DFECHA_ESTADO_MOVIMIENTO,
+             TO_CHAR(TLACU.DFECHA_ESTADO_MOVIMIENTO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_ESTADO_MOVIMIENTO,
+             TLACU.NPERIODO_PROCESO,
+             TLACU.SESTADO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLC.SDESCARGO AS SCARGO,
+             TLACU.NIDAGRUPA,
+             TLACU.NIDUSUARIO_ASIGNADO,
+             TLAECU.SNOMBRE_ESTADO,
+             (SELECT MAX(NIND_RESPUESTA)
+                FROM TBL_LAFT_ALERTA_CAB_USU_PREG
+               WHERE NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO) AS NRESPUESTA,
+             (SELECT MAX(SCOMENTARIO)
+                FROM TBL_LAFT_ALERTA_CAB_USU_PREG
+               WHERE NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO) AS SCOMENTARIO
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO    TLACU,
+             TBL_LAFT_USUARIO               TLU,
+             TBL_LAFT_ALERTA_ESTADO_CAB_USU TLAECU,
+             TBL_LAFT_CARGO                 TLC
+       WHERE TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLACU.NIDALERTA = P_NIDALERTA
+         AND TLU.ID_USUARIO(+) = TLACU.NIDUSUARIO_ASIGNADO
+         AND TLAECU.SESTADO(+) = TLACU.SESTADO
+         AND TLC.NIDCARGO(+) = TLU.NIDCARGO
+         AND TLACU.NIDREGIMEN(+) = P_NIDREGIMEN;
+  
+  END;
+
+  PROCEDURE SP_GET_GESTION_ALERTAS(RC1 OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DISTINCT TLA.NIDALERTA,
+                      TLA.NINDDETQUERY
+        FROM TBL_LAFT_ALERTA        TLA,
+             TBL_LAFT_ALERTA_PERFIL TLAP
+       WHERE TLAP.NIDALERTA = TLA.NIDALERTA
+         AND TLAP.SESTADO = 1
+         AND TLA.SESTADO = 1;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_FRECUENCIA(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLAF.NIDFRECUENCIA,
+             --TLAF.ROWID AS NIDFRECUENCIA,
+             TRUNC(TLAF.DFECINI) AS DFECINI,
+             TLAF.DFECFIN,
+             DECODE(NVL(TLAF.SESTADO, 2), 2, 'ANULADO', 'VIGENTE') AS SESTADO,
+             TLAF.NTIPOFRECUENCIA,
+             TLTF.SDESFRECUENCIA,
+             DECODE(NVL(TLAF.SINDSUSPENSION, 2), 2, 'SUSPENDIDO', 'ACTIVO') AS SESTADOSUSP,
+             TLAF.DFECHA_REGISTRO,
+             INITCAP(TRIM(TLU.NOMBRECOMPLETO)) USUARIO,
+             TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY') AS DFEEJECUTAPROCINI,
+             TO_CHAR(DFEEJECUTAPROCFIN, 'DD/MM/YYYY') AS DFEEJECUTAPROCFIN
+        FROM TBL_LAFT_ALERTA_FRECUENCIA TLAF,
+             TBL_LAFT_TIPO_FRECUENCIA   TLTF,
+             TBL_LAFT_USUARIO           TLU
+       WHERE TLTF.NTIPOFRECUENCIA = TLAF.NTIPOFRECUENCIA
+         AND TLU.ID_USUARIO(+) = TLAF.NIDUSUARIO_MODIFICA
+      --AND TLAF.SESTADO = 1
+       ORDER BY NIDFRECUENCIA DESC;
+  END;
+
+  PROCEDURE SP_GET_LISTA_FRECUENCIA_ACTIVO(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLAF.NIDFRECUENCIA,
+             TO_CHAR(TLAF.DFECINI, 'DD/MM/YYYY') AS DFECINI,
+             TLAF.DFECFIN,
+             TLAF.SESTADO,
+             TLAF.NTIPOFRECUENCIA,
+             TLTF.SDESFRECUENCIA,
+             TLAF.SINDSUSPENSION
+        FROM TBL_LAFT_ALERTA_FRECUENCIA TLAF,
+             TBL_LAFT_TIPO_FRECUENCIA   TLTF
+       WHERE TLTF.NTIPOFRECUENCIA = TLAF.NTIPOFRECUENCIA
+         AND TLAF.SESTADO = 1;
+  END;
+
+  PROCEDURE SP_GET_LISTA_GAFI(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLL.NIDGAFI,
+             TLL.SNOMBRE_PAIS_GAFI,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLL.DFECHA_REGISTRO
+        FROM TBL_LAFT_LISTA_GAFI TLL,
+             TBL_LAFT_USUARIO    TLU
+       WHERE TLU.ID_USUARIO(+) = TLL.NIDUSUARIO_REGISTRO
+         AND TLL.SESTADO = 1;
+  END;
+
+  PROCEDURE SP_GET_LISTA_PRODUCTOS(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    /*      SELECT NPRODUCT,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             TRIM(PM.SDESCRIPT) AS SDESCRIPT
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        FROM INSUDB.PRODMASTER PM
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       WHERE PM.SSTATREGT = 1;*/
+    
+      SELECT NBRANCH AS NPRODUCT,
+             TRIM(PM.SDESCRIPT) AS SDESCRIPT
+        FROM INSUDB.TABLE10 PM
+       WHERE PM.SSTATREGT = 1;
+  END;
+
+  PROCEDURE SP_GET_LISTA_TIPO_FRECUENCIA(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLTF.NTIPOFRECUENCIA,
+             TLTF.SDESFRECUENCIA
+        FROM TBL_LAFT_TIPO_FRECUENCIA TLTF
+       WHERE TLTF.SESTADO = 1;
+  END;
+
+  PROCEDURE SP_GET_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_ADJ.STIPO_USUARIO%TYPE,
+                                    RC1                     OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+      SELECT TLACUA.NIDALERTA_CAB_USUARIO,
+             TLACUA.NIDADJUNTO,
+             TLACUA.SRUTA_ADJUNTO
+        FROM TBL_LAFT_ALERTA_CAB_USU_ADJ TLACUA
+       WHERE TLACUA.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+         AND TLACUA.STIPO_USUARIO = P_STIPO_USUARIO;
+  
+  END;
+
+  PROCEDURE SP_GET_COMENTARIO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDALERTA_CAB_USUARIO%TYPE,
+                                       P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_COMENT.STIPO_USUARIO%TYPE,
+                                       RC1                     OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+      SELECT DFECHA_REGISTRO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             NIDUSUARIO_MODIFICA,
+             SCOMENTARIO,
+             STIPO_USUARIO,
+             STIPO_MENSAJE
+        FROM (SELECT TO_CHAR(TLACUC.DFECHA_REGISTRO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_REGISTRO,
+                     TLACUC.NIDUSUARIO_MODIFICA,
+                     TLACUC.SCOMENTARIO,
+                     TLACUC.STIPO_USUARIO,
+                     'COM' AS STIPO_MENSAJE
+                FROM TBL_LAFT_ALERTA_CAB_USU_COMENT TLACUC
+               WHERE TLACUC.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+              UNION ALL
+              SELECT TO_CHAR(TLACUA.DFECHA_REGISTRO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_REGISTRO,
+                     TLACUA.NIDUSUARIO_MODIFICA,
+                     TLACUA.SRUTA_ADJUNTO,
+                     TLACUA.STIPO_USUARIO,
+                     'ADJ' AS STIPO_MENSAJE
+                FROM TBL_LAFT_ALERTA_CAB_USU_ADJ TLACUA
+               WHERE TLACUA.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO) TBACUC,
+             TBL_LAFT_USUARIO TLU
+       WHERE TLU.ID_USUARIO(+) = TBACUC.NIDUSUARIO_MODIFICA
+       ORDER BY DFECHA_REGISTRO DESC;
+  
+    /*      SELECT TO_CHAR(TBACUC.DFECHA_REGISTRO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_REGISTRO,
+                 INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+                 TBACUC.SCOMENTARIO,
+                 TBACUC.STIPO_USUARIO
+            FROM TBL_LAFT_ALERTA_CAB_USU_COMENT TBACUC,
+                 TBL_LAFT_USUARIO               TLU
+           WHERE TBACUC.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+             AND TLU.ID_USUARIO(+) = TBACUC.NIDUSUARIO_MODIFICA
+           ORDER BY DFECHA_REGISTRO ASC;
+    */ --AND TBACUC.STIPO_USUARIO(+) = P_STIPO_USUARIO;
+  
+  END;
+
+  PROCEDURE SP_GET_ALERTA_X_PERFIL(P_ID_ROL        TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE,
+                                   P_NIDGRUPOSENAL TBL_LAFT_ALERTA.NIDGRUPOSENAL%TYPE,
+                                   P_NIDREGIMEN    TBL_LAFT_ALERTA_PERFIL.NIDREGIMEN%TYPE,
+                                   RC1             OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    /*SELECT TLAP.NIDALERTA,
+                                                                                                                                                     TLA.SNOMBRE_ALERTA,
+                                                                                                                                                     TLA.SDESCRIPCION_ALERTA,
+                                                                                                                                                     LP.NIDPROFILE,
+                                                                                                                                                     LP.SNAME,
+                                                                                                                                                     TLAP.SESTADO,
+                                                                                                                                                     TLR.NIDREGIMEN,
+                                                                                                                                                     TLR.SDESREGIMEN
+                                                                                                                                                FROM TBL_LAFT_ALERTA_PERFIL TLAP,
+                                                                                                                                                     TBL_LAFT_ALERTA        TLA,
+                                                                                                                                                     TBL_LAFT_PROFILES      LP,
+                                                                                                                                                     TBL_LAFT_REGIMEN       TLR
+                                                                                                                                               WHERE TLA.NIDALERTA = TLAP.NIDALERTA
+                                                                                                                                                    --AND TLAP.SESTADO = 1
+                                                                                                                                                 AND LP.NIDPROFILE = TLAP.NIDPROFILE
+                                                                                                                                                 AND TLAP.NIDPROFILE = P_ID_ROL
+                                                                                                                                                 AND LP.SACTIVE = 1
+                                                                                                                                                 AND TLAP.NIDREGIMEN = P_NIDREGIMEN
+                                                                                                                                                 AND TLR.NIDREGIMEN = TLAP.NIDREGIMEN;*/
+    
+      SELECT TLA.NIDALERTA,
+             TLA.SNOMBRE_ALERTA,
+             TLA.SDESCRIPCION_ALERTA,
+             TLP.NIDPROFILE,
+             TLP.SNAME,
+             NVL(TLAP.SESTADO, 2) AS SESTADO,
+             TLR.NIDREGIMEN,
+             TLR.SDESREGIMEN
+        FROM TBL_LAFT_ALERTA TLA
+        LEFT OUTER JOIN TBL_LAFT_REGIMEN TLR
+          ON TLR.NIDREGIMEN = DECODE(TLA.NINDICA_REGIMEN_GRAL, 1, 1)
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_PERFIL TLAP
+          ON TLAP.NIDALERTA = TLA.NIDALERTA
+         AND TLAP.NIDREGIMEN = DECODE(TLA.NINDICA_REGIMEN_GRAL, 1, 1)
+         AND TLAP.NIDPROFILE = P_ID_ROL
+        LEFT OUTER JOIN TBL_LAFT_PROFILES TLP
+          ON TLP.NIDPROFILE = TLAP.NIDPROFILE
+         AND TLP.NIDGRUPOSENAL = TLA.NIDGRUPOSENAL
+            
+         AND TLP.SACTIVE = 1
+       WHERE TLA.NIDGRUPOSENAL = P_NIDGRUPOSENAL
+         AND TLA.NINDICA_REGIMEN_GRAL = 1
+         AND P_NIDREGIMEN = 1
+         AND TLA.NIDALERTA <> 2
+      
+      --ORDER BY TLA.NIDALERTA
+      UNION
+      SELECT TLA.NIDALERTA,
+             TLA.SNOMBRE_ALERTA,
+             TLA.SDESCRIPCION_ALERTA,
+             TLP.NIDPROFILE,
+             TLP.SNAME,
+             NVL(TLAP.SESTADO, 2) AS SESTADO,
+             TLR.NIDREGIMEN,
+             TLR.SDESREGIMEN
+        FROM TBL_LAFT_ALERTA TLA
+        LEFT OUTER JOIN TBL_LAFT_REGIMEN TLR
+          ON TLR.NIDREGIMEN = DECODE(TLA.NINDICA_REGIMEN_SIMP, 1, 2)
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_PERFIL TLAP
+          ON TLAP.NIDALERTA = TLA.NIDALERTA
+         AND TLAP.NIDREGIMEN = DECODE(TLA.NINDICA_REGIMEN_SIMP, 1, 2)
+         AND TLAP.NIDPROFILE = P_ID_ROL
+        LEFT OUTER JOIN TBL_LAFT_PROFILES TLP
+          ON TLP.NIDPROFILE = TLAP.NIDPROFILE
+         AND TLP.NIDGRUPOSENAL = TLA.NIDGRUPOSENAL
+            
+         AND TLP.SACTIVE = 1
+       WHERE TLA.NIDGRUPOSENAL = 1
+         AND TLA.NINDICA_REGIMEN_SIMP = 1
+         AND P_NIDREGIMEN = 2
+         AND TLA.NIDALERTA <> 2
+      
+      --ORDER BY TLA.NIDALERTA
+      UNION
+      SELECT TLA.NIDALERTA,
+             TLA.SNOMBRE_ALERTA,
+             TLA.SDESCRIPCION_ALERTA,
+             TLP.NIDPROFILE,
+             TLP.SNAME,
+             NVL(TLAP.SESTADO, 2) AS SESTADO,
+             NULL NIDREGIMEN,
+             NULL SDESREGIMEN
+        FROM TBL_LAFT_ALERTA TLA
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_PERFIL TLAP
+          ON TLAP.NIDALERTA = TLA.NIDALERTA
+         AND TLAP.NIDPROFILE = P_ID_ROL
+        LEFT OUTER JOIN TBL_LAFT_PROFILES TLP
+          ON TLP.NIDPROFILE = TLAP.NIDPROFILE
+         AND TLP.NIDGRUPOSENAL = TLA.NIDGRUPOSENAL
+            
+         AND TLP.SACTIVE = 1
+       WHERE TLA.NIDGRUPOSENAL = 2
+         AND P_NIDREGIMEN = 3
+         AND TLA.NIDALERTA <> 2;
+  
+    --ORDER BY TLA.NIDALERTA;
+  
+  END;
+
+  PROCEDURE SP_GET_PERFIL(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT LP.NIDPROFILE,
+             LP.SNAME
+        FROM TBL_LAFT_PROFILES LP
+       WHERE LP.SACTIVE = 1;
+  END;
+
+  PROCEDURE SP_GET_GRUPO_SENAL(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT GS.NIDGRUPOSENAL,
+             GS.SDESGRUPO_SENAL
+        FROM TBL_LAFT_GRUPO_SENALES GS
+       WHERE GS.SESTADO = '1';
+  END;
+
+  PROCEDURE SP_GET_ACCIONES(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT AC.NID AS NIDACCION,
+             AC.SDESCRIPT
+        FROM TBL_LAFT_ACCIONES_CORREO AC
+       WHERE AC.SACTIVE = '1';
+  END;
+
+  PROCEDURE SP_GET_PERFIL_ALERTA(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT LP.NIDPROFILE,
+             LP.SNAME
+        FROM TBL_LAFT_PROFILES LP
+       WHERE LP.SACTIVE = '1'
+         AND LP.STIPO_USUARIO = 'RE';
+    /*       WHERE LP.NIDPROFILE IN (SELECT TMP.NIDPROFILE
+                                     FROM TBL_LAFT_ALERTA_PERFIL TMP
+                                    WHERE TMP.NIDPROFILE = LP.NIDPROFILE);
+    */
+  END;
+
+  PROCEDURE SP_GET_PERFIL_X_USUARIO(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT LP.NIDPROFILE,
+             LP.SNAME
+        FROM TBL_LAFT_PROFILES LP
+       WHERE LP.NIDPROFILE IN (SELECT TMP.NIDPROFILE
+                                 FROM TBL_LAFT_USUARIO TMP
+                                WHERE TMP.NIDPROFILE = LP.NIDPROFILE);
+  END;
+
+  PROCEDURE SP_GET_CARGO(P_NIDPROFILE TBL_LAFT_CARGO.NIDCARGO%TYPE,
+                         RC1          OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT LC.NIDCARGO,
+             LC.SDESCARGO
+        FROM TBL_LAFT_CARGO LC
+       WHERE (P_NIDPROFILE = 99 AND LC.SESTADO = 1)
+          OR (NIDPROFILE = P_NIDPROFILE AND LC.SESTADO = 1);
+  END;
+
+  PROCEDURE SP_GET_CONFIG_CORREO_DEF(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT CCD.NID       AS NID,
+             CCD.SNOMBRE   AS SNOMBRE,
+             CCD.NIDACCION AS NIDACCION
+        FROM TBL_LAFT_CONFIG_CORREO_DEF CCD;
+  END;
+
+  PROCEDURE SP_GET_REGIMEN(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT LR.NIDREGIMEN,
+             LR.SDESREGIMEN
+        FROM TBL_LAFT_REGIMEN LR
+       WHERE LR.SESTADO = '1'
+         AND LR.NIDREGIMEN <> 3;
+  END;
+
+  PROCEDURE SP_GET_REGIMEN_PERFIL(P_ID_ROL TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE,
+                                  RC1      OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT DISTINCT TBAP.NIDREGIMEN,
+                      TLR.SDESREGIMEN
+        FROM TBL_LAFT_ALERTA_PERFIL TBAP,
+             TBL_LAFT_REGIMEN       TLR
+       WHERE TLR.NIDREGIMEN = TBAP.NIDREGIMEN
+         AND TBAP.NIDPROFILE = P_ID_ROL
+         AND TLR.SESTADO = '1';
+  END;
+
+  PROCEDURE SP_GET_PERFIL_USUARIO(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT LP.NIDPROFILE,
+             LP.SNAME
+        FROM TBL_LAFT_PROFILES LP
+       WHERE LP.SACTIVE = 1;
+  END;
+
+  PROCEDURE SP_GET_PERIODO_VIGENTE(P_NPERIODO_PROCESO  OUT TBL_LAFT_ALERTA_FRECUENCIA.NPERIODO_PROCESO%TYPE,
+                                   P_DFEEJECUTAPROCFIN OUT VARCHAR2,
+                                   P_NCODE             OUT NUMBER,
+                                   P_SMESSAGE          OUT VARCHAR2) IS
+  BEGIN
+    P_NCODE := 0;
+  
+    BEGIN
+      SELECT NPERIODO_PROCESO,
+             'del ' || TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY') || ' al ' || TO_CHAR(DFEEJECUTAPROCFIN, 'DD/MM/YYYY')
+        INTO P_NPERIODO_PROCESO,
+             P_DFEEJECUTAPROCFIN
+        FROM TBL_LAFT_ALERTA_FRECUENCIA TLAF
+       WHERE TLAF.DNULLDATE IS NULL
+         AND TLAF.SESTADO = 1;
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        P_NPERIODO_PROCESO  := 0;
+        P_DFEEJECUTAPROCFIN := 'Sin periodo';
+        P_NCODE             := 1;
+        P_SMESSAGE          := 'Existe m�s de una frecuencia de ejecuci�n activa';
+        ROLLBACK;
+        RETURN;
+      WHEN NO_DATA_FOUND THEN
+        P_NPERIODO_PROCESO  := 0;
+        P_DFEEJECUTAPROCFIN := 'Sin periodo';
+        P_NCODE             := 1;
+        P_SMESSAGE          := 'No existe una frecuencia de ejecuci�n activa';
+        ROLLBACK;
+        RETURN;
+      WHEN OTHERS THEN
+        P_NPERIODO_PROCESO  := 0;
+        P_DFEEJECUTAPROCFIN := 'Sin periodo';
+        P_NCODE             := 1;
+        P_SMESSAGE          := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+        ROLLBACK;
+        RETURN;
+    END;
+  END;
+  /*
+  PROCEDURE SP_GET_COMENTARIO_COMP(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDALERTA_CAB_USUARIO%TYPE,
+                                   RC1                     OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT SCOMENTARIO,
+             TO_DATE(DFECHA_REGISTRO, 'DD/MM/YYYY') AS DFECHA_REGISTRO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO
+        FROM TBL_LAFT_ALERTA_CAB_USU_COMPLE TLACU,
+             TBL_LAFT_USUARIO               TLU
+       WHERE TLACU.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+         AND TLU.ID_USUARIO = TLACU.NIDUSUARIO_MODIFICA;
+  END;*/
+
+  PROCEDURE SP_GET_USUARIOS_X_PERFIL(P_ID_PERFIL TBL_LAFT_PROFILES.NIDPROFILE%TYPE,
+                                     RC1         OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+      SELECT TLU.ID_USUARIO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLU.SEMAIL,
+             TLC.SDESCARGO AS SCARGO,
+             LP.SNAME
+        FROM TBL_LAFT_USUARIO  TLU,
+             TBL_LAFT_PROFILES LP,
+             TBL_LAFT_CARGO    TLC
+       WHERE TLU.NIDPROFILE = LP.NIDPROFILE
+         AND TLC.NIDCARGO = TLU.NIDCARGO
+         AND (LP.NIDPROFILE = P_ID_PERFIL OR P_ID_PERFIL = -1);
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_ALERTA(RC1 OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT NIDALERTA,
+             SNOMBRE_ALERTA,
+             SDESCRIPCION_ALERTA,
+             TLA.SESTADO,
+             --NIDAGRUPA,
+             TLA.DFECHA_REGISTRO,
+             NINDDETQUERY,
+             NINDCREAFORMULARIO,
+             TLA.NIDUSUARIO_MODIFICA,
+             DECODE(TLA.SESTADO, '2', 'INACTIVO', 'ACTIVO') AS SDESESTADO,
+             NDIASUTILREENVIO,
+             SACTIVA_REENVIO,
+             INITCAP(TLU.NOMBRECOMPLETO) SNOMUSUARIO,
+             TLA.NIDGRUPOSENAL,
+             TLGS.SDESGRUPO_SENAL,
+             TLA.NINDICA_REGIMEN_SIMP,
+             TLA.NINDICA_REGIMEN_GRAL
+        FROM TBL_LAFT_ALERTA        TLA,
+             TBL_LAFT_USUARIO       TLU,
+             TBL_LAFT_GRUPO_SENALES TLGS
+       WHERE TLU.ID_USUARIO(+) = TLA.NIDUSUARIO_MODIFICA
+         AND TLGS.NIDGRUPOSENAL(+) = TLA.NIDGRUPOSENAL;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_ADJUNTO_ALERTA(P_NIDALERTA TBL_LAFT_ALERTA_ADJUNTO.NIDALERTA%TYPE,
+                                        RC1         OUT SYS_REFCURSOR) IS
+    --A�n no se ha implementado
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT NIDALERTA,
+             NIDADJUNTO,
+             SRUTA_ADJUNTO
+        FROM TBL_LAFT_ALERTA_ADJUNTO
+       WHERE NIDALERTA = P_NIDALERTA;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_PREGUNTA_X_ALERTA(P_NIDALERTA TBL_LAFT_ALERTA_PREGUNTA.NIDALERTA%TYPE,
+                                           RC1         OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT NIDALERTA,
+             NIDPREGUNTA,
+             NIDORIGEN,
+             SPREGUNTA,
+             SESTADO,
+             DFECHA_REGISTRO,
+             NIDUSUARIO_MODIFICA,
+             DECODE(SESTADO, '2', 'INACTIVO', 'ACTIVO') AS SDESESTADO,
+             DECODE(NIDORIGEN, 1, 'Cabecera', 2, 'Detalle') AS SDESORIGEN,
+             'U' AS STIPO,
+             NIDINDICAOBLCOMEN,
+             DECODE(NIDINDICAOBLCOMEN, 1, 'SI', 2, 'NO') AS SDESOBLCOMEN
+        FROM TBL_LAFT_ALERTA_PREGUNTA
+       WHERE NIDALERTA = P_NIDALERTA;
+  
+  END;
+  PROCEDURE SP_GET_LISTA_ALERTA_INFORME(P_NIDALERTA        TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+                                        P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                        P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                        RC1                OUT SYS_REFCURSOR) IS
+  
+    CURSOR C_RESULTADOS IS
+      SELECT *
+        FROM TBL_LAFT_ALERTA_RESULTADOS
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NIDREGIMEN = P_NIDREGIMEN
+         AND NACEPTA_COINCIDENCIA = 1
+         AND DNULLDATE IS NULL;
+  
+    CURSOR C_REGISTRO_NEGATIVOS IS
+      SELECT *
+        FROM TBL_LAFT_ALERTA_RESULTADOS
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NIDREGIMEN = P_NIDREGIMEN
+         AND NIDTIPOLISTA = 5
+         AND NACEPTA_COINCIDENCIA = 1
+         AND DNULLDATE IS NULL;
+  
+    CADENA_RESULTADOS       VARCHAR2(32767) := '';
+    CADENA_RESULTADOS_RN    VARCHAR2(32767) := '';
+    NCANTIDAD_RESULTADOS    NUMBER := 0;
+    NCONTADOR_RESULTADOS    NUMBER := 0;
+    NCANTIDAD_RESULTADOS_RN NUMBER := 0;
+    NCONTADOR_RESULTADOS_RN NUMBER := 0;
+  
+  BEGIN
+  
+    IF P_NIDALERTA = 2 THEN
+    
+      SELECT COUNT(*)
+        INTO NCANTIDAD_RESULTADOS
+        FROM TBL_LAFT_ALERTA_RESULTADOS
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NIDREGIMEN = P_NIDREGIMEN
+         AND NACEPTA_COINCIDENCIA = 1
+         AND DNULLDATE IS NULL;
+    
+      SELECT COUNT(*)
+        INTO NCANTIDAD_RESULTADOS_RN
+        FROM TBL_LAFT_ALERTA_RESULTADOS
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NIDREGIMEN = P_NIDREGIMEN
+         AND NIDTIPOLISTA = 5
+         AND NACEPTA_COINCIDENCIA = 1
+         AND DNULLDATE IS NULL;
+    
+      FOR ITEM IN C_RESULTADOS
+      LOOP
+      
+        IF NCONTADOR_RESULTADOS = (NCANTIDAD_RESULTADOS - 1) THEN
+          CADENA_RESULTADOS := CADENA_RESULTADOS || ITEM.STIPO_DOCUMENTO || '|';
+          CADENA_RESULTADOS := CADENA_RESULTADOS || ITEM.SNUM_DOCUMENTO_BUSQ || '|';
+          CADENA_RESULTADOS := CADENA_RESULTADOS || ITEM.SNOM_COMPLETO || '|';
+          CADENA_RESULTADOS := CADENA_RESULTADOS || TRIM(ITEM.SPRODUCTO);
+        ELSE
+          CADENA_RESULTADOS := CADENA_RESULTADOS || ITEM.STIPO_DOCUMENTO || '|';
+          CADENA_RESULTADOS := CADENA_RESULTADOS || ITEM.SNUM_DOCUMENTO_BUSQ || '|';
+          CADENA_RESULTADOS := CADENA_RESULTADOS || ITEM.SNOM_COMPLETO || '|';
+          CADENA_RESULTADOS := CADENA_RESULTADOS || TRIM(ITEM.SPRODUCTO) || '|';
+        END IF;
+      
+        NCONTADOR_RESULTADOS := NCONTADOR_RESULTADOS + 1;
+      END LOOP;
+    
+      NCONTADOR_RESULTADOS := 0;
+    
+      FOR ITEM IN C_REGISTRO_NEGATIVOS
+      LOOP
+      
+        IF NCONTADOR_RESULTADOS_RN = (NCANTIDAD_RESULTADOS_RN - 1) THEN
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || ITEM.STIPO_DOCUMENTO || '|';
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || ITEM.SNUM_DOCUMENTO_BUSQ || '|';
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || ITEM.SNOM_COMPLETO || '|';
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || TRIM(ITEM.SPRODUCTO);
+        ELSE
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || ITEM.STIPO_DOCUMENTO || '|';
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || ITEM.SNUM_DOCUMENTO_BUSQ || '|';
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || ITEM.SNOM_COMPLETO || '|';
+          CADENA_RESULTADOS_RN := CADENA_RESULTADOS_RN || TRIM(ITEM.SPRODUCTO) || '|';
+        END IF;
+      
+        NCONTADOR_RESULTADOS_RN := NCONTADOR_RESULTADOS_RN + 1;
+      END LOOP;
+    
+      OPEN RC1 FOR
+      
+        SELECT 'tblResultados' AS ETIQUETA,
+               CADENA_RESULTADOS AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT 'periodoAnio' AS ETIQUETA,
+               SUBSTR(P_NPERIODO_PROCESO, 1, 4) AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT 'periodoMes' AS ETIQUETA,
+               SUBSTR(P_NPERIODO_PROCESO, 5, 2) AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT 'respuestaCoincid' AS ETIQUETA,
+               CASE
+                 WHEN NCANTIDAD_RESULTADOS > 0 THEN
+                  'S�'
+                 ELSE
+                  'No'
+               END AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS AS NCANTIDAD
+          FROM DUAL
+        /*UNION ALL
+        SELECT 'tblClienteNegativo' AS ETIQUETA,
+               '' AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN               
+          FROM DUAL*/
+        UNION ALL
+        SELECT 'nCantidadResultados' AS ETIQUETA,
+               NCANTIDAD_RESULTADOS || '' AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT 'nCantidadClienteNegativo' AS ETIQUETA,
+               NCANTIDAD_RESULTADOS_RN || '' AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCONTADOR_RESULTADOS_RN AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT 'tblResultadosCliNegativo' AS ETIQUETA,
+               CADENA_RESULTADOS_RN AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS_RN AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT 'respuestaCoincidRN' AS ETIQUETA,
+               CASE
+                 WHEN NCANTIDAD_RESULTADOS_RN > 0 THEN
+                  'S�'
+                 ELSE
+                  'No'
+               END AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               '0' AS SOBLIGA_USUARIO,
+               NCANTIDAD_RESULTADOS_RN AS NCANTIDAD
+          FROM DUAL;
+    ELSIF P_NIDALERTA = 7 THEN
+      OPEN RC1 FOR
+        SELECT DECODE(MIN(TLACUP.NIND_RESPUESTA), 2, 'No', 'Si') AS SRESPUESTA,
+               TLACU.NIDUSUARIO_ASIGNADO,
+               TLACU.NIDREGIMEN,
+               'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA AS ETIQUETA,
+               '0' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM TBL_LAFT_ALERTA_CAB_USUARIO  TLACU,
+               TBL_LAFT_ALERTA_CAB_USU_PREG TLACUP
+         WHERE TLACUP.NIDALERTA = TLACU.NIDALERTA
+           AND TLACUP.NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+           AND (TLACU.NIDALERTA IN (7, 8, 9, 10, 11, 12, 13, 14, 15))
+           AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND TLACUP.NIDORIGEN = 1
+           AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+           AND TLACUP.NIDREGIMEN = P_NIDREGIMEN
+         GROUP BY TLACU.NIDUSUARIO_ASIGNADO,
+                  TLACU.NIDREGIMEN,
+                  'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA
+        UNION
+        SELECT DECODE(MIN(TLACUP.NIND_RESPUESTA), 2, 'No', 'Si') AS SRESPUESTA,
+               TLACU.NIDUSUARIO_ASIGNADO,
+               TLACU.NIDREGIMEN,
+               'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA AS ETIQUETA,
+               '0' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM TBL_LAFT_ALERTA_CAB_USUARIO  TLACU,
+               TBL_LAFT_ALERTA_DET_USU_PREG TLACUP
+         WHERE TLACUP.NIDALERTA = TLACU.NIDALERTA
+           AND TLACUP.NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+           AND (TLACU.NIDALERTA IN (7, 8, 9, 10, 11, 12, 13, 14, 15))
+           AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND TLACUP.NIDORIGEN = 2
+           AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+           AND TLACUP.NIDREGIMEN = P_NIDREGIMEN
+         GROUP BY TLACU.NIDUSUARIO_ASIGNADO,
+                  TLACU.NIDREGIMEN,
+                  'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA
+        UNION ALL
+        SELECT SUBSTR(P_NPERIODO_PROCESO, 1, 4) AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               'periodoAnio' AS ETIQUETA,
+               '1' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT SUBSTR(P_NPERIODO_PROCESO, 5, 2) AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               'periodoMes' AS ETIQUETA,
+               '1' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM DUAL;
+    
+    ELSE
+      OPEN RC1 FOR
+      
+        SELECT DECODE(MIN(TLACUP.NIND_RESPUESTA), 2, 'No', 'Si') AS SRESPUESTA,
+               TLACU.NIDUSUARIO_ASIGNADO,
+               TLACU.NIDREGIMEN,
+               'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA AS ETIQUETA,
+               '0' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM TBL_LAFT_ALERTA_CAB_USUARIO  TLACU,
+               TBL_LAFT_ALERTA_CAB_USU_PREG TLACUP
+         WHERE TLACUP.NIDALERTA = TLACU.NIDALERTA
+           AND TLACUP.NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+           AND TLACU.NIDALERTA = P_NIDALERTA
+           AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND TLACUP.NIDORIGEN = 1
+           AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+           AND TLACUP.NIDREGIMEN = P_NIDREGIMEN
+         GROUP BY TLACU.NIDUSUARIO_ASIGNADO,
+                  TLACU.NIDREGIMEN,
+                  'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA
+        UNION
+        SELECT DECODE(MIN(TLACUP.NIND_RESPUESTA), 2, 'No', 'Si') AS SRESPUESTA,
+               TLACU.NIDUSUARIO_ASIGNADO,
+               TLACU.NIDREGIMEN,
+               'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA AS ETIQUETA,
+               '0' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM TBL_LAFT_ALERTA_CAB_USUARIO  TLACU,
+               TBL_LAFT_ALERTA_DET_USU_PREG TLACUP
+         WHERE TLACUP.NIDALERTA = TLACU.NIDALERTA
+           AND TLACUP.NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+           AND TLACU.NIDALERTA = P_NIDALERTA
+           AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND TLACUP.NIDORIGEN = 2
+           AND TLACU.NIDREGIMEN = P_NIDREGIMEN
+           AND TLACUP.NIDREGIMEN = P_NIDREGIMEN
+         GROUP BY TLACU.NIDUSUARIO_ASIGNADO,
+                  TLACU.NIDREGIMEN,
+                  'rpta' || P_NIDALERTA || TLACUP.NIDORIGEN || TLACUP.NIDPREGUNTA
+        UNION ALL
+        SELECT SUBSTR(P_NPERIODO_PROCESO, 1, 4) AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               'periodoAnio' AS ETIQUETA,
+               '1' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM DUAL
+        UNION ALL
+        SELECT SUBSTR(P_NPERIODO_PROCESO, 5, 2) AS SRESPUESTA,
+               0 AS NIDUSUARIO_ASIGNADO,
+               0 AS NIDREGIMEN,
+               'periodoMes' AS ETIQUETA,
+               '1' AS SOBLIGA_USUARIO,
+               0 AS NCANTIDAD
+          FROM DUAL;
+    END IF;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_NC_EMPRESAS(P_NIDALERTA        TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE,
+                                     P_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE,
+                                     P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                     RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+      SELECT NIDALERTA,
+             NPERIODO_PROCESO,
+             NDEVOLUCION,
+             NIDREGIMEN,
+             NOMCLIENTE,
+             DESTIPODOC,
+             NRODOC,
+             DESPRODUCTO,
+             NPOLICY,
+             DESTIPOCOMP,
+             NROCOMP,
+             NAMOUNT,
+             NIVA,
+             NRIGHTISSUE,
+             DBILLDATE,
+             SESTADOPAGEFEC,
+             DESMOTIVO
+        FROM TBL_LAFT_NOTAS_CREDITO_TMP TLNC
+       WHERE TLNC.NIDALERTA = P_NIDALERTA
+         AND TLNC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLNC.NIDREGIMEN = P_NIDREGIMEN;
+  END;
+
+  PROCEDURE SP_GET_LISTA_HIST_DIRECCCIONES(P_NIDDOC_TYPE INSUDB.CLIENT_IDDOC.NIDDOC_TYPE%TYPE,
+                                           P_SIDDOC      INSUDB.CLIENT_IDDOC.SIDDOC%TYPE,
+                                           RC1           OUT SYS_REFCURSOR) IS
+    V_SCLIENT ADDRESS.SCLIENT%TYPE;
+  
+  BEGIN
+  
+    V_SCLIENT := LPAD(P_NIDDOC_TYPE, 2, '0') || LPAD(TRIM(P_SIDDOC), 12, '0');
+  
+    OPEN RC1 FOR
+      SELECT INSUDB.PKG_REPORTES_TABLERO_CONTROL.FN_DIRE_CORREO_CLIENTE(P_NRECOWNER       => AD.NRECOWNER,
+                                                                        P_SKEYADDRESS     => AD.SKEYADDRESS,
+                                                                        P_DEFFECDATE      => AD.DEFFECDATE,
+                                                                        P_SRECTYPE        => AD.SRECTYPE,
+                                                                        P_SCLIENT         => V_SCLIENT,
+                                                                        P_STIPO_DATO      => 'DU',
+                                                                        P_SIND_INDIVIDUAL => 'X') AS DIRECCION,
+             TO_CHAR(AD.DCOMPDATE, 'DD/MM/YYYY HH24:MI:SS') AS DCOMPDATE,
+             AD.DNULLDATE
+        FROM ADDRESS AD
+       WHERE AD.SCLIENT = V_SCLIENT
+         AND AD.SRECTYPE NOT IN ('4', '5')
+       ORDER BY DCOMPDATE,
+                SKEYADDRESS DESC;
+  END;
+
+  PROCEDURE SP_GET_LISTA_POLIZAS_VIGENTES(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                          P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                          P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                          P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                          P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                          P_NTIPOCARGA          TBL_LAFT_ALERTA_RESULTADOS.NTIPOCARGA%TYPE,
+                                          RC1                   OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+  
+    IF P_NTIPOCARGA = 1 THEN
+    
+      OPEN RC1 FOR
+        SELECT DISTINCT SNUM_POLIZA,
+                        NCERTIF,
+                        SDESPRODUCTO AS SPRODUCTO,
+                        TO_CHAR(FEC_INI_POL, 'DD/MM/YYYY') AS DFEC_INI_POLIZA,
+                        TO_CHAR(FEC_FIN_POL, 'DD/MM/YYYY') AS DFEC_FIN_POLIZA,
+                        PRIMA_POLIZA,
+                        STIPO_CLIENTE,
+                        FEC_PAGO,
+                        PLACA,
+                        DESRAMO RAMO,
+                        NIDREGIMEN,
+                        DECODE(NIDREGIMEN, 1, 'R�gimen General', 2, 'R�gimen Simplificado', '99') AS SREGIMEN
+          FROM TBL_LAFT_CLIENTES_VIGENTES
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND NTIPO_DOCUMENTO = P_NTIPOIDEN_BUSQ
+           AND SNUM_DOCUMENTO = P_SNUM_DOCUMENTO_BUSQ
+           AND (NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99);
+    
+    ELSE
+      OPEN RC1 FOR
+        SELECT DISTINCT SNUM_POLIZA,
+                        NCERTIF,
+                        SDESPRODUCTO AS SPRODUCTO,
+                        TO_CHAR(FEC_INI_POL, 'DD/MM/YYYY') AS DFEC_INI_POLIZA,
+                        TO_CHAR(FEC_FIN_POL, 'DD/MM/YYYY') AS DFEC_FIN_POLIZA,
+                        PRIMA_POLIZA,
+                        STIPO_CLIENTE,
+                        FEC_PAGO,
+                        PLACA,
+                        DESRAMO RAMO,
+                        NIDREGIMEN,
+                        DECODE(NIDREGIMEN, 1, 'R�gimen General', 2, 'R�gimen Simplificado', '99') AS SREGIMEN
+          FROM TBL_LAFT_CLIENTES_VIGENTES_MANUAL
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND NTIPO_DOCUMENTO = P_NTIPOIDEN_BUSQ
+           AND SNUM_DOCUMENTO = P_SNUM_DOCUMENTO_BUSQ
+           AND (NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99);
+    END IF;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_MOVIMIENTO(P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                    P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                    P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                    RC1                   OUT SYS_REFCURSOR) IS
+    V_SCLIENT CLIENT.SCLIENT%TYPE;
+  
+  BEGIN
+  
+    V_SCLIENT := LPAD(P_NTIPOIDEN_BUSQ, 2, '0') || LPAD(TRIM(P_SNUM_DOCUMENTO_BUSQ), 12, '0');
+  
+    OPEN RC1 FOR
+      SELECT (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                FROM TBL_LAFT_ALERTA_FRECUENCIA
+               WHERE NPERIODO_PROCESO = TLAR.NPERIODO_PROCESO
+                 AND SESTADO = 1) AS NPERIODO_PROCESO,
+             TLAR.SNOM_COMPLETO_BUSQ,
+             TLTL.SDESTIPOLISTA,
+             TLAR.NIDTIPOLISTA,
+             TLAR.STIPO_BUSQUEDA,
+             TLAR.NPORC_APROXIMA_BUSQ AS USUARIO_APRUEBA,
+             UPPER(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             --TLAR.DFECHA_CARGA,
+             --TLAR.DFECHA_REVISADO,
+             TO_CHAR(TLAR.DFECHA_CARGA, 'DD/MM/YYYY HH24:MI:SS') DFECHA_REGISTRO,
+             TLAR.NTIPOCARGA,
+             TLAR.NPORC_APROXIMA_BUSQ,
+             TLAR.NACEPTA_COINCIDENCIA,
+             TO_CHAR(TLAR.DFECHA_REVISADO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_REVISADO
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_TIPO_LISTA        TLTL,
+             TBL_LAFT_USUARIO           TLU
+       WHERE TLAR.SCOD_CLIENTE_BUSQ = V_SCLIENT
+         AND (TLAR.NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99)
+         AND TLTL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TLU.ID_USUARIO = TLAR.NIDUSUARIO_REVISADO
+       ORDER BY TLAR.DFECHA_CARGA;
+  END;
+
+  --LAFT.TBL_LAFT_MOVIMIENTOS
+
+  PROCEDURE SP_UPD_NC_EMPRESAS(P_NIDALERTA        TBL_LAFT_NOTAS_CREDITO_TMP.NIDALERTA%TYPE,
+                               P_NPERIODO_PROCESO TBL_LAFT_NOTAS_CREDITO_TMP.NPERIODO_PROCESO%TYPE,
+                               P_NDEVOLUCION      TBL_LAFT_NOTAS_CREDITO_TMP.NDEVOLUCION%TYPE,
+                               P_NIDREGIMEN       TBL_LAFT_NOTAS_CREDITO_TMP.NIDREGIMEN%TYPE,
+                               P_SESTADOPAGEFEC   TBL_LAFT_NOTAS_CREDITO_TMP.SESTADOPAGEFEC%TYPE,
+                               P_DESMOTIVO        TBL_LAFT_NOTAS_CREDITO_TMP.DESMOTIVO%TYPE,
+                               P_NCODE            OUT NUMBER,
+                               P_SMESSAGE         OUT VARCHAR2) IS
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� la informaci�n de la nota de cr�dito correctamente';
+  
+    UPDATE TBL_LAFT_NOTAS_CREDITO_TMP TLNC
+       SET TLNC.SESTADOPAGEFEC = P_SESTADOPAGEFEC,
+           TLNC.DESMOTIVO      = P_DESMOTIVO
+     WHERE NIDALERTA = P_NIDALERTA
+       AND NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND NDEVOLUCION = P_NDEVOLUCION;
+    /*AND NIDREGIMEN = P_NIDREGIMEN
+    AND NROCOMP = P_NROCOMP
+    AND SBILLTYPE = P_SBILLTYPE
+    AND NINSUR_AREA = P_NINSUR_AREA;*/
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_ADJ.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_SRUTA_ADJUNTO         TBL_LAFT_ALERTA_CAB_USU_ADJ.SRUTA_ADJUNTO%TYPE,
+                                    P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_ADJ.STIPO_USUARIO%TYPE,
+                                    P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                    P_NCODE                 OUT NUMBER,
+                                    P_SMESSAGE              OUT VARCHAR2) IS
+  
+    V_NIDADJUNTO NUMBER := 0;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    SELECT NVL(MAX(NIDADJUNTO), 0)
+      INTO V_NIDADJUNTO
+      FROM TBL_LAFT_ALERTA_CAB_USU_ADJ
+     WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+       AND STIPO_USUARIO = P_STIPO_USUARIO;
+  
+    V_NIDADJUNTO := V_NIDADJUNTO + 1;
+    BEGIN
+      INSERT INTO TBL_LAFT_ALERTA_CAB_USU_ADJ
+        (NIDALERTA_CAB_USUARIO,
+         NIDADJUNTO,
+         SRUTA_ADJUNTO,
+         STIPO_USUARIO,
+         NIDUSUARIO_MODIFICA,
+         DFECHA_REGISTRO)
+      VALUES
+        (P_NIDALERTA_CAB_USUARIO,
+         V_NIDADJUNTO,
+         P_SRUTA_ADJUNTO,
+         P_STIPO_USUARIO,
+         P_NIDUSUARIO_MODIFICA,
+         SYSDATE);
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        NULL;
+    END;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_ADJ.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_NIDADJUNTO            TBL_LAFT_ALERTA_CAB_USU_ADJ.NIDADJUNTO%TYPE,
+                                    P_SRUTA_ADJUNTO         TBL_LAFT_ALERTA_CAB_USU_ADJ.SRUTA_ADJUNTO%TYPE,
+                                    P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_ADJ.STIPO_USUARIO%TYPE,
+                                    P_SESTADO               VARCHAR2,
+                                    P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                    P_NCODE                 OUT NUMBER,
+                                    P_SMESSAGE              OUT VARCHAR2) IS
+  
+    V_NIDADJUNTO NUMBER := 0;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    IF P_SESTADO = '2' THEN
+    
+      DELETE FROM TBL_LAFT_ALERTA_CAB_USU_ADJ
+       WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+         AND NIDADJUNTO = P_NIDADJUNTO
+         AND STIPO_USUARIO = P_STIPO_USUARIO;
+    
+    ELSE
+      SP_INS_ADJUNTO_CABECERA(P_NIDALERTA_CAB_USUARIO => P_NIDALERTA_CAB_USUARIO,
+                              P_SRUTA_ADJUNTO         => P_SRUTA_ADJUNTO,
+                              P_STIPO_USUARIO         => P_STIPO_USUARIO,
+                              P_NIDUSUARIO_MODIFICA   => P_NIDUSUARIO_MODIFICA,
+                              P_NCODE                 => P_NCODE,
+                              P_SMESSAGE              => P_SMESSAGE);
+      IF P_NCODE = 1 THEN
+        RETURN;
+      END IF;
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_ALERTA(P_NIDALERTA           TBL_LAFT_ALERTA.NIDALERTA%TYPE,
+                          P_SNOMBRE_ALERTA      TBL_LAFT_ALERTA.SNOMBRE_ALERTA%TYPE,
+                          P_SDESCRIPCION_ALERTA TBL_LAFT_ALERTA.SDESCRIPCION_ALERTA%TYPE,
+                          P_SESTADO             TBL_LAFT_ALERTA.SESTADO%TYPE,
+                          --P_NIDAGRUPA           TBL_LAFT_ALERTA.NIDAGRUPA%TYPE,
+                          P_NIDUSUARIO_MODIFICA  TBL_LAFT_ALERTA.NIDUSUARIO_MODIFICA%TYPE,
+                          P_NDIASUTILREENVIO     TBL_LAFT_ALERTA.NDIASUTILREENVIO%TYPE,
+                          P_SACTIVA_REENVIO      TBL_LAFT_ALERTA.SACTIVA_REENVIO%TYPE,
+                          P_STIPO_OPE            VARCHAR2,
+                          P_NIDGRUPOSENAL        TBL_LAFT_ALERTA.NIDGRUPOSENAL%TYPE,
+                          P_NINDICA_REGIMEN_SIMP TBL_LAFT_ALERTA.NINDICA_REGIMEN_SIMP%TYPE,
+                          P_NINDICA_REGIMEN_GRAL TBL_LAFT_ALERTA.NINDICA_REGIMEN_GRAL%TYPE,
+                          P_OUT_NIDALERTA        OUT NUMBER,
+                          P_NCODE                OUT NUMBER,
+                          P_SMESSAGE             OUT VARCHAR2) IS
+  
+    V_NIDALERTA TBL_LAFT_ALERTA.NIDALERTA%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se ha realizado los cambios de la alerta correctamente.';
+  
+    IF P_STIPO_OPE = 'I' THEN
+    
+      SELECT NVL(MAX(NIDALERTA), 0) + 1
+        INTO V_NIDALERTA
+        FROM TBL_LAFT_ALERTA;
+    
+      INSERT INTO TBL_LAFT_ALERTA
+        (NIDALERTA,
+         SNOMBRE_ALERTA,
+         SDESCRIPCION_ALERTA,
+         SESTADO,
+         DFECHA_REGISTRO,
+         NIDUSUARIO_MODIFICA,
+         NDIASUTILREENVIO,
+         SACTIVA_REENVIO,
+         NIDGRUPOSENAL,
+         NINDICA_REGIMEN_SIMP,
+         NINDICA_REGIMEN_GRAL)
+      VALUES
+        (V_NIDALERTA,
+         P_SNOMBRE_ALERTA,
+         P_SDESCRIPCION_ALERTA,
+         1,
+         SYSDATE,
+         P_NIDUSUARIO_MODIFICA,
+         P_NDIASUTILREENVIO,
+         P_SACTIVA_REENVIO,
+         P_NIDGRUPOSENAL,
+         P_NINDICA_REGIMEN_SIMP,
+         P_NINDICA_REGIMEN_GRAL);
+    
+      P_OUT_NIDALERTA := V_NIDALERTA;
+    ELSE
+      UPDATE TBL_LAFT_ALERTA
+         SET SNOMBRE_ALERTA       = P_SNOMBRE_ALERTA,
+             SDESCRIPCION_ALERTA  = P_SDESCRIPCION_ALERTA,
+             SESTADO              = P_SESTADO,
+             DFECHA_REGISTRO      = SYSDATE,
+             NIDUSUARIO_MODIFICA  = P_NIDUSUARIO_MODIFICA,
+             NDIASUTILREENVIO     = P_NDIASUTILREENVIO,
+             SACTIVA_REENVIO      = P_SACTIVA_REENVIO,
+             NIDGRUPOSENAL        = P_NIDGRUPOSENAL,
+             NINDICA_REGIMEN_GRAL = P_NINDICA_REGIMEN_GRAL,
+             NINDICA_REGIMEN_SIMP = P_NINDICA_REGIMEN_SIMP
+       WHERE NIDALERTA = P_NIDALERTA;
+    
+      P_OUT_NIDALERTA := P_NIDALERTA;
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_ADJUNTO_ALERTA(P_NIDALERTA     TBL_LAFT_ALERTA_ADJUNTO.NIDALERTA%TYPE,
+                                  P_NIDADJUNTO    TBL_LAFT_ALERTA_ADJUNTO.NIDADJUNTO%TYPE,
+                                  P_SRUTA_ADJUNTO TBL_LAFT_ALERTA_ADJUNTO.SRUTA_ADJUNTO%TYPE,
+                                  P_STIPO         VARCHAR2,
+                                  P_NCODE         OUT NUMBER,
+                                  P_SMESSAGE      OUT VARCHAR2) IS
+  
+    V_NIDADJUNTO NUMBER := 0;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se ha actualizado el adjunto de la alerta correctamente.';
+  
+    IF P_STIPO = 'D' THEN
+    
+      DELETE FROM TBL_LAFT_ALERTA_ADJUNTO
+       WHERE NIDALERTA = P_NIDALERTA
+         AND NIDADJUNTO = P_NIDADJUNTO;
+    
+    ELSE
+    
+      SELECT NVL(MAX(NIDADJUNTO), 0) + 1
+        INTO V_NIDADJUNTO
+        FROM TBL_LAFT_ALERTA_ADJUNTO
+       WHERE NIDALERTA = P_NIDALERTA;
+    
+      INSERT INTO TBL_LAFT_ALERTA_ADJUNTO
+        (NIDALERTA,
+         NIDADJUNTO,
+         SRUTA_ADJUNTO,
+         SESTADO,
+         DFECHA_REGISTRO)
+      VALUES
+        (P_NIDALERTA,
+         V_NIDADJUNTO,
+         P_SRUTA_ADJUNTO,
+         1,
+         SYSDATE);
+    
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_PREGUNTA_X_ALERTA(P_NIDALERTA           TBL_LAFT_ALERTA_PREGUNTA.NIDALERTA%TYPE,
+                                     P_NIDPREGUNTA         TBL_LAFT_ALERTA_PREGUNTA.NIDPREGUNTA%TYPE,
+                                     P_NIDORIGEN           TBL_LAFT_ALERTA_PREGUNTA.NIDORIGEN%TYPE,
+                                     P_SPREGUNTA           TBL_LAFT_ALERTA_PREGUNTA.SPREGUNTA%TYPE,
+                                     P_SESTADO             TBL_LAFT_ALERTA_PREGUNTA.SESTADO%TYPE,
+                                     P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_PREGUNTA.NIDUSUARIO_MODIFICA%TYPE,
+                                     P_STIPO_OPE           VARCHAR2,
+                                     P_NIDINDICAOBLCOMEN   TBL_LAFT_ALERTA_PREGUNTA.NIDINDICAOBLCOMEN%TYPE,
+                                     P_NCODE               OUT NUMBER,
+                                     P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDPREGUNTA TBL_LAFT_ALERTA_PREGUNTA.NIDPREGUNTA%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se ha actualizado la pregunta correctamente.';
+  
+    IF P_STIPO_OPE = 'I' THEN
+    
+      SELECT NVL(MAX(NIDPREGUNTA), 0) + 1
+        INTO V_NIDPREGUNTA
+        FROM TBL_LAFT_ALERTA_PREGUNTA
+       WHERE NIDALERTA = P_NIDALERTA
+         AND NIDORIGEN = P_NIDORIGEN;
+    
+      INSERT INTO TBL_LAFT_ALERTA_PREGUNTA
+        (NIDALERTA,
+         NIDPREGUNTA,
+         NIDORIGEN,
+         SPREGUNTA,
+         SESTADO,
+         DFECHA_REGISTRO,
+         NIDUSUARIO_MODIFICA,
+         NIDINDICAOBLCOMEN)
+      VALUES
+        (P_NIDALERTA,
+         V_NIDPREGUNTA,
+         P_NIDORIGEN,
+         P_SPREGUNTA,
+         P_SESTADO,
+         SYSDATE,
+         P_NIDUSUARIO_MODIFICA,
+         P_NIDINDICAOBLCOMEN);
+    ELSE
+      UPDATE TBL_LAFT_ALERTA_PREGUNTA
+         SET SPREGUNTA           = P_SPREGUNTA,
+             SESTADO             = P_SESTADO,
+             DFECHA_REGISTRO     = SYSDATE,
+             NIDUSUARIO_MODIFICA = P_NIDUSUARIO_MODIFICA,
+             NIDINDICAOBLCOMEN   = P_NIDINDICAOBLCOMEN
+       WHERE NIDALERTA = P_NIDALERTA
+         AND NIDPREGUNTA = P_NIDPREGUNTA
+         AND NIDORIGEN = P_NIDORIGEN;
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_CONFIG_CORREO(P_NIDCORREO           TBL_LAFT_CONFIGURACION_CORREO.NIDCORREO%TYPE,
+                                 P_NIDGRUPOSENAL       TBL_LAFT_CONFIGURACION_CORREO.NIDGRUPOSENAL%TYPE,
+                                 P_NIDPROFILE          TBL_LAFT_CONFIGURACION_CORREO.NIDPROFILE%TYPE,
+                                 P_SASUNTO_CORREO      TBL_LAFT_CONFIGURACION_CORREO.SASUNTO_CORREO%TYPE,
+                                 P_SCUERPO_CORREO      TBL_LAFT_CONFIGURACION_CORREO.SCUERPO_CORREO%TYPE,
+                                 P_SCUERPO_CORREO_DEF  TBL_LAFT_CONFIGURACION_CORREO.SCUERPO_CORREO_DEF%TYPE,
+                                 P_NIDUSUARIO_MODIFICA TBL_LAFT_CONFIGURACION_CORREO.NIDUSUARIO_MODIFICA%TYPE,
+                                 P_NIDACCION           TBL_LAFT_CONFIGURACION_CORREO.NIDACCION%TYPE,
+                                 P_SCUERPO_TEXTO       TBL_LAFT_CONFIGURACION_CORREO.SCUERPO_TEXTO%TYPE,
+                                 P_NCODE               OUT NUMBER,
+                                 P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDCORREO TBL_LAFT_CONFIGURACION_CORREO.NIDCORREO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se ha realizado los cambios del correo correctamente.';
+  
+    IF P_NIDCORREO = 0 THEN
+    
+      SELECT NVL(MAX(NIDCORREO), 0) + 1
+        INTO V_NIDCORREO
+        FROM TBL_LAFT_CONFIGURACION_CORREO;
+    
+      INSERT INTO TBL_LAFT_CONFIGURACION_CORREO
+        (NIDCORREO,
+         NIDGRUPOSENAL,
+         NIDPROFILE,
+         SASUNTO_CORREO,
+         SCUERPO_CORREO,
+         SCUERPO_CORREO_DEF,
+         SCUERPO_TEXTO,
+         DFECHA_REGISTRO,
+         NIDUSUARIO_MODIFICA,
+         NIDACCION)
+      VALUES
+        (V_NIDCORREO,
+         P_NIDGRUPOSENAL,
+         P_NIDPROFILE,
+         P_SASUNTO_CORREO,
+         P_SCUERPO_CORREO,
+         P_SCUERPO_CORREO_DEF,
+         P_SCUERPO_TEXTO,
+         SYSDATE,
+         P_NIDUSUARIO_MODIFICA,
+         P_NIDACCION);
+    
+    ELSE
+      UPDATE TBL_LAFT_CONFIGURACION_CORREO
+         SET SASUNTO_CORREO      = P_SASUNTO_CORREO,
+             SCUERPO_CORREO      = P_SCUERPO_CORREO,
+             DFECHA_REGISTRO     = SYSDATE,
+             NIDUSUARIO_MODIFICA = P_NIDUSUARIO_MODIFICA,
+             SCUERPO_TEXTO       = P_SCUERPO_TEXTO
+       WHERE NIDGRUPOSENAL = P_NIDGRUPOSENAL
+         AND NIDPROFILE = P_NIDPROFILE
+         AND NIDCORREO = P_NIDCORREO
+         AND NIDACCION = P_NIDACCION;
+    
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_COMENTARIO_CAB_USU(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDALERTA_CAB_USUARIO%TYPE,
+                                      P_SCOMENTARIO           TBL_LAFT_ALERTA_CAB_USU_COMENT.SCOMENTARIO%TYPE,
+                                      P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                      P_STIPO_USUARIO         TBL_LAFT_ALERTA_CAB_USU_COMENT.STIPO_USUARIO%TYPE,
+                                      P_NCODE                 OUT NUMBER,
+                                      P_SMESSAGE              OUT VARCHAR2) IS
+  
+    V_NIDCOMENTARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDCOMENTARIO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    SELECT NVL(MAX(NIDCOMENTARIO), 0) + 1
+      INTO V_NIDCOMENTARIO
+      FROM TBL_LAFT_ALERTA_CAB_USU_COMENT
+     WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+       AND STIPO_USUARIO = P_STIPO_USUARIO;
+  
+    INSERT INTO TBL_LAFT_ALERTA_CAB_USU_COMENT
+      (NIDALERTA_CAB_USUARIO,
+       NIDCOMENTARIO,
+       SCOMENTARIO,
+       DFECHA_REGISTRO,
+       NIDUSUARIO_MODIFICA,
+       STIPO_USUARIO)
+    VALUES
+      (P_NIDALERTA_CAB_USUARIO,
+       V_NIDCOMENTARIO,
+       P_SCOMENTARIO,
+       SYSDATE,
+       P_NIDUSUARIO_MODIFICA,
+       P_STIPO_USUARIO);
+  
+    IF P_STIPO_USUARIO = 'OC' THEN
+      UPDATE TBL_LAFT_ALERTA_CAB_USUARIO CAB
+         SET CAB.DFECHA_ESTADO_MOVIMIENTO = SYSDATE,
+             CAB.SESTADO                  = 3,
+             CAB.NIDUSUARIO_VERIFICADO    = P_NIDUSUARIO_MODIFICA
+       WHERE CAB.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_EST_REVISADO_CAB(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA_CAB_USUARIO%TYPE,
+                                    P_SESTADO_REVISADO      TBL_LAFT_ALERTA_CAB_USUARIO.SESTADO_REVISADO%TYPE,
+                                    P_DFECHA_REVISADO       OUT TBL_LAFT_ALERTA_CAB_USUARIO.DFECHA_REVISADO%TYPE,
+                                    P_NCODE                 OUT NUMBER,
+                                    P_SMESSAGE              OUT VARCHAR2) IS
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    P_DFECHA_REVISADO := SYSDATE;
+  
+    UPDATE TBL_LAFT_ALERTA_CAB_USUARIO
+       SET SESTADO_REVISADO = P_SESTADO_REVISADO,
+           DFECHA_REVISADO  = P_DFECHA_REVISADO
+     WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_EST_REVISADO_RES(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                    P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                    P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                    P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                    P_SESTADO_REVISADO    TBL_LAFT_ALERTA_RESULTADOS.SESTADO_REVISADO%TYPE,
+                                    P_NIDUSUARIO_REVISADO TBL_LAFT_ALERTA_RESULTADOS.NIDUSUARIO_REVISADO%TYPE,
+                                    P_DFECHA_REVISADO     OUT TBL_LAFT_ALERTA_RESULTADOS.DFECHA_REVISADO%TYPE,
+                                    P_NCODE               OUT NUMBER,
+                                    P_SMESSAGE            OUT VARCHAR2) IS
+  BEGIN
+  
+    P_NCODE           := 0;
+    P_DFECHA_REVISADO := SYSDATE;
+  
+    UPDATE TBL_LAFT_ALERTA_RESULTADOS
+       SET SESTADO_REVISADO    = P_SESTADO_REVISADO,
+           DFECHA_REVISADO     = P_DFECHA_REVISADO,
+           NIDUSUARIO_REVISADO = P_NIDUSUARIO_REVISADO
+     WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND NIDALERTA = P_NIDALERTA
+       AND NTIPOIDEN_BUSQ = P_NTIPOIDEN_BUSQ
+       AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_ALERTA_PERIODO(P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO.NIDALERTA%TYPE,
+                                  P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO.NPERIODO_PROCESO%TYPE,
+                                  P_SESTADO          TBL_LAFT_ALERTA_PROCESO.SESTADO%TYPE,
+                                  P_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                  P_NCODE            OUT NUMBER,
+                                  P_SMESSAGE         OUT VARCHAR2) IS
+  
+    /*CURSOR DETALLE_FORM IS
+    SELECT TLACU.NIDALERTA_CAB_USUARIO
+      FROM TBL_LAFT_ALERTA_CAB_USUARIO TLACU
+     WHERE TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND TLACU.NIDALERTA = P_NIDALERTA
+       AND TLACU.NIDREGIMEN = P_NIDREGIMEN;*/
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� la se�al de alerta correctamente';
+  
+    UPDATE TBL_LAFT_ALERTA_PROCESO
+       SET SESTADO                  = P_SESTADO,
+           DFECHA_ESTADO_MOVIMIENTO = SYSDATE
+     WHERE NIDALERTA = P_NIDALERTA
+       AND NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+  
+    /*FOR C1 IN DETALLE_FORM
+    LOOP
+      UPDATE TBL_LAFT_ALERTA_CAB_USUARIO
+         SET SESTADO_PROC_ALERTA = P_SESTADO
+       WHERE NIDALERTA_CAB_USUARIO = C1.NIDALERTA_CAB_USUARIO;
+    END LOOP;*/
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_COMENT_ALERTA_PERIODO(P_NIDALERTA           TBL_LAFT_ALERTA_PROCESO_COMENT.NIDALERTA%TYPE,
+                                         P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_PROCESO_COMENT.NPERIODO_PROCESO%TYPE,
+                                         P_SCOMENTARIO         TBL_LAFT_ALERTA_PROCESO_COMENT.SCOMENTARIO%TYPE,
+                                         P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_PROCESO_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                         P_NCODE               OUT NUMBER,
+                                         P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDCOMENTARIO TBL_LAFT_ALERTA_PROCESO_COMENT.NIDCOMENTARIO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� el comentario de la se�al de alerta correctamente';
+  
+    SELECT NVL(MAX(NIDCOMENTARIO), 0) + 1
+      INTO V_NIDCOMENTARIO
+      FROM TBL_LAFT_ALERTA_PROCESO_COMENT;
+  
+    INSERT INTO TBL_LAFT_ALERTA_PROCESO_COMENT
+      (NIDALERTA,
+       NPERIODO_PROCESO,
+       NIDCOMENTARIO,
+       SCOMENTARIO,
+       DFECHA_REGISTRO,
+       NIDUSUARIO_MODIFICA)
+    VALUES
+      (P_NIDALERTA,
+       P_NPERIODO_PROCESO,
+       V_NIDCOMENTARIO,
+       P_SCOMENTARIO,
+       SYSDATE,
+       P_NIDUSUARIO_MODIFICA);
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_ADJUNTO_ALERTA_PERIODO(P_NIDALERTA           TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_PROCESO_ADJUN.NPERIODO_PROCESO%TYPE,
+                                          P_SRUTA_ADJUNTO       TBL_LAFT_ALERTA_PROCESO_ADJUN.SRUTA_ADJUNTO%TYPE,
+                                          P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDUSUARIO_MODIFICA%TYPE,
+                                          P_NCODE               OUT NUMBER,
+                                          P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDADJUNTO TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDADJUNTO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� el adjunto de la se�al de alerta correctamente';
+  
+    SELECT NVL(MAX(NIDADJUNTO), 0) + 1
+      INTO V_NIDADJUNTO
+      FROM TBL_LAFT_ALERTA_PROCESO_ADJUN;
+  
+    INSERT INTO TBL_LAFT_ALERTA_PROCESO_ADJUN
+      (NIDALERTA,
+       NPERIODO_PROCESO,
+       NIDADJUNTO,
+       SRUTA_ADJUNTO,
+       DFECHA_REGISTRO,
+       NIDUSUARIO_MODIFICA)
+    VALUES
+      (P_NIDALERTA,
+       P_NPERIODO_PROCESO,
+       V_NIDADJUNTO,
+       P_SRUTA_ADJUNTO,
+       SYSDATE,
+       P_NIDUSUARIO_MODIFICA);
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_ADJ_ALR_INFORM_PERIODO(P_NIDALERTA           TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO    TBL_LAFT_ALR_PROC_ADJUN_INFORM.NPERIODO_PROCESO%TYPE,
+                                          P_SRUTA_ADJUNTO       TBL_LAFT_ALR_PROC_ADJUN_INFORM.SRUTA_ADJUNTO%TYPE,
+                                          P_NIDUSUARIO_MODIFICA TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDUSUARIO_MODIFICA%TYPE,
+                                          P_STIPO_CARGA         TBL_LAFT_ALR_PROC_ADJUN_INFORM.STIPO_CARGA%TYPE,
+                                          P_NREGIMEN            TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                          P_NIDALERTA_CABECERA  TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA_CABECERA%TYPE,
+                                          P_NCODE               OUT NUMBER,
+                                          P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDADJUNTO TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDADJUNTO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� el informe de la se�al de alerta correctamente';
+  
+    SELECT NVL(MAX(NIDADJUNTO), 0) + 1
+      INTO V_NIDADJUNTO
+      FROM TBL_LAFT_ALR_PROC_ADJUN_INFORM;
+  
+    IF P_STIPO_CARGA = 'ADJUNTOS-SUSTENTO' THEN
+      DELETE TBL_LAFT_ALR_PROC_ADJUN_INFORM TLAPA
+       WHERE TLAPA.STIPO_CARGA = P_STIPO_CARGA
+         AND TLAPA.NIDALERTA = P_NIDALERTA
+         AND TLAPA.NIDALERTA_CABECERA = P_NIDALERTA_CABECERA
+         AND TLAPA.NREGIMEN = P_NREGIMEN;
+      COMMIT;
+    END IF;
+  
+    INSERT INTO TBL_LAFT_ALR_PROC_ADJUN_INFORM
+      (NIDALERTA,
+       NPERIODO_PROCESO,
+       NIDADJUNTO,
+       SRUTA_ADJUNTO,
+       DFECHA_REGISTRO,
+       NIDUSUARIO_MODIFICA,
+       STIPO_CARGA,
+       NIDALERTA_CABECERA,
+       NREGIMEN)
+    VALUES
+      (P_NIDALERTA,
+       P_NPERIODO_PROCESO,
+       V_NIDADJUNTO,
+       P_SRUTA_ADJUNTO,
+       SYSDATE,
+       P_NIDUSUARIO_MODIFICA,
+       P_STIPO_CARGA,
+       P_NIDALERTA_CABECERA,
+       P_NREGIMEN);
+    COMMIT;
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_EMPRESA_DETALLE_USUARIO(P_NIDALERTA             TBL_LAFT_ALERTA_DETALLE.NIDALERTA%TYPE,
+                                           P_NPERIODO_PROCESO      TBL_LAFT_ALERTA_CAB_USU_ADJ.SRUTA_ADJUNTO%TYPE,
+                                           P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_PREG.NIDALERTA_CAB_USUARIO%TYPE,
+                                           P_STIPO_DOC             TBL_LAFT_ALERTA_DETALLE.STIPO_DOC%TYPE,
+                                           P_SNUMERO_DOC           TBL_LAFT_ALERTA_DETALLE.SNUMERO_DOC%TYPE,
+                                           P_SPRIMER_NOMBRE        TBL_LAFT_ALERTA_DETALLE.SPRIMER_NOMBRE%TYPE,
+                                           P_SSEGUNDO_NOMBRE       TBL_LAFT_ALERTA_DETALLE.SSEGUNDO_NOMBRE%TYPE,
+                                           P_SAPE_PATERNO          TBL_LAFT_ALERTA_DETALLE.SAPE_PATERNO%TYPE,
+                                           P_SAPE_MATERNO          TBL_LAFT_ALERTA_DETALLE.SAPE_MATERNO%TYPE,
+                                           P_SRAZON_SOCIAL         TBL_LAFT_ALERTA_DETALLE.SRAZON_SOCIAL%TYPE,
+                                           P_SDIRECCION            TBL_LAFT_ALERTA_DETALLE.SDIRECCION%TYPE,
+                                           P_SPAIS                 TBL_LAFT_ALERTA_DETALLE.SPAIS%TYPE,
+                                           P_NPRODUCT              TBL_LAFT_ALERTA_DETALLE.NPRODUCT%TYPE,
+                                           P_NIDREGIMEN            TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE,
+                                           RC1                     OUT SYS_REFCURSOR,
+                                           P_NCODE                 OUT NUMBER,
+                                           P_SMESSAGE              OUT VARCHAR2) IS
+  
+    V_NIDALERTA_DET         NUMBER;
+    V_NIDALERTA_DET_USUARIO NUMBER;
+  
+    CURSOR PREGUNTA_DET IS
+      SELECT TLADU.NIDALERTA_CAB_USUARIO,
+             TLADU.NIDALERTA_DET_USUARIO,
+             TLADU.NIDALERTA,
+             TLADU.NPERIODO_PROCESO,
+             TLADU.NIDALERTA_DET,
+             TLAP.NIDPREGUNTA,
+             TLAP.NIDORIGEN,
+             TLACU.NIDREGIMEN
+        FROM TBL_LAFT_ALERTA_CAB_USUARIO TLACU,
+             TBL_LAFT_ALERTA_DET_USUARIO TLADU,
+             TBL_LAFT_ALERTA_DETALLE     TLAD,
+             TBL_LAFT_ALERTA_PREGUNTA    TLAP
+       WHERE TLACU.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+         AND TLACU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLACU.NIDALERTA = P_NIDALERTA
+         AND TLADU.NIDALERTA_CAB_USUARIO = TLACU.NIDALERTA_CAB_USUARIO
+         AND TLADU.NIDALERTA = TLACU.NIDALERTA
+         AND TLADU.NIDREGIMEN = TLACU.NIDREGIMEN
+         AND TLADU.NPERIODO_PROCESO = TLACU.NPERIODO_PROCESO
+         AND TLADU.NIDALERTA_DET = TLAD.NIDALERTA_DET
+         AND TLAP.NIDALERTA = TLACU.NIDALERTA
+         AND TLAD.NPERIODO_PROCESO = TLACU.NPERIODO_PROCESO
+         AND TLAD.NIDALERTA = TLACU.NIDALERTA
+         AND TLAD.NIDALERTA_DET = V_NIDALERTA_DET
+         AND TLAP.SESTADO = 1
+         AND TLAP.NIDORIGEN = 2;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    BEGIN
+    
+      SELECT SEQ_ID_ALERTA_DETALLE.NEXTVAL
+        INTO V_NIDALERTA_DET
+        FROM DUAL;
+    
+      INSERT INTO TBL_LAFT_ALERTA_DETALLE
+        (NIDALERTA,
+         NIDALERTA_DET,
+         NPERIODO_PROCESO,
+         DFECHA_REGISTRO,
+         STIPO_DOC,
+         SNUMERO_DOC,
+         SPRIMER_NOMBRE,
+         SSEGUNDO_NOMBRE,
+         SAPE_PATERNO,
+         SAPE_MATERNO,
+         SRAZON_SOCIAL,
+         SDIRECCION,
+         SPAIS,
+         NPRODUCT,
+         NIDREGIMEN)
+      VALUES
+        (P_NIDALERTA,
+         V_NIDALERTA_DET,
+         P_NPERIODO_PROCESO,
+         SYSDATE,
+         1, --RUC--P_STIPO_DOC,
+         P_SNUMERO_DOC,
+         P_SPRIMER_NOMBRE,
+         P_SSEGUNDO_NOMBRE,
+         P_SAPE_PATERNO,
+         P_SAPE_MATERNO,
+         P_SRAZON_SOCIAL,
+         P_SDIRECCION,
+         P_SPAIS,
+         P_NPRODUCT,
+         P_NIDREGIMEN);
+    
+      SELECT SEQ_ID_ALERTA_DET_USUARIO.NEXTVAL
+        INTO V_NIDALERTA_DET_USUARIO
+        FROM DUAL;
+    
+      INSERT INTO TBL_LAFT_ALERTA_DET_USUARIO
+        (NIDALERTA_CAB_USUARIO,
+         NIDALERTA_DET_USUARIO,
+         NPERIODO_PROCESO,
+         NIDALERTA,
+         NIDALERTA_DET,
+         NIDREGIMEN,
+         DFECHA_CREACION)
+      VALUES
+        (P_NIDALERTA_CAB_USUARIO,
+         V_NIDALERTA_DET_USUARIO,
+         P_NPERIODO_PROCESO,
+         P_NIDALERTA,
+         V_NIDALERTA_DET,
+         P_NIDREGIMEN,
+         SYSDATE);
+    
+      FOR C1 IN PREGUNTA_DET
+      LOOP
+      
+        INSERT INTO TBL_LAFT_ALERTA_DET_USU_PREG
+          (NIDALERTA_CAB_USUARIO,
+           NIDALERTA_DET_USUARIO,
+           NPERIODO_PROCESO,
+           NIDALERTA,
+           NIDALERTA_DET,
+           NIDPREGUNTA,
+           NIDORIGEN,
+           NIDREGIMEN)
+        VALUES
+          (C1.NIDALERTA_CAB_USUARIO,
+           C1.NIDALERTA_DET_USUARIO,
+           C1.NPERIODO_PROCESO,
+           C1.NIDALERTA,
+           C1.NIDALERTA_DET,
+           C1.NIDPREGUNTA,
+           C1.NIDORIGEN,
+           C1.NIDREGIMEN);
+      END LOOP;
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        NULL;
+    END;
+  
+    OPEN RC1 FOR
+    
+      SELECT TLADUP.*
+        FROM TBL_LAFT_ALERTA_DET_USU_PREG TLADUP
+       WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+         AND NIDALERTA_DET_USUARIO = V_NIDALERTA_DET_USUARIO
+         AND NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NIDALERTA_DET = V_NIDALERTA_DET;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+  PROCEDURE SP_DEL_ADJ_INFORM_ALERTA(P_NIDALERTA TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE, --P_NPERIODO_PROCESO TBL_LAFT_MONITOREO_ALERTA.NPERIODO_PROCESO%TYPE,
+                                     P_NREGIMEN  TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                     P_NCODE     OUT NUMBER,
+                                     P_SMESSAGE  OUT VARCHAR2) IS
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    DELETE TBL_LAFT_ALR_PROC_ADJUN_INFORM
+     WHERE NIDALERTA = P_NIDALERTA
+       AND NREGIMEN = P_NREGIMEN;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_INS_MONITOREO_ALERTA(P_SID               OUT TBL_LAFT_MONITOREO_ALERTA.SID%TYPE,
+                                    P_NPERIODO_PROCESO  OUT TBL_LAFT_MONITOREO_ALERTA.NPERIODO_PROCESO%TYPE,
+                                    P_DFEEJECUTAPROCINI OUT TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                    P_DFEEJECUTAPROCFIN OUT TBL_LAFT_ALERTA_FRECUENCIA.DFEEJECUTAPROCINI%TYPE,
+                                    P_NCODE             OUT NUMBER,
+                                    P_SMESSAGE          OUT VARCHAR2) IS
+  
+    V_SINDSUSPENSION TBL_LAFT_ALERTA_FRECUENCIA.SINDSUSPENSION%TYPE;
+    V_NIDPROFILE     TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE;
+    V_NCOUNT         INTEGER;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+    --P_NPERIODO_PROCESO := 202012;
+    P_SID := TO_CHAR(SYSDATE, 'DDMMYYYYHH24MISS');
+  
+    /*SELECT COUNT(DISTINCT TLAPP.NIDPROFILE)
+      INTO V_NCOUNT
+      FROM TBL_LAFT_ALERTA_PERFIL TLAPP
+     WHERE NOT EXISTS (SELECT 1
+              FROM TBL_LAFT_CONFIGURACION_CORREO COR
+             WHERE COR.NIDPROFILE = TLAPP.NIDPROFILE
+               AND NIDACCION = 1);
+    
+    IF V_NCOUNT > 0 THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'Existen perfiles que no cuentan con el correo configurado';
+      ROLLBACK;
+      RETURN;
+    END IF;*/
+  
+    BEGIN
+      SELECT NPERIODO_PROCESO,
+             DFEEJECUTAPROCINI,
+             DFEEJECUTAPROCFIN,
+             SINDSUSPENSION
+        INTO P_NPERIODO_PROCESO,
+             P_DFEEJECUTAPROCINI,
+             P_DFEEJECUTAPROCFIN,
+             V_SINDSUSPENSION
+        FROM TBL_LAFT_ALERTA_FRECUENCIA TLAF
+       WHERE TLAF.DNULLDATE IS NULL
+         AND TLAF.SESTADO = 1;
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'Existe m�s de una frecuencia de ejecuci�n activa';
+        ROLLBACK;
+        RETURN;
+      WHEN NO_DATA_FOUND THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'No existe una frecuencia de ejecuci�n activa';
+        ROLLBACK;
+        RETURN;
+    END;
+  
+    IF V_SINDSUSPENSION = '2' THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'La frecuencia de ejecuci�n se encuentra Inactiva';
+      ROLLBACK;
+      RETURN;
+    END IF;
+  
+    INSERT INTO TBL_LAFT_MONITOREO_ALERTA
+      (NPERIODO_PROCESO,
+       DINIPROC,
+       --DFINPROC,
+       DCOMPDATE,
+       NSTATUSPROC,
+       SID,
+       DRANGOINI,
+       DRANGOFIN)
+    VALUES
+      (P_NPERIODO_PROCESO,
+       SYSDATE,
+       --NULL,
+       SYSDATE,
+       1,
+       P_SID,
+       P_DFEEJECUTAPROCINI,
+       P_DFEEJECUTAPROCFIN);
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_MONITOREO_ALERTA(P_SID         TBL_LAFT_MONITOREO_ALERTA.SID%TYPE, --P_NPERIODO_PROCESO TBL_LAFT_MONITOREO_ALERTA.NPERIODO_PROCESO%TYPE,
+                                    P_NSTATUSPROC TBL_LAFT_MONITOREO_ALERTA.NSTATUSPROC%TYPE,
+                                    P_SMENSAJE    TBL_LAFT_MONITOREO_ALERTA.SMENSAJE%TYPE,
+                                    P_NCODE       OUT NUMBER,
+                                    P_SMESSAGE    OUT VARCHAR2) IS
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    UPDATE TBL_LAFT_MONITOREO_ALERTA
+       SET NSTATUSPROC = P_NSTATUSPROC,
+           SMENSAJE    = P_SMENSAJE,
+           DFINPROC    = SYSDATE
+     WHERE SID = P_SID;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  /*PROCEDURE SP_INS_COMPLEMENTO_CAB_USU(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDALERTA_CAB_USUARIO%TYPE,
+                                       P_SCOMENTARIO           TBL_LAFT_ALERTA_CAB_USU_COMPLE.SCOMENTARIO%TYPE,
+                                       P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDUSUARIO_MODIFICA%TYPE,
+                                       P_NCODE                 OUT NUMBER,
+                                       P_SMESSAGE              OUT VARCHAR2) IS
+  
+    V_NIDCOMPLEMENTO TBL_LAFT_ALERTA_CAB_USU_COMPLE.NIDCOMPLEMENTO%TYPE;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    UPDATE TBL_LAFT_ALERTA_CAB_USU_COMPLE
+       SET DNULLDATE = SYSDATE
+     WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO
+       AND DNULLDATE IS NULL;
+  
+    SELECT NVL(MAX(NIDCOMPLEMENTO), 0) + 1
+      INTO V_NIDCOMPLEMENTO
+      FROM TBL_LAFT_ALERTA_CAB_USU_COMPLE
+     WHERE NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+  
+    INSERT INTO TBL_LAFT_ALERTA_CAB_USU_COMPLE
+      (NIDALERTA_CAB_USUARIO,
+       NIDCOMPLEMENTO,
+       SCOMENTARIO,
+       DFECHA_REGISTRO,
+       NIDUSUARIO_MODIFICA,
+       DNULLDATE)
+    VALUES
+      (P_NIDALERTA_CAB_USUARIO,
+       V_NIDCOMPLEMENTO,
+       P_SCOMENTARIO,
+       SYSDATE,
+       P_NIDUSUARIO_MODIFICA,
+       NULL);
+  
+    UPDATE TBL_LAFT_ALERTA_CAB_USUARIO CAB
+       SET CAB.DFECHA_ESTADO_MOVIMIENTO = SYSDATE,
+           CAB.SESTADO                  = 3,
+           CAB.NIDUSUARIO_VERIFICADO    = P_NIDUSUARIO_MODIFICA
+     WHERE CAB.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;*/
+
+  PROCEDURE SP_UPD_PAIS_GAFI(P_NIDGAFI             TBL_LAFT_LISTA_GAFI.NIDGAFI%TYPE,
+                             P_SNOMBRE_PAIS_GAFI   TBL_LAFT_LISTA_GAFI.SNOMBRE_PAIS_GAFI%TYPE,
+                             P_SESTADO             TBL_LAFT_LISTA_GAFI.SESTADO%TYPE,
+                             P_NIDUSUARIO_REGISTRO TBL_LAFT_LISTA_GAFI.NIDUSUARIO_REGISTRO%TYPE,
+                             P_STIPO_OPE           CHAR,
+                             P_NCODE               OUT NUMBER,
+                             P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDGAFI TBL_LAFT_LISTA_GAFI.NIDGAFI%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� correctamente el Pa�s GAFI';
+  
+    IF P_STIPO_OPE = 'D' THEN
+      UPDATE TBL_LAFT_LISTA_GAFI TBLG
+         SET TBLG.SESTADO         = 2,
+             TBLG.DFECHA_REGISTRO = SYSDATE
+       WHERE NIDGAFI = P_NIDGAFI;
+    END IF;
+  
+    IF P_STIPO_OPE = 'I' THEN
+    
+      IF TRIM(P_SNOMBRE_PAIS_GAFI) IS NULL THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'El Nombre del Pa�s no debe estar vac�o';
+        RETURN;
+      END IF;
+    
+      SELECT NVL(MAX(TBLG.NIDGAFI), 0) + 1
+        INTO V_NIDGAFI
+        FROM TBL_LAFT_LISTA_GAFI TBLG;
+    
+      BEGIN
+      
+        INSERT INTO TBL_LAFT_LISTA_GAFI
+          (NIDGAFI,
+           SNOMBRE_PAIS_GAFI,
+           SESTADO,
+           DFECHA_REGISTRO,
+           NIDUSUARIO_REGISTRO)
+        VALUES
+          (V_NIDGAFI,
+           P_SNOMBRE_PAIS_GAFI,
+           1,
+           SYSDATE,
+           TRIM(P_NIDUSUARIO_REGISTRO));
+      EXCEPTION
+        WHEN DUP_VAL_ON_INDEX THEN
+          UPDATE TBL_LAFT_LISTA_GAFI TBLG
+             SET TBLG.SESTADO         = 1,
+                 TBLG.DFECHA_REGISTRO = SYSDATE,
+                 NIDUSUARIO_REGISTRO  = P_NIDUSUARIO_REGISTRO
+           WHERE SNOMBRE_PAIS_GAFI = TRIM(P_SNOMBRE_PAIS_GAFI);
+      END;
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_FRECUENCIA_PROCESO(P_NIDFRECUENCIA       TBL_LAFT_ALERTA_FRECUENCIA.NIDFRECUENCIA%TYPE,
+                                      P_NTIPOFRECUENCIA     TBL_LAFT_ALERTA_FRECUENCIA.NTIPOFRECUENCIA%TYPE,
+                                      P_DFECINI             VARCHAR2,
+                                      P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_FRECUENCIA.NIDUSUARIO_MODIFICA%TYPE,
+                                      P_NCODE               OUT NUMBER,
+                                      P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDFRECUENCIA TBL_LAFT_ALERTA_FRECUENCIA.NIDFRECUENCIA%TYPE;
+    V_NNUM_MESES    TBL_LAFT_TIPO_FRECUENCIA.NNUM_MESES%TYPE;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� correctamente la Frecuencia del proceso';
+  
+    IF TRIM(P_NTIPOFRECUENCIA) IS NULL THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'Debe seleccionar el tipo de frecuencia';
+      RETURN;
+    END IF;
+  
+    IF TRIM(P_DFECINI) IS NULL THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'La fecha de inicio del proceso no puede estar vac�a';
+      RETURN;
+    END IF;
+  
+    IF P_DFECINI < TRUNC(SYSDATE) THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := 'La fecha de inicio no puede ser menor a la fecha actual';
+      RETURN;
+    END IF;
+  
+    UPDATE TBL_LAFT_ALERTA_FRECUENCIA TLAF
+       SET TLAF.SESTADO        = '2',
+           TLAF.DNULLDATE      = SYSDATE,
+           TLAF.SINDSUSPENSION = '2'
+     WHERE TLAF.NIDFRECUENCIA = P_NIDFRECUENCIA;
+  
+    SELECT NVL(MAX(TLAF.NIDFRECUENCIA), 0) + 1
+      INTO V_NIDFRECUENCIA
+      FROM TBL_LAFT_ALERTA_FRECUENCIA TLAF;
+  
+    SELECT NNUM_MESES
+      INTO V_NNUM_MESES
+      FROM TBL_LAFT_TIPO_FRECUENCIA T
+     WHERE T.NTIPOFRECUENCIA = P_NTIPOFRECUENCIA;
+  
+    INSERT INTO TBL_LAFT_ALERTA_FRECUENCIA
+      (NIDFRECUENCIA,
+       DFECINI,
+       DFECFIN,
+       SESTADO,
+       NTIPOFRECUENCIA,
+       DNULLDATE,
+       DFEEJECUTAPROCINI,
+       DFEEJECUTAPROCFIN,
+       NPERIODO_PROCESO,
+       SINDSUSPENSION,
+       DFECHA_REGISTRO,
+       NIDUSUARIO_MODIFICA)
+    VALUES
+      (V_NIDFRECUENCIA,
+       P_DFECINI,
+       NULL,
+       1,
+       P_NTIPOFRECUENCIA,
+       NULL,
+       ADD_MONTHS(P_DFECINI, -V_NNUM_MESES),
+       P_DFECINI,
+       TO_CHAR(TO_DATE(P_DFECINI, 'DD/MM/YYYY'), 'YYYYMMDD'),
+       1,
+       SYSDATE,
+       P_NIDUSUARIO_MODIFICA);
+  
+    COMMIT;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE || ' - ' || ADD_MONTHS(P_DFECINI, -V_NNUM_MESES) || ' - ' || P_DFECINI || ' - ' || V_NNUM_MESES || ' - ' ||
+                    V_NIDFRECUENCIA;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_FRECUENCIA_SUSPENSION(P_NIDFRECUENCIA  TBL_LAFT_ALERTA_FRECUENCIA.NIDFRECUENCIA%TYPE,
+                                         P_SINDSUSPENSION TBL_LAFT_ALERTA_FRECUENCIA.SINDSUSPENSION%TYPE,
+                                         P_NCODE          OUT NUMBER,
+                                         P_SMESSAGE       OUT VARCHAR2) IS
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� correctamente la Frecuencia del proceso';
+  
+    UPDATE TBL_LAFT_ALERTA_FRECUENCIA TLAF
+       SET TLAF.SINDSUSPENSION = P_SINDSUSPENSION
+     WHERE TLAF.NIDFRECUENCIA = P_NIDFRECUENCIA;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_ALERTA_X_PERFIL(P_ID_ROL     TBL_LAFT_ALERTA_PERFIL.NIDPROFILE%TYPE,
+                                   P_NIDREGIMEN TBL_LAFT_ALERTA_PERFIL.NIDREGIMEN%TYPE,
+                                   P_NIDALERTA  TBL_LAFT_ALERTA_PERFIL.NIDALERTA%TYPE,
+                                   P_SESTADO    TBL_LAFT_ALERTA_PERFIL.SESTADO%TYPE,
+                                   P_NCODE      OUT NUMBER,
+                                   P_SMESSAGE   OUT VARCHAR2) IS
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� correctamente la Alerta por Perfil';
+  
+    UPDATE TBL_LAFT_ALERTA_PERFIL TLAP
+       SET TLAP.SESTADO = P_SESTADO
+     WHERE TLAP.NIDPROFILE = P_ID_ROL
+       AND TLAP.NIDREGIMEN = P_NIDREGIMEN
+       AND NIDALERTA = P_NIDALERTA;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_RESULTADO_COINCIDENCIA(P_NPERIODO_PROCESO     TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                          P_NIDALERTA            TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                          P_NIDRESULTADO         TBL_LAFT_ALERTA_RESULTADOS.NIDRESULTADO%TYPE,
+                                          P_NIDREGIMEN           TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                          P_NIDTIPOLISTA         TBL_LAFT_ALERTA_RESULTADOS.NIDTIPOLISTA%TYPE,
+                                          P_NIDPROVEEDOR         TBL_LAFT_ALERTA_RESULTADOS.NIDPROVEEDOR%TYPE,
+                                          P_NACEPTA_COINCIDENCIA TBL_LAFT_ALERTA_RESULTADOS.NACEPTA_COINCIDENCIA%TYPE,
+                                          P_SCLIENT              TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                          P_NIDUSUARIO_REVISADO  TBL_LAFT_ALERTA_RESULTADOS.NIDUSUARIO_REVISADO%TYPE,
+                                          P_SESTADO_TRAT         TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE,
+                                          P_NTIPOCARGA           TBL_LAFT_ALERTA_RESULTADOS.NTIPOCARGA%TYPE,
+                                          P_STIPO_BUSQUEDA       TBL_LAFT_ALERTA_RESULTADOS.STIPO_BUSQUEDA%TYPE,
+                                          P_NCODE                OUT NUMBER,
+                                          P_SMESSAGE             OUT VARCHAR2) IS
+  
+    V_NCOUNT         INTEGER := 0;
+    V_SESTADO_TRAT   TBL_LAFT_ALERTA_RESULTADOS.SESTADO_TRAT%TYPE;
+    V_NIDTRATCLIEHIS TBL_LAFT_TRATAM_CLIENTE_HIS.NIDTRATCLIEHIS%TYPE;
+  
+    V_NCOUNT_TOTAL INTEGER;
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� correctamente la lista';
+  
+    IF P_NACEPTA_COINCIDENCIA = '1' THEN
+    
+      IF P_SESTADO_TRAT IS NULL OR NVL(P_SESTADO_TRAT, 'XX') <> 'CRF' THEN
+        IF P_NIDTIPOLISTA IN (2, 3) AND P_NIDREGIMEN IN (1) AND P_NACEPTA_COINCIDENCIA = '1' THEN
+          V_SESTADO_TRAT := 'CRF';
+        ELSIF P_NACEPTA_COINCIDENCIA = '1' THEN
+          V_SESTADO_TRAT := 'CRE';
+        END IF;
+      
+        IF V_SESTADO_TRAT = 'CRE' THEN
+          SELECT COUNT(*)
+            INTO V_NCOUNT
+            FROM TBL_LAFT_ALERTA_RESULTADOS
+           WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+             AND NIDALERTA = P_NIDALERTA
+             AND SCOD_CLIENTE_BUSQ = P_SCLIENT
+             AND DNULLDATE IS NULL
+             AND NTIPOCARGA = P_NTIPOCARGA
+             AND SESTADO_TRAT = 'CRF';
+        END IF;
+      
+        IF V_NCOUNT = 0 THEN
+        
+          SP_UPD_TRATAMIENTO_CLIENTE(P_NPERIODO_PROCESO    => P_NPERIODO_PROCESO,
+                                     P_NIDALERTA           => P_NIDALERTA,
+                                     P_SCLIENT             => P_SCLIENT,
+                                     P_SESTADO_TRAT        => V_SESTADO_TRAT,
+                                     P_NIDUSUARIO_MODIFICA => P_NIDUSUARIO_REVISADO,
+                                     P_STIPOACTRESULTADO   => 'AUTOMATICO',
+                                     P_STIPO_PEP           => NULL,
+                                     P_SDES_PEP            => NULL,
+                                     P_SCOMENTARIO         => 'AUTOM�TICO',
+                                     --P_SCOMENTARIO         => CASE
+                                     --                           WHEN P_NTIPOCARGA = 2 THEN
+                                     --                            'MANUAL'
+                                     --                           ELSE
+                                     --                            'AUTOMATICO'
+                                     --                         END,
+                                     P_NIDREGIMEN     => P_NIDREGIMEN,
+                                     P_NIDTRATCLIEHIS => 0,
+                                     P_NTIPOCARGA     => P_NTIPOCARGA,
+                                     P_TIPOACCION     => 'I',
+                                     P_NCODE          => P_NCODE,
+                                     P_SMESSAGE       => P_SMESSAGE);
+        
+          /*IF V_SESTADO_TRAT = 'CRF' THEN
+            UPDATE INSUDB.CLIENT_CM
+               SET NIDREGIMEN = 1
+             WHERE SCLIENT = P_SCLIENT;
+          ELSE
+            UPDATE INSUDB.CLIENT_CM
+               SET NIDREGIMEN = 2
+             WHERE SCLIENT = P_SCLIENT;
+          END IF;*/
+        END IF;
+      
+      END IF;
+    
+    END IF;
+  
+    UPDATE TBL_LAFT_ALERTA_RESULTADOS TLAR
+       SET TLAR.NACEPTA_COINCIDENCIA = P_NACEPTA_COINCIDENCIA,
+           TLAR.SESTADO_REVISADO     = '1',
+           TLAR.DFECHA_REVISADO      = SYSDATE,
+           TLAR.NIDUSUARIO_REVISADO  = P_NIDUSUARIO_REVISADO,
+           TLAR.SESTADO_TRAT         = V_SESTADO_TRAT,
+           TLAR.DNULLDATE            = DECODE(P_NACEPTA_COINCIDENCIA, 2, SYSDATE, TLAR.DNULLDATE)
+     WHERE TLAR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND TLAR.NIDALERTA = P_NIDALERTA
+          --AND TLAR.NIDRESULTADO = P_NIDRESULTADO
+       AND TLAR.SCOD_CLIENTE_BUSQ = P_SCLIENT
+       AND TLAR.NIDREGIMEN = P_NIDREGIMEN
+       AND TLAR.NIDTIPOLISTA = P_NIDTIPOLISTA
+       AND TLAR.NIDPROVEEDOR = P_NIDPROVEEDOR
+       AND TLAR.NTIPOCARGA = P_NTIPOCARGA
+       AND TLAR.STIPO_BUSQUEDA = P_STIPO_BUSQUEDA
+       AND TLAR.DNULLDATE IS NULL;
+  
+    SELECT COUNT(*)
+      INTO V_NCOUNT
+      FROM TBL_LAFT_ALERTA_RESULTADOS TLAR
+     WHERE TLAR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND TLAR.NIDALERTA = P_NIDALERTA
+       AND TLAR.NIDTIPOLISTA = P_NIDTIPOLISTA
+       AND TLAR.NIDREGIMEN = P_NIDREGIMEN
+       AND TLAR.SESTADO_REVISADO = '2'
+       AND TLAR.NTIPOCARGA = P_NTIPOCARGA;
+    --AND TLAR.DNULLDATE IS NULL;
+  
+    IF V_NCOUNT = 0 THEN
+      UPDATE TBL_LAFT_ALERTA_LISTAS_PERIODO TLP
+         SET TLP.SESTADO_REVISADO = '1',
+             TLP.NCANTCLIXREV     = 0
+       WHERE TLP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLP.NIDALERTA = P_NIDALERTA
+         AND TLP.NIDTIPOLISTA = P_NIDTIPOLISTA
+         AND TLP.NIDREGIMEN = P_NIDREGIMEN;
+    ELSE
+      UPDATE TBL_LAFT_ALERTA_LISTAS_PERIODO TLP
+         SET TLP.NCANTCLIXREV = V_NCOUNT
+       WHERE TLP.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLP.NIDALERTA = P_NIDALERTA
+         AND TLP.NIDTIPOLISTA = P_NIDTIPOLISTA
+         AND TLP.NIDREGIMEN = P_NIDREGIMEN;
+    END IF;
+  
+    IF P_NACEPTA_COINCIDENCIA = '2' THEN
+      SELECT COUNT(*)
+        INTO V_NCOUNT_TOTAL
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR
+       WHERE TLAR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLAR.NIDALERTA = P_NIDALERTA
+         AND TLAR.NTIPOCARGA = P_NTIPOCARGA
+         AND TLAR.SCOD_CLIENTE_BUSQ = P_SCLIENT
+         AND TLAR.DNULLDATE IS NULL;
+    
+      IF V_NCOUNT_TOTAL = 0 THEN
+      
+        DELETE FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND NIDREGIMEN = P_NIDREGIMEN
+           AND SCLIENT = P_SCLIENT;
+      
+        SELECT NVL(MAX(NIDTRATCLIEHIS), 0) + 1
+          INTO V_NIDTRATCLIEHIS
+          FROM LAFT.TBL_LAFT_TRATAM_CLIENTE_HIS;
+      
+        INSERT INTO LAFT.TBL_LAFT_TRATAM_CLIENTE_HIS
+          (NPERIODO_PROCESO,
+           NIDALERTA,
+           NIDTRATCLIEHIS,
+           SCLIENT,
+           SESTADO_TRAT,
+           NIDUSUARIO_MODIFICA,
+           DCOMPDATE)
+        VALUES
+          (P_NPERIODO_PROCESO,
+           P_NIDALERTA,
+           V_NIDTRATCLIEHIS,
+           P_SCLIENT,
+           'DTC',
+           P_NIDUSUARIO_REVISADO,
+           SYSDATE);
+      END IF;
+    
+    END IF;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_ANULAR_RESULTADO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                    P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                    P_SCLIENT          TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                    P_NCODE            OUT NUMBER,
+                                    P_SMESSAGE         OUT VARCHAR2) IS
+  
+    V_NCOUNT INTEGER;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se anul� correctamente el resultado';
+  
+    UPDATE TBL_LAFT_ALERTA_RESULTADOS TLAR
+       SET TLAR.DNULLDATE = SYSDATE
+     WHERE TLAR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND TLAR.NIDALERTA = P_NIDALERTA
+       AND TLAR.SCOD_CLIENTE_BUSQ = P_SCLIENT;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_UPD_TRATAMIENTO_CLIENTE(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_TRATAM_CLIENTE.NPERIODO_PROCESO%TYPE,
+                                       P_NIDALERTA           TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDALERTA%TYPE,
+                                       P_SCLIENT             TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCLIENT%TYPE,
+                                       P_SESTADO_TRAT        TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE,
+                                       P_NIDUSUARIO_MODIFICA TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDUSUARIO_MODIFICA%TYPE,
+                                       P_NTIPOCLIENTE        NUMBER DEFAULT NULL,
+                                       P_STIPOACTRESULTADO   VARCHAR2,
+                                       P_DBIRTHDAT           TBL_LAFT_ALERTA_TRATAM_CLIENTE.DBIRTHDAT%TYPE DEFAULT NULL,
+                                       P_SCLIENAME           TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCLIENAME%TYPE DEFAULT NULL,
+                                       P_STIPOIDEN           TBL_LAFT_ALERTA_TRATAM_CLIENTE.STIPOIDEN%TYPE DEFAULT NULL,
+                                       P_STIPO_PEP           TBL_LAFT_ALERTA_TRATAM_CLIENTE.STIPO_PEP%TYPE,
+                                       P_SDES_PEP            TBL_LAFT_ALERTA_TRATAM_CLIENTE.SDES_PEP%TYPE,
+                                       P_SCOMENTARIO         TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCOMENTARIO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDREGIMEN%TYPE,
+                                       P_NIDTRATCLIEHIS      TBL_LAFT_ALERTA_TRATAM_CLIENTE.NIDTRATCLIEHIS%TYPE,
+                                       P_NTIPOCARGA          TBL_LAFT_ALERTA_RESULTADOS.NTIPOCARGA%TYPE,
+                                       P_TIPOACCION          VARCHAR2,
+                                       P_NCODE               OUT NUMBER,
+                                       P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_NIDTRATCLIEHIS TBL_LAFT_TRATAM_CLIENTE_HIS.NIDTRATCLIEHIS%TYPE;
+    V_SESTADO_TRAT   TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE;
+    V_ENCONTRO       CHAR(1) := 'S';
+    V_NCOUNT         INTEGER;
+    V_NCOUNT_TOTAL   INTEGER;
+    V_STIPO_PEP      TBL_LAFT_ALERTA_TRATAM_CLIENTE.STIPO_PEP%TYPE;
+    V_SDES_PEP       TBL_LAFT_ALERTA_TRATAM_CLIENTE.SDES_PEP%TYPE;
+    V_SCOMENTARIO    TBL_LAFT_ALERTA_TRATAM_CLIENTE.SCOMENTARIO%TYPE;
+    V_NIDREGIMEN     TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE;
+  
+    CURSOR LISTA_RES_CLIENTE IS
+      SELECT DISTINCT NIDTIPOLISTA
+        FROM TBL_LAFT_ALERTA_RESULTADOS
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND SCOD_CLIENTE_BUSQ = P_SCLIENT
+         AND NIDREGIMEN = P_NIDREGIMEN
+         AND DNULLDATE IS NULL;
+    V_NIDRESULTADO INTEGER;
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� correctamente el estado del cliente';
+  
+    SELECT NVL(MAX(NIDTRATCLIEHIS), 0) + 1
+      INTO V_NIDTRATCLIEHIS
+      FROM TBL_LAFT_TRATAM_CLIENTE_HIS;
+  
+    V_SESTADO_TRAT := P_SESTADO_TRAT;
+    V_STIPO_PEP    := P_STIPO_PEP;
+    V_SDES_PEP     := P_SDES_PEP;
+    V_SCOMENTARIO  := P_SCOMENTARIO;
+    V_NIDREGIMEN   := P_NIDREGIMEN;
+  
+    IF P_TIPOACCION = 'I' THEN
+    
+      /*IF P_NTIPOCLIENTE = 1 \*OR P_STIPOACTRESULTADO = 'MANUAL'*\
+       THEN
+        SELECT NVL(MAX(NIDRESULTADO), 0) + 1
+          INTO V_NIDRESULTADO
+          FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND SCOD_CLIENTE_BUSQ = P_SCLIENT;
+      
+        INSERT INTO LAFT.TBL_LAFT_ALERTA_RESULTADOS
+          (NPERIODO_PROCESO,
+           NIDALERTA,
+           NIDRESULTADO,
+           DFECHA_CARGA,
+           NTIPOIDEN_BUSQ,
+           SNUM_DOCUMENTO_BUSQ,
+           SNOM_COMPLETO_BUSQ,
+           STIPO_CLIENTE,
+           SPARENTESCO,
+           STIPO_DOCUMENTO,
+           SCOD_CLIENTE_BUSQ,
+           STIPOIDEN_BUSQ,
+           SNUM_DOCUMENTO,
+           SNOM_COMPLETO,
+           --SDIRECCION,
+           NIDPROVEEDOR,
+           STIPO_BUSQUEDA,
+           NIDREGIMEN,
+           NIDTIPOLISTA,
+           NPORC_APROXIMA_BUSQ,
+           SORIGEN,
+           DBIRTHDAT,
+           SPRODUCTO,
+           NTIPOCARGA,
+           NIDBUSQUEDA,
+           SESTADO_TRAT)
+          SELECT P_NPERIODO_PROCESO,
+                 P_NIDALERTA,
+                 V_NIDRESULTADO,
+                 SYSDATE,
+                 CD.NTYPCLIENTDOC,
+                 TRIM(CD.SCLINUMDOCU),
+                 NVL(CL.SCLIENAME, CL.SLEGALNAME),
+                 TRIM(UPPER(TP.SDESCRIPT)),
+                 NULL,
+                 TRIM(UPPER(TD.SDESCRIPT)),
+                 CL.SCLIENT,
+                 CD.NTYPCLIENTDOC,
+                 CD.SCLINUMDOCU,
+                 NVL(CL.SCLIENAME, CL.SLEGALNAME),
+                 3,
+                 'DOCUMENTO',
+                 DECODE(V_SESTADO_TRAT, 'CRF', 1, 2),
+                 0,
+                 NULL,
+                 'FORZADO',
+                 CL.DBIRTHDAT,
+                 NULL,
+                 P_NTIPOCARGA,
+                 0,
+                 V_SESTADO_TRAT
+            FROM CLIENT       CL,
+                 TABLE5645    TD,
+                 TABLE5006    TP,
+                 CLIDOCUMENTS CD
+           WHERE CL.SCLIENT = P_SCLIENT
+             AND TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+             AND TP.NPERSON_TYP = CL.NPERSON_TYP
+             AND CD.SCLIENT = CL.SCLIENT;
+      
+      END IF;*/
+    
+      BEGIN
+      
+        INSERT INTO TBL_LAFT_ALERTA_TRATAM_CLIENTE
+          (NPERIODO_PROCESO,
+           NIDALERTA,
+           SCLIENT,
+           DFECHA_REGISTRO,
+           NIDUSUARIO_MODIFICA,
+           SESTADO_TRAT,
+           STIPO_PEP,
+           SDES_PEP,
+           SCOMENTARIO,
+           NIDREGIMEN,
+           NIDTRATCLIEHIS)
+        VALUES
+          (P_NPERIODO_PROCESO,
+           P_NIDALERTA,
+           P_SCLIENT,
+           SYSDATE,
+           P_NIDUSUARIO_MODIFICA,
+           P_SESTADO_TRAT,
+           V_STIPO_PEP,
+           V_SDES_PEP,
+           V_SCOMENTARIO,
+           V_NIDREGIMEN,
+           V_NIDTRATCLIEHIS);
+      
+      EXCEPTION
+        WHEN DUP_VAL_ON_INDEX THEN
+        
+          IF P_STIPOACTRESULTADO = 'MANUAL' THEN
+          
+            UPDATE TBL_LAFT_ALERTA_RESULTADOS
+               SET DNULLDATE = SYSDATE
+             WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+               AND NIDALERTA = P_NIDALERTA
+               AND SCOD_CLIENTE_BUSQ = P_SCLIENT
+               AND DNULLDATE IS NULL;
+          
+          END IF;
+        
+          UPDATE TBL_LAFT_ALERTA_TRATAM_CLIENTE
+             SET SESTADO_TRAT        = P_SESTADO_TRAT,
+                 DFECHA_REGISTRO     = SYSDATE,
+                 NIDUSUARIO_MODIFICA = P_NIDUSUARIO_MODIFICA,
+                 STIPO_PEP           = V_STIPO_PEP,
+                 SDES_PEP            = V_SDES_PEP,
+                 SCOMENTARIO         = V_SCOMENTARIO,
+                 NIDTRATCLIEHIS      = V_NIDTRATCLIEHIS,
+                 NIDREGIMEN          = V_NIDREGIMEN
+           WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+             AND NIDALERTA = P_NIDALERTA
+             AND SCLIENT = P_SCLIENT;
+          --AND NIDREGIMEN = P_NIDREGIMEN;
+      END;
+    ELSE
+      UPDATE TBL_LAFT_ALERTA_RESULTADOS
+         SET DNULLDATE = SYSDATE
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND SCOD_CLIENTE_BUSQ = P_SCLIENT
+         AND DNULLDATE IS NULL;
+    
+      DELETE FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+            --AND NIDREGIMEN = V_NIDREGIMEN
+         AND SCLIENT = P_SCLIENT;
+    
+      V_SESTADO_TRAT := CASE
+                          WHEN P_SESTADO_TRAT = 'CRE' THEN
+                           'RRE'
+                          WHEN P_SESTADO_TRAT = 'CRF' THEN
+                           'RRF'
+                          WHEN P_SESTADO_TRAT = 'CCO' THEN
+                           'RCO'
+                        END;
+    
+      /*BEGIN
+        SELECT HIS.SESTADO_TRAT,
+               HIS.STIPO_PEP,
+               HIS.SDES_PEP,
+               HIS.SCOMENTARIO
+          INTO V_SESTADO_TRAT,
+               V_STIPO_PEP,
+               V_SDES_PEP,
+               V_SCOMENTARIO
+          FROM TBL_LAFT_TRATAM_CLIENTE_HIS HIS
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND SCLIENT = P_SCLIENT
+           AND NIDREGIMEN = P_NIDREGIMEN
+           AND NIDTRATCLIEHIS IN (SELECT MAX(NIDTRATCLIEHIS)
+                                    FROM TBL_LAFT_TRATAM_CLIENTE_HIS
+                                   WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                     AND NIDALERTA = P_NIDALERTA
+                                     AND SCLIENT = P_SCLIENT
+                                     AND NIDREGIMEN = P_NIDREGIMEN
+                                     AND NIDTRATCLIEHIS <> P_NIDTRATCLIEHIS
+                                     AND DNULLDATE IS NULL);
+      EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+        
+          \*SELECT COUNT(*)
+           INTO V_NCOUNT
+           FROM TBL_LAFT_TRATAM_CLIENTE_HIS
+          WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+            AND NIDALERTA = P_NIDALERTA
+            AND SCLIENT = P_SCLIENT
+            AND NIDREGIMEN = P_NIDREGIMEN
+            AND DNULLDATE IS NULL;*\
+        
+          V_ENCONTRO := 'N';
+        
+        \*     IF V_NCOUNT = 1 THEN
+          V_ENCONTRO := 'S';
+        END IF;*\
+      
+      END;
+      
+      IF V_ENCONTRO = 'S' THEN
+      
+        UPDATE TBL_LAFT_ALERTA_TRATAM_CLIENTE
+           SET SESTADO_TRAT        = V_SESTADO_TRAT,
+               NIDTRATCLIEHIS      = V_NIDTRATCLIEHIS,
+               NIDUSUARIO_MODIFICA = P_NIDUSUARIO_MODIFICA,
+               STIPO_PEP           = V_STIPO_PEP,
+               SDES_PEP            = V_SDES_PEP,
+               SCOMENTARIO         = V_SCOMENTARIO
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND SCLIENT = P_SCLIENT
+           AND NIDREGIMEN = P_NIDREGIMEN;
+      ELSE
+        --IF V_SESTADO_TRAT = 'CRF' THEN
+      
+        DELETE FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND NIDREGIMEN = P_NIDREGIMEN
+           AND SCLIENT = P_SCLIENT;
+        \*
+        DELETE FROM TBL_LAFT_TRATAM_CLIENTE_HIS
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+           AND NIDREGIMEN = P_NIDREGIMEN
+           AND SCLIENT = P_SCLIENT;*\
+      
+        UPDATE LAFT.TBL_LAFT_TRATAM_CLIENTE_HIS
+           SET DNULLDATE = SYSDATE
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND NIDALERTA = P_NIDALERTA
+              --AND NIDREGIMEN = P_NIDREGIMEN
+           AND SCLIENT = P_SCLIENT
+           AND NIDTRATCLIEHIS IN (SELECT MAX(NIDTRATCLIEHIS)
+                                    FROM LAFT.TBL_LAFT_TRATAM_CLIENTE_HIS T
+                                   WHERE T.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                     AND T.NIDALERTA = P_NIDALERTA
+                                        --AND NIDREGIMEN = P_NIDREGIMEN
+                                     AND T.SCLIENT = P_SCLIENT);
+      
+        IF P_NTIPOCARGA = 1 THEN
+          FOR C1 IN LISTA_RES_CLIENTE
+          LOOP
+            UPDATE TBL_LAFT_ALERTA_LISTAS_PERIODO TAL
+               SET NCANTCLIXREV = NCANTCLIXREV - 1
+             WHERE TAL.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+               AND TAL.NIDALERTA = P_NIDALERTA
+               AND TAL.NIDTIPOLISTA = C1.NIDTIPOLISTA
+               AND TAL.NIDREGIMEN = P_NIDREGIMEN;
+          END LOOP;
+        
+          UPDATE TBL_LAFT_ALERTA_RESULTADOS
+             SET SESTADO_REVISADO     = 2,
+                 DFECHA_REVISADO      = NULL,
+                 NIDUSUARIO_REVISADO  = NULL,
+                 NACEPTA_COINCIDENCIA = 2
+           WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+             AND NIDALERTA = P_NIDALERTA
+             AND SCOD_CLIENTE_BUSQ = P_SCLIENT
+             AND NIDREGIMEN = P_NIDREGIMEN
+             AND DNULLDATE IS NULL;
+        ELSE
+          UPDATE TBL_LAFT_ALERTA_RESULTADOS
+             SET DNULLDATE = SYSDATE
+           WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+             AND NIDALERTA = P_NIDALERTA
+             AND SCOD_CLIENTE_BUSQ = P_SCLIENT
+             AND NIDREGIMEN = P_NIDREGIMEN
+             AND DNULLDATE IS NULL;
+        END IF;
+      
+        RETURN;
+        COMMIT;
+      
+        --END IF;
+      END IF;*/
+    
+    END IF;
+  
+    INSERT INTO TBL_LAFT_TRATAM_CLIENTE_HIS
+      (NPERIODO_PROCESO,
+       NIDALERTA,
+       NIDTRATCLIEHIS,
+       NIDREGIMEN,
+       SCLIENT,
+       SESTADO_TRAT,
+       NIDUSUARIO_MODIFICA,
+       DCOMPDATE,
+       STIPO_PEP,
+       SDES_PEP,
+       SCOMENTARIO,
+       STIPOACTRESULTADO)
+    VALUES
+      (P_NPERIODO_PROCESO,
+       P_NIDALERTA,
+       V_NIDTRATCLIEHIS,
+       V_NIDREGIMEN,
+       P_SCLIENT,
+       V_SESTADO_TRAT,
+       P_NIDUSUARIO_MODIFICA,
+       SYSDATE,
+       V_STIPO_PEP,
+       V_SDES_PEP,
+       V_SCOMENTARIO,
+       P_STIPOACTRESULTADO);
+  
+    COMMIT;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                   P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                   P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                   RC1                OUT SYS_REFCURSOR) IS
+    /*CURSOR LISTA IS
+      SELECT DISTINCT NTIPOIDEN_BUSQ,
+                      SNUM_DOCUMENTO_BUSQ,
+                      SNOM_COMPLETO_BUSQ,
+                      TO_CHAR(DBIRTHDAT, 'DD/MM/YYYY') AS DBIRTHDAT,
+                      STIPO_DOCUMENTO STIPOIDEN_BUSQ
+        FROM TBL_LAFT_ALERTA_RESULTADOS
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NIDREGIMEN = P_NIDREGIMEN;
+    
+    V_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE;
+    V_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE;
+    V_SNOM_COMPLETO_BUSQ  TBL_LAFT_ALERTA_RESULTADOS.SNOM_COMPLETO_BUSQ%TYPE;
+    V_DBIRTHDAT           TBL_LAFT_ALERTA_RESULTADOS.DBIRTHDAT%TYPE;
+    V_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.STIPOIDEN_BUSQ%TYPE;
+    --V_NTIPO_DOCUMENTO TBL_LAFT_ALERTA_RESULTADOS.NTIPO_DOCUMENTO%TYPE;
+    
+    CURSOR LISTA_CLIE IS
+      SELECT DECODE(TLAR.NIDTIPOLISTA, NULL, V_NTIPOIDEN_BUSQ, NTIPOIDEN_BUSQ) AS NTIPOIDEN_BUSQ,
+             DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNUM_DOCUMENTO_BUSQ, SNUM_DOCUMENTO_BUSQ) AS SNUM_DOCUMENTO_BUSQ,
+             DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNOM_COMPLETO_BUSQ, SNOM_COMPLETO_BUSQ) AS SNOM_COMPLETO_BUSQ,
+             TO_CHAR(DECODE(TLAR.NIDTIPOLISTA, NULL, V_DBIRTHDAT, MAX(TLAR.DBIRTHDAT)), 'DD/MM/YYYY') AS DBIRTHDAT,
+             FLOOR((SYSDATE - DECODE(TLAR.NIDTIPOLISTA, NULL, V_DBIRTHDAT, MAX(TLAR.DBIRTHDAT))) / 30 / 12) EDAD,
+             DECODE(TLAR.NIDTIPOLISTA, NULL, V_STIPOIDEN_BUSQ, STIPO_DOCUMENTO) AS STIPOIDEN_BUSQ,
+             TLTL.NIDTIPOLISTA,
+             TLTL.SDESTIPOLISTA,
+             CASE
+               WHEN COUNT(CASE
+                            WHEN TLAR.NIDTIPOLISTA IS NOT NULL THEN
+                             1
+                          END) > 0 THEN
+                'COINCIDENCIA'
+               ELSE
+                'NO COINCIDENCIA'
+             END AS SESTADO,
+             NVL(TLAR.NIDTIPOLISTA, TLTL.NIDTIPOLISTA),
+             ' ' AS SZONA_GEO,
+             ' ' AS SCARGO,
+             ' ' AS SOCUPACION,
+             MAX(TLAR.DFECHA_REVISADO) AS DFECHA_REVISADO,
+             NVL(MAX(TLAR.NIDUSUARIO_REVISADO), 0) AS NIDUSUARIO_REVISADO,
+             MAX(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO,
+             CL.SCLIENT
+        FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_TIPO_LISTA             TLTL,
+             INSUDB.CLIENT                   CL,
+             INSUDB.CLIENT_IDDOC             CLI,
+             INSUDB.TABLE5645                TD
+       WHERE TLAR.NPERIODO_PROCESO(+) = P_NPERIODO_PROCESO
+         AND TLAR.NIDALERTA(+) = P_NIDALERTA
+         AND TLAR.NIDREGIMEN(+) = P_NIDREGIMEN
+         AND TLAR.NTIPOIDEN_BUSQ(+) = V_NTIPOIDEN_BUSQ
+         AND TLAR.SNUM_DOCUMENTO_BUSQ(+) = V_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA = TLTL.NIDTIPOLISTA
+         AND CLI.NIDDOC_TYPE(+) = TLAR.NTIPOIDEN_BUSQ
+         AND CLI.SIDDOC(+) = TLAR.SNUM_DOCUMENTO_BUSQ
+         AND CL.SCLIENT(+) = CLI.SCLIENT
+         AND TD.NIDDOC_TYPE(+) = CLI.NIDDOC_TYPE
+      --AND TLAR.NACEPTA_COINCIDENCIA NOT IN (0)
+       GROUP BY NTIPOIDEN_BUSQ,
+                SNUM_DOCUMENTO_BUSQ,
+                SNOM_COMPLETO_BUSQ,
+                STIPO_DOCUMENTO, --STIPOIDEN_BUSQ,
+                --NTIPO_DOCUMENTO,
+                TLTL.NIDTIPOLISTA,
+                TLTL.SDESTIPOLISTA,
+                TLAR.NIDTIPOLISTA,
+                CL.SCLIENT;
+    
+    --SELECT DECODE(TLAR.NIDTIPOLISTA, NULL, V_STIPOIDEN, STIPOIDEN) STIPOIDEN, DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNUM_DOCUMENTO, SNUM_DOCUMENTO) AS SNUM_DOCUMENTO, DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNOM_COMPLETO, SNOM_COMPLETO) AS SNOM_COMPLETO, DECODE(TLAR.NIDTIPOLISTA, NULL, V_NTIPO_DOCUMENTO, NTIPO_DOCUMENTO) AS NTIPO_DOCUMENTO, TLTL.NIDTIPOLISTA, TLTL.SDESTIPOLISTA, CASE WHEN COUNT(CASE WHEN TLAR.NIDTIPOLISTA IS NOT NULL THEN 1 END) > 0 THEN 'CONCIDENCIA' ELSE 'NO CONCIDENCIA' END AS SESTADO, MAX(CL.DBIRTHDAT) AS DBIRTHDAT, FLOOR((SYSDATE - MAX(CL.DBIRTHDAT)) / 30 / 12) EDAD FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR, TBL_LAFT_TIPO_LISTA TLTL, INSUDB.CLIENT CL, INSUDB.CLIENT_IDDOC CLI WHERE TLAR.NPERIODO_PROCESO(+) = P_NPERIODO_PROCESO AND TLAR.NIDALERTA(+) = P_NIDALERTA AND TLAR.NIDREGIMEN(+) = P_NIDREGIMEN AND TLAR.NTIPO_DOCUMENTO(+) = V_NTIPO_DOCUMENTO AND TLAR.SNUM_DOCUMENTO(+) = V_SNUM_DOCUMENTO AND TLAR.NIDTIPOLISTA(+) = TLTL.NIDTIPOLISTA AND CLI.NIDDOC_TYPE(+) = V_NTIPO_DOCUMENTO AND CLI.SIDDOC(+) = V_SNUM_DOCUMENTO AND CL.SCLIENT(+) = CLI.SCLIENT GROUP BY STIPOIDEN, SNUM_DOCUMENTO, SNOM_COMPLETO, NTIPO_DOCUMENTO, TLTL.NIDTIPOLISTA, TLTL.SDESTIPOLISTA, TLAR.NIDTIPOLISTA;
+    
+    V_TABLE_LISTA T_TABLE_LISTA_RESULTADO := T_TABLE_LISTA_RESULTADO();*/
+  
+  BEGIN
+    /*FOR C1 IN LISTA
+    LOOP
+    
+      V_NTIPOIDEN_BUSQ      := C1.NTIPOIDEN_BUSQ;
+      V_SNUM_DOCUMENTO_BUSQ := C1.SNUM_DOCUMENTO_BUSQ;
+      V_SNOM_COMPLETO_BUSQ  := C1.SNOM_COMPLETO_BUSQ;
+      V_STIPOIDEN_BUSQ      := C1.STIPOIDEN_BUSQ;
+      V_DBIRTHDAT           := C1.DBIRTHDAT;
+    
+      FOR C2 IN LISTA_CLIE
+      LOOP
+      
+        V_TABLE_LISTA.EXTEND();
+        V_TABLE_LISTA(V_TABLE_LISTA.COUNT) := T_RECORD_LISTA_RESULTADO(SCLIENT             => C2.SCLIENT,
+                                                                       STIPOIDEN           => C2.STIPOIDEN_BUSQ,
+                                                                       SNUM_DOCUMENTO      => C2.SNUM_DOCUMENTO_BUSQ,
+                                                                       SNOM_COMPLETO       => C2.SNOM_COMPLETO_BUSQ,
+                                                                       SDESTIPOLISTA       => C2.SDESTIPOLISTA,
+                                                                       SDESESTADO          => C2.SESTADO,
+                                                                       NTIPO_DOCUMENTO     => C2.NTIPOIDEN_BUSQ,
+                                                                       DFECHA_NACIMIENTO   => C2.DBIRTHDAT,
+                                                                       EDAD                => C2.EDAD,
+                                                                       SCARGO              => C2.SCARGO,
+                                                                       SOCUPACION          => C2.SOCUPACION,
+                                                                       SZONA_GEO           => C2.SZONA_GEO,
+                                                                       SESTADO_REVISADO    => C2.SESTADO_REVISADO,
+                                                                       DFECHA_REVISADO     => C2.DFECHA_REVISADO,
+                                                                       NIDUSUARIO_REVISADO => C2.NIDUSUARIO_REVISADO);
+      END LOOP;
+    END LOOP;*/
+  
+    OPEN RC1 FOR
+    /* SELECT STIPOIDEN,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SNUM_DOCUMENTO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SNOM_COMPLETO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SDESTIPOLISTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SDESESTADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         NTIPO_DOCUMENTO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         TO_CHAR(DFECHA_NACIMIENTO, 'DD/MM/YYYY') AS DFECHA_NACIMIENTO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         EDAD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SCARGO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SOCUPACION,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SZONA_GEO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SESTADO_REVISADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         TO_CHAR(DFECHA_REVISADO, 'DD/MM/YYYY') AS DFECHA_REVISADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SCLIENT
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    FROM TABLE(V_TABLE_LISTA);*/
+    
+      SELECT STIPO_DOCUMENTO     STIPOIDEN,
+             SNUM_DOCUMENTO_BUSQ SNUM_DOCUMENTO,
+             SNOM_COMPLETO_BUSQ  SNOM_COMPLETO,
+             TL.SDESTIPOLISTA    AS SDESTIPOLISTA,
+             --NULL SDESESTADO,
+             NTIPOIDEN_BUSQ NTIPO_DOCUMENTO,
+             TO_CHAR(DBIRTHDAT, 'DD/MM/YYYY') AS DFECHA_NACIMIENTO,
+             TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+             NULL SCARGO,
+             NULL SOCUPACION,
+             NULL SZONA_GEO,
+             DECODE(SESTADO_REVISADO, '1', 'Si', '2', 'No') AS SESTADO_REVISADO,
+             TO_CHAR(DFECHA_REVISADO, 'DD/MM/YYYY') AS DFECHA_REVISADO,
+             TLR.SCOD_CLIENTE_BUSQ AS SCLIENT,
+             TL.NIDTIPOLISTA,
+             TLR.SORIGEN,
+             TLP.SDESPROVEEDOR,
+             DECODE(TLR.NACEPTA_COINCIDENCIA, 1, 'Si', 2, 'No', NULL) SDESESTADO,
+             (SELECT SESTADO_TRAT
+                FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE TTC
+               WHERE TTC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                 AND TTC.NIDALERTA = P_NIDALERTA
+                 AND TTC.SCLIENT = TLR.SCOD_CLIENTE_BUSQ
+                 AND TTC.NIDREGIMEN = P_NIDREGIMEN) AS SESTADO_TRAT,
+             TLR.NTIPOCARGA
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLR,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_PROVEEDOR         TLP
+       WHERE TLR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLR.NIDALERTA = P_NIDALERTA
+         AND TL.NIDTIPOLISTA = TLR.NIDTIPOLISTA
+         AND TLR.NIDREGIMEN = P_NIDREGIMEN
+         AND TLP.NIDPROVEEDOR = TLR.NIDPROVEEDOR
+         AND TLR.NTIPOCARGA = 1;
+    --AND TLR.DNULLDATE IS NULL;
+    --AND TLR.NTIPOCARGA = 1;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_TRAT(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                        P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                        P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                        P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE DEFAULT NULL,
+                                        RC1                OUT SYS_REFCURSOR) IS
+  
+    /*CURSOR LISTA_TRATAM_CLIENTE IS
+        SELECT DISTINCT NIDDOC_TYPE AS NTIPOIDEN_BUSQ,
+                        SIDDOC      AS SNUM_DOCUMENTO_BUSQ,
+                        SCLIENAME   AS SNOM_COMPLETO_BUSQ,
+                        DBIRTHDAT,
+                        STIPOIDEN   AS STIPOIDEN_BUSQ,
+                        SCLIENT
+          FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE
+         WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+           AND SESTADO_TRAT = P_SESTADO_TRAT;
+    
+      V_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE;
+      V_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE;
+      V_SNOM_COMPLETO_BUSQ  TBL_LAFT_ALERTA_RESULTADOS.SNOM_COMPLETO_BUSQ%TYPE;
+      V_DBIRTHDAT           TBL_LAFT_ALERTA_RESULTADOS.DBIRTHDAT%TYPE;
+      V_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.STIPOIDEN_BUSQ%TYPE;
+    
+      CURSOR LISTA_CLIE IS
+        SELECT DECODE(TLAR.NIDTIPOLISTA, NULL, V_NTIPOIDEN_BUSQ, NTIPOIDEN_BUSQ) AS NTIPOIDEN_BUSQ,
+               DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNUM_DOCUMENTO_BUSQ, SNUM_DOCUMENTO_BUSQ) AS SNUM_DOCUMENTO_BUSQ,
+               DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNOM_COMPLETO_BUSQ, SNOM_COMPLETO_BUSQ) AS SNOM_COMPLETO_BUSQ,
+               TO_CHAR(DECODE(TLAR.NIDTIPOLISTA, NULL, V_DBIRTHDAT, MAX(TLAR.DBIRTHDAT)), 'DD/MM/YYYY') AS DBIRTHDAT,
+               FLOOR((SYSDATE - DECODE(TLAR.NIDTIPOLISTA, NULL, V_DBIRTHDAT, MAX(TLAR.DBIRTHDAT))) / 30 / 12) EDAD,
+               DECODE(TLAR.NIDTIPOLISTA, NULL, V_STIPOIDEN_BUSQ, STIPOIDEN_BUSQ) AS STIPOIDEN_BUSQ,
+               TLTL.NIDTIPOLISTA,
+               TLTL.SDESTIPOLISTA,
+               CASE
+                 WHEN COUNT(CASE
+                              WHEN TLAR.NIDTIPOLISTA IS NOT NULL THEN
+                               1
+                            END) > 0 THEN
+                  'COINCIDENCIA'
+                 ELSE
+                  'NO COINCIDENCIA'
+               END AS SESTADO,
+               NVL(TLAR.NIDTIPOLISTA, TLTL.NIDTIPOLISTA),
+               ' ' AS SZONA_GEO,
+               ' ' AS SCARGO,
+               ' ' AS SOCUPACION,
+               MAX(TLAR.DFECHA_REVISADO) AS DFECHA_REVISADO,
+               MAX(TLAR.NIDUSUARIO_REVISADO) AS NIDUSUARIO_REVISADO,
+               MAX(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO,
+               CL.SCLIENT
+          FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR,
+               TBL_LAFT_TIPO_LISTA             TLTL,
+               INSUDB.CLIENT                   CL,
+               INSUDB.CLIENT_IDDOC             CLI,
+               INSUDB.TABLE5645                TD
+         WHERE TLAR.NPERIODO_PROCESO(+) = P_NPERIODO_PROCESO
+           AND TLAR.NIDALERTA(+) = P_NIDALERTA
+              --AND TLAR.NIDREGIMEN(+) = P_NIDREGIMEN
+           AND TLAR.NTIPOIDEN_BUSQ(+) = V_NTIPOIDEN_BUSQ
+           AND TLAR.SNUM_DOCUMENTO_BUSQ(+) = V_SNUM_DOCUMENTO_BUSQ
+           AND TLAR.NIDTIPOLISTA(+) = TLTL.NIDTIPOLISTA
+           AND CLI.NIDDOC_TYPE(+) = TLAR.NTIPOIDEN_BUSQ
+           AND CLI.SIDDOC(+) = TLAR.SNUM_DOCUMENTO_BUSQ
+           AND CL.SCLIENT(+) = CLI.SCLIENT
+           AND TD.NIDDOC_TYPE(+) = CLI.NIDDOC_TYPE
+           AND TLAR.NACEPTA_COINCIDENCIA = 1
+         GROUP BY NTIPOIDEN_BUSQ,
+                  SNUM_DOCUMENTO_BUSQ,
+                  SNOM_COMPLETO_BUSQ,
+                  STIPOIDEN_BUSQ,
+                  --NTIPO_DOCUMENTO,
+                  TLTL.NIDTIPOLISTA,
+                  TLTL.SDESTIPOLISTA,
+                  TLAR.NIDTIPOLISTA,
+                  CL.SCLIENT;
+    
+      --SELECT DECODE(TLAR.NIDTIPOLISTA, NULL, V_STIPOIDEN, STIPOIDEN) STIPOIDEN, DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNUM_DOCUMENTO, SNUM_DOCUMENTO) AS SNUM_DOCUMENTO, DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNOM_COMPLETO, SNOM_COMPLETO) AS SNOM_COMPLETO, DECODE(TLAR.NIDTIPOLISTA, NULL, V_NTIPO_DOCUMENTO, NTIPO_DOCUMENTO) AS NTIPO_DOCUMENTO, TLTL.NIDTIPOLISTA, TLTL.SDESTIPOLISTA, CASE WHEN COUNT(CASE WHEN TLAR.NIDTIPOLISTA IS NOT NULL THEN 1 END) > 0 THEN 'CONCIDENCIA' ELSE 'NO CONCIDENCIA' END AS SESTADO, MAX(CL.DBIRTHDAT) AS DBIRTHDAT, FLOOR((SYSDATE - MAX(CL.DBIRTHDAT)) / 30 / 12) EDAD FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR, TBL_LAFT_TIPO_LISTA TLTL, INSUDB.CLIENT CL, INSUDB.CLIENT_IDDOC CLI WHERE TLAR.NPERIODO_PROCESO(+) = P_NPERIODO_PROCESO AND TLAR.NIDALERTA(+) = P_NIDALERTA AND TLAR.NIDREGIMEN(+) = P_NIDREGIMEN AND TLAR.NTIPO_DOCUMENTO(+) = V_NTIPO_DOCUMENTO AND TLAR.SNUM_DOCUMENTO(+) = V_SNUM_DOCUMENTO AND TLAR.NIDTIPOLISTA(+) = TLTL.NIDTIPOLISTA AND CLI.NIDDOC_TYPE(+) = V_NTIPO_DOCUMENTO AND CLI.SIDDOC(+) = V_SNUM_DOCUMENTO AND CL.SCLIENT(+) = CLI.SCLIENT GROUP BY STIPOIDEN, SNUM_DOCUMENTO, SNOM_COMPLETO, NTIPO_DOCUMENTO, TLTL.NIDTIPOLISTA, TLTL.SDESTIPOLISTA, TLAR.NIDTIPOLISTA;
+    
+      V_TABLE_LISTA T_TABLE_LISTA_RESULTADO := T_TABLE_LISTA_RESULTADO();
+    
+    BEGIN
+      FOR C1 IN LISTA_TRATAM_CLIENTE
+      LOOP
+      
+        V_NTIPOIDEN_BUSQ      := C1.NTIPOIDEN_BUSQ;
+        V_SNUM_DOCUMENTO_BUSQ := C1.SNUM_DOCUMENTO_BUSQ;
+        V_SNOM_COMPLETO_BUSQ  := C1.SNOM_COMPLETO_BUSQ;
+        V_STIPOIDEN_BUSQ      := C1.STIPOIDEN_BUSQ;
+        V_DBIRTHDAT           := C1.DBIRTHDAT;
+      
+        FOR C2 IN LISTA_CLIE
+        LOOP
+        
+          V_TABLE_LISTA.EXTEND();
+          V_TABLE_LISTA(V_TABLE_LISTA.COUNT) := T_RECORD_LISTA_RESULTADO(SCLIENT             => C2.SCLIENT,
+                                                                         STIPOIDEN           => C2.STIPOIDEN_BUSQ,
+                                                                         SNUM_DOCUMENTO      => C2.SNUM_DOCUMENTO_BUSQ,
+                                                                         SNOM_COMPLETO       => C2.SNOM_COMPLETO_BUSQ,
+                                                                         SDESTIPOLISTA       => C2.SDESTIPOLISTA,
+                                                                         SDESESTADO          => C2.SESTADO,
+                                                                         NTIPO_DOCUMENTO     => C2.NTIPOIDEN_BUSQ,
+                                                                         DFECHA_NACIMIENTO   => C2.DBIRTHDAT,
+                                                                         EDAD                => C2.EDAD,
+                                                                         SCARGO              => C2.SCARGO,
+                                                                         SOCUPACION          => C2.SOCUPACION,
+                                                                         SZONA_GEO           => C2.SZONA_GEO,
+                                                                         SESTADO_REVISADO    => C2.SESTADO_REVISADO,
+                                                                         DFECHA_REVISADO     => C2.DFECHA_REVISADO,
+                                                                         NIDUSUARIO_REVISADO => C2.NIDUSUARIO_REVISADO);
+        END LOOP;
+      END LOOP;
+    
+      OPEN RC1 FOR
+        SELECT STIPOIDEN,
+               SNUM_DOCUMENTO,
+               SNOM_COMPLETO,
+               SDESTIPOLISTA,
+               SDESESTADO,
+               NTIPO_DOCUMENTO,
+               TO_CHAR(DFECHA_NACIMIENTO, 'DD/MM/YYYY') AS DFECHA_NACIMIENTO,
+               EDAD,
+               SCARGO,
+               SOCUPACION,
+               SZONA_GEO,
+               SESTADO_REVISADO,
+               TO_CHAR(DFECHA_REVISADO, 'DD/MM/YYYY') AS DFECHA_REVISADO,
+               SCLIENT
+          FROM TABLE(V_TABLE_LISTA);*/
+  BEGIN
+    OPEN RC1 FOR
+    /*      SELECT TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY') AS DFECHA_NACIMIENTO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             FLOOR((SYSDATE - DECODE(TL.NIDTIPOLISTA, NULL, CL.DBIRTHDAT, CL.DBIRTHDAT)) / 30 / 12) EDAD,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             NTIPOIDEN_BUSQ AS NTIPO_DOCUMENTO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             '' AS SCARGO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             SCOD_CLIENTE_BUSQ AS SCLIENT,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             'COINCIDENCIA' AS SDESESTADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             TL.NIDTIPOLISTA AS NIDTIPOLISTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             TL.SDESTIPOLISTA AS SDESTIPOLISTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             SNOM_COMPLETO_BUSQ AS SNOM_COMPLETO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             SNUM_DOCUMENTO_BUSQ AS SNUM_DOCUMENTO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             '' AS SOCUPACION,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             STIPO_DOCUMENTO AS STIPOIDEN,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             '' AS SZONA_GEO
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       INNER JOIN TBL_LAFT_TIPO_LISTA TL
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ON TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       INNER JOIN CLIENT CL
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ON CL.SCLIENT = TLAR.SCOD_CLIENTE_BUSQ
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       WHERE TLAR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         AND TLAR.NIDALERTA = P_NIDALERTA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         AND TLAR.SESTADO_TRAT = P_SESTADO_TRAT;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+    
+      SELECT CD.NTYPCLIENTDOC AS NTIPO_DOCUMENTO,
+             TRIM(TD.SDESCRIPT) || ' - ' || CD.SCLINUMDOCU AS STIPOIDEN,
+             TRIM(CD.SCLINUMDOCU) AS SNUM_DOCUMENTO,
+             NVL(CL.SCLIENAME, CL.SLEGALNAME) AS SNOM_COMPLETO,
+             TL.SDESTIPOLISTA,
+             TL.NIDTIPOLISTA,
+             TRIM(TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY')) AS DFECHA_NACIMIENTO,
+             TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(CL.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+             NULL AS SDESPRODUCTO,
+             CL.SCLIENT,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'NNN', TLR.SESTADO_TRAT) AS SESTADO_TRAT,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'No Aplica', TT.SDESESTADO_TRAT) AS SDESESTADO_TRAT,
+             3 AS NIDREGIMEN,
+             'Manual' AS SDESREGIMEN,
+             TLTC.STIPO_PEP,
+             TLTC.SDES_PEP,
+             TLTC.SCOMENTARIO,
+             TLTC.NIDTRATCLIEHIS
+        FROM TBL_LAFT_TIPO_LISTA TL
+       INNER JOIN TBL_LAFT_ALERTA_TRATAM_CLIENTE TLTC
+          ON NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+            --AND NVL(TLTC.SESTADO_TRAT,'XXX') = P_SESTADO_TRAT
+         AND NIDREGIMEN IN (3)
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_RESULTADOS TLR
+          ON TLR.NPERIODO_PROCESO = TLTC.NPERIODO_PROCESO
+         AND TLR.NIDALERTA = TLTC.NIDALERTA
+         AND TLR.NIDREGIMEN = TLTC.NIDREGIMEN
+         AND TLR.SCOD_CLIENTE_BUSQ = TLTC.SCLIENT
+         AND TLR.NIDTIPOLISTA = TL.NIDTIPOLISTA
+         AND TLR.DNULLDATE IS NULL
+        LEFT OUTER JOIN CLIENT CL
+          ON CL.SCLIENT = TLTC.SCLIENT
+        LEFT OUTER JOIN CLIDOCUMENTS CD
+          ON CD.SCLIENT = CL.SCLIENT
+        LEFT OUTER JOIN TABLE5645 TD
+          ON TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT
+          ON TT.SESTADO_TRAT = TLTC.SESTADO_TRAT
+       WHERE NVL(TLTC.SESTADO_TRAT, 'XXX') = P_SESTADO_TRAT
+      UNION ALL
+      
+      SELECT CD.NTYPCLIENTDOC AS NTIPO_DOCUMENTO,
+             TRIM(TD.SDESCRIPT) || ' - ' || CD.SCLINUMDOCU AS STIPOIDEN,
+             TRIM(CD.SCLINUMDOCU) AS SNUM_DOCUMENTO,
+             NVL(CL.SCLIENAME, CL.SLEGALNAME) AS SNOM_COMPLETO,
+             TL.SDESTIPOLISTA,
+             TL.NIDTIPOLISTA,
+             TRIM(TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY')) AS DFECHA_NACIMIENTO,
+             TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(CL.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+             NULL AS SDESPRODUCTO,
+             CL.SCLIENT,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'NNN', TLR.SESTADO_TRAT) AS SESTADO_TRAT,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'No Aplica', TT.SDESESTADO_TRAT) AS SDESESTADO_TRAT,
+             1 AS NIDREGIMEN,
+             'R�gimen General' AS SDESREGIMEN,
+             TLTC.STIPO_PEP,
+             TLTC.SDES_PEP,
+             TLTC.SCOMENTARIO,
+             TLTC.NIDTRATCLIEHIS
+        FROM TBL_LAFT_TIPO_LISTA TL
+       INNER JOIN TBL_LAFT_ALERTA_TRATAM_CLIENTE TLTC
+          ON NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+            --AND NVL(TLTC.SESTADO_TRAT,'XXX') = P_SESTADO_TRAT
+         AND NIDREGIMEN IN (1)
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_RESULTADOS TLR
+          ON TLR.NPERIODO_PROCESO = TLTC.NPERIODO_PROCESO
+         AND TLR.NIDALERTA = TLTC.NIDALERTA
+         AND TLR.NIDREGIMEN = TLTC.NIDREGIMEN
+         AND TLR.SCOD_CLIENTE_BUSQ = TLTC.SCLIENT
+         AND TLR.NIDTIPOLISTA = TL.NIDTIPOLISTA
+         AND TLR.DNULLDATE IS NULL
+        LEFT OUTER JOIN CLIENT CL
+          ON CL.SCLIENT = TLTC.SCLIENT
+        LEFT OUTER JOIN CLIDOCUMENTS CD
+          ON CD.SCLIENT = CL.SCLIENT
+        LEFT OUTER JOIN TABLE5645 TD
+          ON TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT
+          ON TT.SESTADO_TRAT = TLTC.SESTADO_TRAT
+       WHERE NVL(TLTC.SESTADO_TRAT, 'XXX') = P_SESTADO_TRAT
+      
+      UNION ALL
+      
+      SELECT CD.NTYPCLIENTDOC AS NTIPO_DOCUMENTO,
+             TRIM(TD.SDESCRIPT) || ' - ' || CD.SCLINUMDOCU AS STIPOIDEN,
+             TRIM(CD.SCLINUMDOCU) AS SNUM_DOCUMENTO,
+             NVL(CL.SCLIENAME, CL.SLEGALNAME) AS SNOM_COMPLETO,
+             TL.SDESTIPOLISTA,
+             TL.NIDTIPOLISTA,
+             TRIM(TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY')) AS DFECHA_NACIMIENTO,
+             TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(CL.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+             NULL AS SDESPRODUCTO,
+             CL.SCLIENT,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'NNN', TLR.SESTADO_TRAT) AS SESTADO_TRAT,
+             DECODE(TLR.NPERIODO_PROCESO, NULL, 'No Aplica', TT.SDESESTADO_TRAT) AS SDESESTADO_TRAT,
+             2 AS NIDREGIMEN,
+             'R�gimen Simplificado' AS SDESREGIMEN,
+             TLTC.STIPO_PEP,
+             TLTC.SDES_PEP,
+             TLTC.SCOMENTARIO,
+             TLTC.NIDTRATCLIEHIS
+        FROM TBL_LAFT_TIPO_LISTA TL
+       INNER JOIN TBL_LAFT_ALERTA_TRATAM_CLIENTE TLTC
+          ON NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+            --
+         AND NIDREGIMEN IN (2)
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_RESULTADOS TLR
+          ON TLR.NPERIODO_PROCESO = TLTC.NPERIODO_PROCESO
+         AND TLR.NIDALERTA = TLTC.NIDALERTA
+         AND TLR.NIDREGIMEN = TLTC.NIDREGIMEN
+         AND TLR.SCOD_CLIENTE_BUSQ = TLTC.SCLIENT
+         AND TLR.NIDTIPOLISTA = TL.NIDTIPOLISTA
+         AND TLR.DNULLDATE IS NULL
+        LEFT OUTER JOIN CLIENT CL
+          ON CL.SCLIENT = TLTC.SCLIENT
+        LEFT OUTER JOIN CLIDOCUMENTS CD
+          ON CD.SCLIENT = CL.SCLIENT
+        LEFT OUTER JOIN TABLE5645 TD
+          ON TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT
+          ON TT.SESTADO_TRAT = TLTC.SESTADO_TRAT
+       WHERE NVL(TLTC.SESTADO_TRAT, 'XXX') = P_SESTADO_TRAT;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_TRATAMIENTO(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                               P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                               P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                               P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE DEFAULT NULL,
+                                               RC1                OUT SYS_REFCURSOR) IS
+  
+    V_COUNT               INTEGER;
+    V_TABLE_LISTA_CLIENTE T_TABLE_LISTA_RESULTADO_CLIENTE := T_TABLE_LISTA_RESULTADO_CLIENTE();
+  
+    CURSOR CLIENTES_TRATA IS
+      SELECT DISTINCT (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                         FROM TBL_LAFT_ALERTA_FRECUENCIA
+                        WHERE NPERIODO_PROCESO = TTC.NPERIODO_PROCESO
+                          AND SESTADO = 1) AS NPERIODO_PROCESO,
+                      TD.NIDDOC_TYPE AS NTIPO_DOCUMENTO,
+                      TRIM(TD.SDESCRIPT) || ' - ' || TRIM(CD.SCLINUMDOCU) AS STIPOIDEN,
+                      TRIM(CD.SCLINUMDOCU) AS SNUM_DOCUMENTO,
+                      NVL(CL.SCLIENAME, CL.SLEGALNAME) AS SNOM_COMPLETO,
+                      UPPER(TL.SDESTIPOLISTA) AS SDESTIPOLISTA,
+                      TL.NIDTIPOLISTA,
+                      TRIM(TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY')) AS DFECHA_NACIMIENTO,
+                      TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(CL.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+                      DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+                      UPPER(NVL(TLR.SPRODUCTO, 'VARIOS')) /*FN_OBT_PRODUCTO(CL.SCLIENT)*/ AS SDESPRODUCTO,
+                      CL.SCLIENT,
+                      DECODE(TLR.NPERIODO_PROCESO, NULL, 'NNN', TTC.SESTADO_TRAT) AS SESTADO_TRAT,
+                      UPPER(DECODE(TLR.NPERIODO_PROCESO, NULL, 'No Aplica', TT.SDESESTADO_TRAT)) AS SDESESTADO_TRAT,
+                      --TR.NIDREGIMEN,
+                      UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+                      TTC.STIPO_PEP,
+                      TTC.SDES_PEP,
+                      TTC.SCOMENTARIO,
+                      TTC.NIDTRATCLIEHIS,
+                      TLR.NTIPOCARGA,
+                      UPPER(TLR.SESTADO_REVISADO) AS SESTADO_REVISADO,
+                      DECODE(CM.SCLIENT, NULL, 99, CM.NIDREGIMEN) NIDREGIMEN,
+                      TR.NIDREGIMEN AS NIDREGIMEN_VALID,
+                      DECODE((SELECT COUNT(*)
+                               FROM TBL_LAFT_ALERTA_RESULTADOS T
+                              WHERE T.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                AND T.NIDALERTA = P_NIDALERTA
+                                AND T.SCOD_CLIENTE_BUSQ = TLR.SCOD_CLIENTE_BUSQ
+                                AND T.NACEPTA_COINCIDENCIA = 2
+                                AND T.DNULLDATE IS NULL
+                                AND T.NIDTIPOLISTA <> 0),
+                             0,
+                             'NO',
+                             'SI') SFALTA_ACEPTAR_COINC
+        FROM CLIENT CL
+       INNER JOIN CLIDOCUMENTS CD
+          ON CD.SCLIENT = CL.SCLIENT
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_TRATAM_CLIENTE TTC
+          ON TTC.SCLIENT = CD.SCLIENT
+         AND TTC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TTC.NIDALERTA = P_NIDALERTA
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_RESULTADOS TLR
+          ON TLR.SCOD_CLIENTE_BUSQ = TTC.SCLIENT
+         AND TLR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLR.NIDALERTA = P_NIDALERTA
+         AND TLR.DNULLDATE IS NULL
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_CLIENTE CM
+          ON CM.SCLIENT = CL.SCLIENT
+         AND CM.DNULLDATE IS NULL
+        LEFT OUTER JOIN TBL_LAFT_REGIMEN TR
+          ON TR.NIDREGIMEN = CM.NIDREGIMEN
+        LEFT OUTER JOIN TABLE5645 TD
+          ON TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT
+          ON TT.SESTADO_TRAT = TTC.SESTADO_TRAT
+        LEFT OUTER JOIN TBL_LAFT_TIPO_LISTA TL
+          ON TL.NIDTIPOLISTA = TLR.NIDTIPOLISTA
+       WHERE TTC.SESTADO_TRAT = P_SESTADO_TRAT
+         AND TLR.DNULLDATE IS NULL
+         AND (SELECT COUNT(*)
+                FROM TBL_LAFT_ALERTA_RESULTADOS T
+               WHERE T.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                 AND T.NIDALERTA = P_NIDALERTA
+                 AND T.SCOD_CLIENTE_BUSQ = TLR.SCOD_CLIENTE_BUSQ
+                 AND T.NACEPTA_COINCIDENCIA = 2
+                 AND T.DNULLDATE IS NULL
+                 AND T.NIDTIPOLISTA <> 0) = 0;
+  
+    CURSOR LISTAS IS
+      SELECT *
+        FROM TBL_LAFT_TIPO_LISTA TL
+       WHERE TL.NIDTIPOLISTA <> 0;
+  
+  BEGIN
+  
+    EXECUTE IMMEDIATE 'ALTER SESSION SET NLS_DATE_FORMAT = ''DD/MM/YYYY''';
+  
+    FOR C1 IN LISTAS
+    LOOP
+      FOR C2 IN CLIENTES_TRATA
+      LOOP
+        V_TABLE_LISTA_CLIENTE.EXTEND();
+        V_TABLE_LISTA_CLIENTE(V_TABLE_LISTA_CLIENTE.COUNT) := T_RECORD_LISTA_RESULTADO_CLIENTE(NTIPO_DOCUMENTO      => C2.NTIPO_DOCUMENTO,
+                                                                                               STIPOIDEN            => C2.STIPOIDEN,
+                                                                                               SNUM_DOCUMENTO       => C2.SNUM_DOCUMENTO,
+                                                                                               SNOM_COMPLETO        => C2.SNOM_COMPLETO,
+                                                                                               DFECHA_NACIMIENTO    => C2.DFECHA_NACIMIENTO,
+                                                                                               EDAD                 => C2.EDAD,
+                                                                                               SDESESTADO           => CASE
+                                                                                                                         WHEN C2.NIDTIPOLISTA = C1.NIDTIPOLISTA THEN
+                                                                                                                          'COINCIDENCIA'
+                                                                                                                         ELSE
+                                                                                                                          'SIN COINCIDENCIA'
+                                                                                                                       END,
+                                                                                               SDESPRODUCTO         => C2.SDESPRODUCTO,
+                                                                                               SCLIENT              => C2.SCLIENT,
+                                                                                               SESTADO_TRAT         => C2.SESTADO_TRAT,
+                                                                                               SDESESTADO_TRAT      => C2.SDESESTADO_TRAT,
+                                                                                               NIDREGIMEN           => C2.NIDREGIMEN,
+                                                                                               SDESREGIMEN          => C2.SDESREGIMEN,
+                                                                                               NPERIODO_PROCESO     => C2.NPERIODO_PROCESO,
+                                                                                               NIDTIPOLISTA         => C1.NIDTIPOLISTA,
+                                                                                               SDESTIPOLISTA        => C1.SDESTIPOLISTA,
+                                                                                               SESTADO_REVISADO     => C2.SESTADO_REVISADO,
+                                                                                               NTIPOCARGA           => C2.NTIPOCARGA,
+                                                                                               NIDTRATCLIEHIS       => C2.NIDTRATCLIEHIS,
+                                                                                               SFALTA_ACEPTAR_COINC => C2.SFALTA_ACEPTAR_COINC,
+                                                                                               NIDREGIMEN_VALID     => C2.NIDREGIMEN_VALID);
+      
+      END LOOP;
+    END LOOP;
+  
+    OPEN RC1 FOR
+      SELECT *
+        FROM TABLE(V_TABLE_LISTA_CLIENTE);
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_GC(P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                      P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                      P_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                      P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                      P_SNOM_COMPLETO_BUSQ  TBL_LAFT_ALERTA_RESULTADOS.SNOM_COMPLETO_BUSQ%TYPE,
+                                      RC1                   OUT SYS_REFCURSOR,
+                                      P_NCODE               OUT NUMBER,
+                                      P_SMESSAGE            OUT VARCHAR2) IS
+  
+    V_COUNT               INTEGER;
+    V_TABLE_LISTA_CLIENTE T_TABLE_LISTA_RESULTADO_CLIENTE := T_TABLE_LISTA_RESULTADO_CLIENTE();
+  
+    CURSOR CLIENTES_NRO_DOC IS
+      SELECT DISTINCT (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                         FROM TBL_LAFT_ALERTA_FRECUENCIA
+                        WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                          AND SESTADO = 1) AS NPERIODO_PROCESO,
+                      TD.NIDDOC_TYPE AS NTIPO_DOCUMENTO,
+                      TRIM(TD.SDESCRIPT) AS STIPOIDEN,
+                      TRIM(CD.SCLINUMDOCU) AS SNUM_DOCUMENTO,
+                      NVL(CL.SCLIENAME, CL.SLEGALNAME) AS SNOM_COMPLETO,
+                      TRIM(TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY')) AS DFECHA_NACIMIENTO,
+                      TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(CL.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+                      DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+                      UPPER(NVL(TLR.SPRODUCTO, 'VARIOS')) AS SDESPRODUCTO,
+                      CL.SCLIENT,
+                      --DECODE(TLR.NPERIODO_PROCESO, NULL, 'NNN', NVL(TLR.SESTADO_TRAT, TTC.SESTADO_TRAT)) AS SESTADO_TRAT,
+                      --DECODE(TLR.NPERIODO_PROCESO, NULL, 'No Aplica', NVL(TT.SDESESTADO_TRAT, TT1.SDESESTADO_TRAT)) AS SDESESTADO_TRAT,
+                      NVL(NVL(TLR.SESTADO_TRAT, DECODE(TTC.SESTADO_TRAT, 'BMN', NULL, 'BAU', NULL, TTC.SESTADO_TRAT)), 'NNN') AS SESTADO_TRAT,
+                      UPPER(NVL(NVL(TT.SDESESTADO_TRAT, DECODE(TTC.SESTADO_TRAT, 'BMN', NULL, 'BAU', NULL, TT1.SDESESTADO_TRAT)), 'No Aplica')) AS SDESESTADO_TRAT,
+                      UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+                      NVL(TLR.NIDTIPOLISTA, 0) AS NIDTIPOLISTA,
+                      TLR.SESTADO_REVISADO,
+                      --3 AS SESTADO_REVISADO,
+                      TLR.NTIPOCARGA,
+                      DECODE(CM.SCLIENT, NULL, 99, CM.NIDREGIMEN) AS NIDREGIMEN,
+                      CM.NIDREGIMEN AS NIDREGIMEN_VALID,
+                      DECODE((SELECT COUNT(*)
+                               FROM TBL_LAFT_ALERTA_RESULTADOS T
+                              WHERE T.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                AND T.NIDALERTA = P_NIDALERTA
+                                AND T.SCOD_CLIENTE_BUSQ = TLR.SCOD_CLIENTE_BUSQ
+                                AND T.NACEPTA_COINCIDENCIA = 2
+                                AND T.DNULLDATE IS NULL
+                                AND T.NIDTIPOLISTA <> 0),
+                             0,
+                             'NO',
+                             'SI') SFALTA_ACEPTAR_COINC
+        FROM CLIENT CL
+       INNER JOIN CLIDOCUMENTS CD
+          ON CD.NTYPCLIENTDOC = P_NTIPOIDEN_BUSQ
+         AND TRIM(CD.SCLINUMDOCU) = P_SNUM_DOCUMENTO_BUSQ
+         AND CL.SCLIENT = CD.SCLIENT
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_RESULTADOS TLR
+          ON TLR.NTIPOIDEN_BUSQ = CD.NTYPCLIENTDOC
+         AND TLR.SNUM_DOCUMENTO_BUSQ = TRIM(CD.SCLINUMDOCU)
+         AND NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND DNULLDATE IS NULL
+        LEFT OUTER JOIN TABLE5645 TD
+          ON TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_TRATAM_CLIENTE TTC
+          ON TTC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TTC.NIDALERTA = P_NIDALERTA
+         AND TTC.SCLIENT = CL.SCLIENT
+      --AND TTC.NIDREGIMEN = TLR.NIDREGIMEN
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_CLIENTE CM
+          ON CM.SCLIENT = CL.SCLIENT
+         AND CM.DNULLDATE IS NULL
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT
+          ON TT.SESTADO_TRAT = TLR.SESTADO_TRAT
+        LEFT OUTER JOIN TBL_LAFT_REGIMEN TR
+          ON TR.NIDREGIMEN = CM.NIDREGIMEN
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT1
+          ON TT1.SESTADO_TRAT = TTC.SESTADO_TRAT;
+  
+    CURSOR CLIENTES_NOMBRE IS
+      SELECT DISTINCT (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                         FROM TBL_LAFT_ALERTA_FRECUENCIA
+                        WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                          AND SESTADO = 1) AS NPERIODO_PROCESO,
+                      TD.NIDDOC_TYPE AS NTIPO_DOCUMENTO,
+                      TRIM(TD.SDESCRIPT) AS STIPOIDEN,
+                      TRIM(CD.SCLINUMDOCU) AS SNUM_DOCUMENTO,
+                      NVL(CL.SCLIENAME, CL.SLEGALNAME) AS SNOM_COMPLETO,
+                      TRIM(TO_CHAR(CL.DBIRTHDAT, 'DD/MM/YYYY')) AS DFECHA_NACIMIENTO,
+                      TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(CL.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+                      DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+                      UPPER(NVL(TLR.SPRODUCTO, 'VARIOS')) AS SDESPRODUCTO,
+                      CL.SCLIENT,
+                      NVL(NVL(TLR.SESTADO_TRAT, DECODE(TTC.SESTADO_TRAT, 'BMN', NULL, 'BAU', NULL, TTC.SESTADO_TRAT)), 'NNN') AS SESTADO_TRAT,
+                      UPPER(NVL(NVL(TT.SDESESTADO_TRAT, DECODE(TTC.SESTADO_TRAT, 'BMN', NULL, 'BAU', NULL, TT1.SDESESTADO_TRAT)), 'No Aplica')) AS SDESESTADO_TRAT,
+                      UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+                      --TLR.NPERIODO_PROCESO,
+                      NVL(TLR.NIDTIPOLISTA, 0) AS NIDTIPOLISTA,
+                      TLR.SESTADO_REVISADO,
+                      --3 AS SESTADO_REVISADO,
+                      TLR.NTIPOCARGA,
+                      /*DECODE((SELECT COUNT(*)
+                        FROM TBL_LAFT_ALERTA_RESULTADOS T
+                       WHERE T.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                         AND T.NIDALERTA = P_NIDALERTA
+                         AND T.SCOD_CLIENTE_BUSQ = TLR.SCOD_CLIENTE_BUSQ
+                         AND T.DNULLDATE IS NULL),
+                      1,
+                      TR.NIDREGIMEN,
+                      0,
+                      NULL,
+                      99) NIDREGIMEN,*/
+                      DECODE(CM.SCLIENT, NULL, 99, CM.NIDREGIMEN) AS NIDREGIMEN,
+                      TR.NIDREGIMEN AS NIDREGIMEN_VALID,
+                      DECODE((SELECT COUNT(*)
+                               FROM TBL_LAFT_ALERTA_RESULTADOS T
+                              WHERE T.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                                AND T.NIDALERTA = P_NIDALERTA
+                                AND T.SCOD_CLIENTE_BUSQ = TLR.SCOD_CLIENTE_BUSQ
+                                AND T.NACEPTA_COINCIDENCIA = 2
+                                AND T.DNULLDATE IS NULL
+                                AND T.NIDTIPOLISTA <> 0),
+                             0,
+                             'NO',
+                             'SI') SFALTA_ACEPTAR_COINC
+        FROM CLIENT CL
+        LEFT OUTER JOIN LAFT.TBL_LAFT_ALERTA_RESULTADOS TLR
+          ON TLR.SCOD_CLIENTE_BUSQ = CL.SCLIENT
+         AND NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND DNULLDATE IS NULL
+        LEFT OUTER JOIN CLIDOCUMENTS CD
+          ON CD.SCLIENT = CL.SCLIENT
+        LEFT OUTER JOIN TABLE5645 TD
+          ON TD.NIDDOC_TYPE = CD.NTYPCLIENTDOC
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_TRATAM_CLIENTE TTC
+          ON TTC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TTC.NIDALERTA = P_NIDALERTA
+         AND TTC.SCLIENT = CL.SCLIENT
+        LEFT OUTER JOIN TBL_LAFT_ALERTA_CLIENTE CM
+          ON CM.SCLIENT = CL.SCLIENT
+         AND CM.DNULLDATE IS NULL
+        LEFT OUTER JOIN TBL_LAFT_REGIMEN TR
+          ON TR.NIDREGIMEN = CM.NIDREGIMEN
+      --AND TTC.NIDREGIMEN = TLR.NIDREGIMEN
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT
+          ON TT.SESTADO_TRAT = TLR.SESTADO_TRAT
+        LEFT OUTER JOIN TBL_LAFT_TIPO_TRATAMIENTO TT1
+          ON TT1.SESTADO_TRAT = TTC.SESTADO_TRAT
+       WHERE CL.SCLIENAME LIKE '%' || UPPER(TRIM(P_SNOM_COMPLETO_BUSQ)) || '%';
+  
+    CURSOR LISTAS IS
+      SELECT *
+        FROM TBL_LAFT_TIPO_LISTA TL
+       WHERE TL.NIDTIPOLISTA <> 0;
+  
+  BEGIN
+  
+    EXECUTE IMMEDIATE 'ALTER SESSION SET NLS_DATE_FORMAT = ''DD/MM/YYYY''';
+    P_NCODE := 0;
+    IF P_NTIPOIDEN_BUSQ = 0 THEN
+    
+      IF LENGTH(P_SNOM_COMPLETO_BUSQ) <= 2 AND TRIM(P_SNOM_COMPLETO_BUSQ) IS NOT NULL THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'Debe considerar el ingreso de m�s de 2 caracteres en alguno de los campos del nombre o raz�n social para realizar la b�squeda';
+        RETURN;
+      END IF;
+    
+      FOR C1 IN LISTAS
+      LOOP
+        FOR C2 IN CLIENTES_NOMBRE
+        LOOP
+          V_TABLE_LISTA_CLIENTE.EXTEND();
+          V_TABLE_LISTA_CLIENTE(V_TABLE_LISTA_CLIENTE.COUNT) := T_RECORD_LISTA_RESULTADO_CLIENTE(NTIPO_DOCUMENTO      => C2.NTIPO_DOCUMENTO,
+                                                                                                 STIPOIDEN            => C2.STIPOIDEN,
+                                                                                                 SNUM_DOCUMENTO       => C2.SNUM_DOCUMENTO,
+                                                                                                 SNOM_COMPLETO        => C2.SNOM_COMPLETO,
+                                                                                                 DFECHA_NACIMIENTO    => C2.DFECHA_NACIMIENTO,
+                                                                                                 EDAD                 => C2.EDAD,
+                                                                                                 SDESESTADO           => CASE
+                                                                                                                           WHEN C2.NIDTIPOLISTA = C1.NIDTIPOLISTA THEN
+                                                                                                                            'COINCIDENCIA'
+                                                                                                                           ELSE
+                                                                                                                            'SIN COINCIDENCIA'
+                                                                                                                         END,
+                                                                                                 SDESPRODUCTO         => C2.SDESPRODUCTO,
+                                                                                                 SCLIENT              => C2.SCLIENT,
+                                                                                                 SESTADO_TRAT         => C2.SESTADO_TRAT,
+                                                                                                 SDESESTADO_TRAT      => C2.SDESESTADO_TRAT,
+                                                                                                 NIDREGIMEN           => C2.NIDREGIMEN,
+                                                                                                 SDESREGIMEN          => C2.SDESREGIMEN,
+                                                                                                 NPERIODO_PROCESO     => C2.NPERIODO_PROCESO,
+                                                                                                 NIDTIPOLISTA         => C1.NIDTIPOLISTA,
+                                                                                                 SDESTIPOLISTA        => C1.SDESTIPOLISTA,
+                                                                                                 SESTADO_REVISADO     => C2.SESTADO_REVISADO,
+                                                                                                 NTIPOCARGA           => C2.NTIPOCARGA,
+                                                                                                 NIDTRATCLIEHIS       => NULL,
+                                                                                                 SFALTA_ACEPTAR_COINC => C2.SFALTA_ACEPTAR_COINC,
+                                                                                                 NIDREGIMEN_VALID     => C2.NIDREGIMEN_VALID);
+        
+        END LOOP;
+      END LOOP;
+    
+    ELSE
+    
+      SELECT COUNT(*)
+        INTO V_COUNT
+        FROM TABLE5645
+       WHERE NIDDOC_TYPE = P_NTIPOIDEN_BUSQ
+         AND SSTATREGT = '1';
+      IF V_COUNT = 0 THEN
+        P_SMESSAGE := 'El C�digo del tipo de documento del cliente es inv�lido o est� inactivo.';
+        P_NCODE    := 1;
+        RETURN;
+      END IF;
+    
+      IF P_NTIPOIDEN_BUSQ = 1 THEN
+        IF (SUBSTR(P_SNUM_DOCUMENTO_BUSQ, 1, 2) NOT IN ('10', '15', '17', '20')) THEN
+          P_NCODE    := 1;
+          P_SMESSAGE := 'Debe ingresar ingresar un RUC valido';
+        END IF;
+        IF LENGTH(TRIM(P_SNUM_DOCUMENTO_BUSQ)) <> 11 THEN
+          P_SMESSAGE := 'El n�mero de documento del cliente debe de tener 11 caracteres.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      
+        IF NOT REGEXP_LIKE(P_SNUM_DOCUMENTO_BUSQ, '^[0-9]*$') THEN
+          P_SMESSAGE := 'El n�mero de documento del cliente solo debe tener n�meros.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      
+      END IF;
+      IF P_NTIPOIDEN_BUSQ = 2 THEN
+        IF LENGTH(TRIM(P_SNUM_DOCUMENTO_BUSQ)) <> 8 THEN
+          P_SMESSAGE := 'El n�mero de documento del contacto debe de tener 8 caracteres.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      
+        IF NOT REGEXP_LIKE(P_SNUM_DOCUMENTO_BUSQ, '^[0-9]*$') THEN
+          P_SMESSAGE := 'El n�mero de documento del contacto solo debe tener n�meros.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      
+        IF TRIM(P_SNUM_DOCUMENTO_BUSQ) = '12345678' THEN
+          P_SMESSAGE := 'El n�mero de documento del contacto no puede ser 12345678.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      END IF;
+    
+      IF P_NTIPOIDEN_BUSQ = 3 THEN
+        IF LENGTH(TRIM(P_SNUM_DOCUMENTO_BUSQ)) <> 12 THEN
+          P_SMESSAGE := 'El n�mero de documento del cliente debe de tener 12 caracteres.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      
+        IF NOT REGEXP_LIKE(P_SNUM_DOCUMENTO_BUSQ, '^[A-Za-z0-9]*$') THEN
+          P_SMESSAGE := 'El n�mero de documento del cliente solo debe tener n�meros y letras.';
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      END IF;
+    
+      IF P_NTIPOIDEN_BUSQ IN (4, 6) THEN
+        IF LENGTH(TRIM(P_SNUM_DOCUMENTO_BUSQ)) > 12 OR LENGTH(TRIM(P_SNUM_DOCUMENTO_BUSQ)) < 8 THEN
+          P_SMESSAGE := 'El n�mero de documento debe de tener entre 8 o 12 caracteres. - ' || P_SNUM_DOCUMENTO_BUSQ;
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      
+        IF NOT REGEXP_LIKE(P_SNUM_DOCUMENTO_BUSQ, '^[A-Za-z0-9]*$') THEN
+          P_SMESSAGE := 'El n�mero de documento del cliente solo debe tener n�meros y letras. - ' || P_SNUM_DOCUMENTO_BUSQ;
+          P_NCODE    := 1;
+          RETURN;
+        END IF;
+      END IF;
+    
+      FOR C1 IN LISTAS
+      LOOP
+        FOR C2 IN CLIENTES_NRO_DOC
+        LOOP
+          V_TABLE_LISTA_CLIENTE.EXTEND();
+          V_TABLE_LISTA_CLIENTE(V_TABLE_LISTA_CLIENTE.COUNT) := T_RECORD_LISTA_RESULTADO_CLIENTE(NTIPO_DOCUMENTO      => C2.NTIPO_DOCUMENTO,
+                                                                                                 STIPOIDEN            => C2.STIPOIDEN,
+                                                                                                 SNUM_DOCUMENTO       => C2.SNUM_DOCUMENTO,
+                                                                                                 SNOM_COMPLETO        => C2.SNOM_COMPLETO,
+                                                                                                 DFECHA_NACIMIENTO    => C2.DFECHA_NACIMIENTO,
+                                                                                                 EDAD                 => C2.EDAD,
+                                                                                                 SDESESTADO           => CASE
+                                                                                                                           WHEN C2.NIDTIPOLISTA = C1.NIDTIPOLISTA THEN
+                                                                                                                            'COINCIDENCIA'
+                                                                                                                           ELSE
+                                                                                                                            'SIN COINCIDENCIA'
+                                                                                                                         END,
+                                                                                                 SDESPRODUCTO         => C2.SDESPRODUCTO,
+                                                                                                 SCLIENT              => C2.SCLIENT,
+                                                                                                 SESTADO_TRAT         => C2.SESTADO_TRAT,
+                                                                                                 SDESESTADO_TRAT      => C2.SDESESTADO_TRAT,
+                                                                                                 NIDREGIMEN           => C2.NIDREGIMEN,
+                                                                                                 SDESREGIMEN          => C2.SDESREGIMEN,
+                                                                                                 NPERIODO_PROCESO     => C2.NPERIODO_PROCESO,
+                                                                                                 NIDTIPOLISTA         => C1.NIDTIPOLISTA,
+                                                                                                 SDESTIPOLISTA        => C1.SDESTIPOLISTA,
+                                                                                                 SESTADO_REVISADO     => C2.SESTADO_REVISADO,
+                                                                                                 NTIPOCARGA           => C2.NTIPOCARGA,
+                                                                                                 NIDTRATCLIEHIS       => NULL,
+                                                                                                 SFALTA_ACEPTAR_COINC => C2.SFALTA_ACEPTAR_COINC,
+                                                                                                 NIDREGIMEN_VALID     => C2.NIDREGIMEN_VALID);
+        
+        END LOOP;
+      END LOOP;
+    
+    END IF;
+  
+    OPEN RC1 FOR
+      SELECT *
+        FROM TABLE(V_TABLE_LISTA_CLIENTE);
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_COINC_GC(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                            P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                            P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                            P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                            RC1                   OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DECODE(SNUM_DOCUMENTO, NULL, NULL, STIPO_DOCUMENTO) AS STIPOIDEN,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             TLAR.SORIGEN AS SORIGEN,
+             NPORC_APROXIMA_BUSQ,
+             NACEPTA_COINCIDENCIA,
+             NIDRESULTADO,
+             TLAR.NIDTIPOLISTA,
+             TLAR.NIDPROVEEDOR,
+             TLP.SDESPROVEEDOR,
+             STIPO_BUSQUEDA,
+             TL.SDESTIPOLISTA,
+             TLAR.NIDREGIMEN,
+             TR.SDESREGIMEN,
+             TLAR.SCOD_CLIENTE_BUSQ AS SCLIENT,
+             (SELECT SESTADO_TRAT
+                FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE TTC
+               WHERE TTC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                 AND TTC.NIDALERTA = P_NIDALERTA
+                 AND TTC.SCLIENT = TLAR.SCOD_CLIENTE_BUSQ
+                 AND TTC.NIDREGIMEN = TLAR.NIDREGIMEN) AS SESTADO_TRAT,
+             TLAR.NTIPOCARGA
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_PROVEEDOR         TLP,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_REGIMEN           TR
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND NTIPOIDEN_BUSQ = P_STIPOIDEN_BUSQ
+         AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ
+         AND TLP.NIDPROVEEDOR = TLAR.NIDPROVEEDOR
+         AND TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TR.NIDREGIMEN = TLAR.NIDREGIMEN
+         AND TLAR.DNULLDATE IS NULL;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_LI(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                      P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                      P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                      P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                      P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                      RC1                   OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DECODE(SNUM_DOCUMENTO, NULL, NULL, STIPO_DOCUMENTO) AS STIPOIDEN,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             UPPER(TLAR.SORIGEN) AS SORIGEN,
+             NPORC_APROXIMA_BUSQ,
+             NACEPTA_COINCIDENCIA,
+             NIDRESULTADO,
+             TLAR.NIDTIPOLISTA,
+             TLAR.NIDPROVEEDOR,
+             UPPER(TLP.SDESPROVEEDOR) AS SDESPROVEEDOR,
+             UPPER(STIPO_BUSQUEDA) AS STIPO_BUSQUEDA,
+             TLAR.SCOD_CLIENTE_BUSQ SCLIENT,
+             UPPER(TLAR.SESTADO_TRAT) AS SESTADO_TRAT,
+             TLAR.NTIPOCARGA,
+             TR.NIDREGIMEN,
+             UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+             UPPER(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_PROVEEDOR         TLP,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_REGIMEN           TR
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND (TLAR.NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99)
+         AND NTIPOIDEN_BUSQ = P_STIPOIDEN_BUSQ
+         AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA = 1
+         AND TLAR.DNULLDATE IS NULL
+         AND TLP.NIDPROVEEDOR = TLAR.NIDPROVEEDOR
+         AND TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TR.NIDREGIMEN = TLAR.NIDREGIMEN;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_PEP(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                       P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                       P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DECODE(SNUM_DOCUMENTO, NULL, NULL, STIPO_DOCUMENTO) AS STIPOIDEN,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             UPPER(TLAR.SORIGEN) AS SORIGEN,
+             NPORC_APROXIMA_BUSQ,
+             NACEPTA_COINCIDENCIA,
+             NIDRESULTADO,
+             TLAR.NIDTIPOLISTA,
+             TLAR.NIDPROVEEDOR,
+             UPPER(TLP.SDESPROVEEDOR) AS SDESPROVEEDOR,
+             UPPER(STIPO_BUSQUEDA) AS STIPO_BUSQUEDA,
+             TLAR.SCOD_CLIENTE_BUSQ SCLIENT,
+             UPPER(TLAR.SESTADO_TRAT) AS SESTADO_TRAT,
+             TLAR.NTIPOCARGA,
+             TR.NIDREGIMEN,
+             UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+             UPPER(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_PROVEEDOR         TLP,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_REGIMEN           TR
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND (TLAR.NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99)
+         AND NTIPOIDEN_BUSQ = P_STIPOIDEN_BUSQ
+         AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA = 2
+         AND TLP.NIDPROVEEDOR = TLAR.NIDPROVEEDOR
+         AND TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TLAR.DNULLDATE IS NULL
+         AND TR.NIDREGIMEN = TLAR.NIDREGIMEN;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_FPEP(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                        P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                        P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                        P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                        P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                        RC1                   OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DECODE(SNUM_DOCUMENTO, NULL, NULL, STIPO_DOCUMENTO) AS STIPOIDEN,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             UPPER(TLAR.SORIGEN) AS SORIGEN,
+             NPORC_APROXIMA_BUSQ,
+             NACEPTA_COINCIDENCIA,
+             NIDRESULTADO,
+             TLAR.NIDTIPOLISTA,
+             TLAR.NIDPROVEEDOR,
+             UPPER(TLP.SDESPROVEEDOR) AS SDESPROVEEDOR,
+             UPPER(STIPO_BUSQUEDA) AS STIPO_BUSQUEDA,
+             TLAR.SCOD_CLIENTE_BUSQ SCLIENT,
+             UPPER(TLAR.SESTADO_TRAT) AS SESTADO_TRAT,
+             TLAR.NTIPOCARGA,
+             TR.NIDREGIMEN,
+             UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+             UPPER(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_PROVEEDOR         TLP,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_REGIMEN           TR
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND (TLAR.NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99)
+         AND NTIPOIDEN_BUSQ = P_STIPOIDEN_BUSQ
+         AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA = 3
+         AND TLP.NIDPROVEEDOR = TLAR.NIDPROVEEDOR
+         AND TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TLAR.DNULLDATE IS NULL
+         AND TR.NIDREGIMEN = TLAR.NIDREGIMEN;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_SAC(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                       P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                       P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DECODE(SNUM_DOCUMENTO, NULL, NULL, STIPO_DOCUMENTO) AS STIPOIDEN,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             UPPER(TLAR.SORIGEN) AS SORIGEN,
+             TLAR.NIDTIPOLISTA,
+             NPORC_APROXIMA_BUSQ,
+             NACEPTA_COINCIDENCIA,
+             NIDRESULTADO,
+             TLAR.NIDPROVEEDOR,
+             UPPER(TLP.SDESPROVEEDOR) AS SDESPROVEEDOR,
+             UPPER(STIPO_BUSQUEDA) AS STIPO_BUSQUEDA,
+             TLAR.SCOD_CLIENTE_BUSQ SCLIENT,
+             UPPER(TLAR.SESTADO_TRAT) AS SESTADO_TRAT,
+             TLAR.NTIPOCARGA,
+             TR.NIDREGIMEN,
+             UPPER(TR.SDESREGIMEN) SDESREGIMEN,
+             UPPER(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_PROVEEDOR         TLP,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_REGIMEN           TR
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND (TLAR.NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99)
+         AND NTIPOIDEN_BUSQ = P_STIPOIDEN_BUSQ
+         AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA = 4
+         AND TLP.NIDPROVEEDOR = TLAR.NIDPROVEEDOR
+         AND TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TLAR.DNULLDATE IS NULL
+         AND TR.NIDREGIMEN = TLAR.NIDREGIMEN;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_RESULTADO_ESP(P_NIDALERTA           TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO    TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN          TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                       P_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE,
+                                       P_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE,
+                                       RC1                   OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DECODE(SNUM_DOCUMENTO, NULL, NULL, STIPO_DOCUMENTO) AS STIPOIDEN,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             UPPER(TL.SDESTIPOLISTA) AS SORIGEN,
+             TLAR.NIDTIPOLISTA,
+             NPORC_APROXIMA_BUSQ,
+             NACEPTA_COINCIDENCIA,
+             NIDRESULTADO,
+             TLAR.NIDPROVEEDOR,
+             UPPER(TLP.SDESPROVEEDOR) AS SDESPROVEEDOR,
+             UPPER(STIPO_BUSQUEDA) AS STIPO_BUSQUEDA,
+             TLAR.SCOD_CLIENTE_BUSQ SCLIENT,
+             UPPER(TLAR.SESTADO_TRAT) AS SESTADO_TRAT,
+             TLAR.NTIPOCARGA,
+             TR.NIDREGIMEN,
+             UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+             UPPER(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO
+        FROM TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_PROVEEDOR         TLP,
+             TBL_LAFT_TIPO_LISTA        TL,
+             TBL_LAFT_REGIMEN           TR
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA
+         AND (TLAR.NIDREGIMEN = P_NIDREGIMEN OR P_NIDREGIMEN = 99)
+         AND NTIPOIDEN_BUSQ = P_STIPOIDEN_BUSQ
+         AND SNUM_DOCUMENTO_BUSQ = P_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA = 5
+         AND TLP.NIDPROVEEDOR = TLAR.NIDPROVEEDOR
+         AND TL.NIDTIPOLISTA = TLAR.NIDTIPOLISTA
+         AND TLAR.DNULLDATE IS NULL
+         AND TR.NIDREGIMEN = TLAR.NIDREGIMEN;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_HISTORIAL_ESTADO_CLI(P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                              P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                              P_SCLIENT          TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                              RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                FROM TBL_LAFT_ALERTA_FRECUENCIA
+               WHERE NPERIODO_PROCESO = HIS.NPERIODO_PROCESO
+                 AND SESTADO = 1) AS NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDTRATCLIEHIS,
+             NIDREGIMEN,
+             HIS.SCLIENT,
+             TT.SDESESTADO_TRAT AS SESTADO_TRAT,
+             NIDUSUARIO_MODIFICA,
+             HIS.DCOMPDATE,
+             STIPO_PEP,
+             SDES_PEP,
+             SCOMENTARIO,
+             UPPER(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO
+        FROM TBL_LAFT_TRATAM_CLIENTE_HIS HIS,
+             CLIENT                      CL,
+             TBL_LAFT_USUARIO            TLU,
+             TBL_LAFT_TIPO_TRATAMIENTO   TT
+       WHERE HIS.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND HIS.NIDALERTA = P_NIDALERTA
+         AND HIS.SCLIENT = P_SCLIENT
+         AND CL.SCLIENT = HIS.SCLIENT
+         AND TLU.ID_USUARIO = HIS.NIDUSUARIO_MODIFICA
+         AND TT.SESTADO_TRAT = HIS.SESTADO_TRAT
+       ORDER BY NIDTRATCLIEHIS;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_COINCIDENCIA_PEN(P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                          P_SCLIENT          TBL_LAFT_ALERTA_RESULTADOS.SCOD_CLIENTE_BUSQ%TYPE,
+                                          RC1                OUT SYS_REFCURSOR) IS
+  
+    V_COUNT               INTEGER;
+    V_TABLE_LISTA_CLIENTE T_TABLE_LISTA_RESULTADO_CLIENTE := T_TABLE_LISTA_RESULTADO_CLIENTE();
+  
+    CURSOR CLIENTES IS
+    
+      SELECT DISTINCT (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                         FROM TBL_LAFT_ALERTA_FRECUENCIA
+                        WHERE NPERIODO_PROCESO = TLR.NPERIODO_PROCESO
+                          AND SESTADO = 1) AS NPERIODO_PROCESO,
+                      TLR.NTIPOIDEN_BUSQ AS NTIPO_DOCUMENTO,
+                      TLR.STIPO_DOCUMENTO || ' - ' || TLR.SNUM_DOCUMENTO_BUSQ AS STIPOIDEN,
+                      TLR.SNUM_DOCUMENTO_BUSQ AS SNUM_DOCUMENTO,
+                      TLR.SNOM_COMPLETO_BUSQ AS SNOM_COMPLETO,
+                      TLR.DBIRTHDAT AS DFECHA_NACIMIENTO,
+                      TRUNC((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(TLR.DBIRTHDAT, 'YYYYMMDD'))) / 10000) EDAD,
+                      DECODE(TLR.NPERIODO_PROCESO, NULL, 'NO COINCIDENCIA', 'COINCIDENCIA') AS SDESESTADO,
+                      UPPER(TLR.SPRODUCTO) AS SDESPRODUCTO,
+                      TLR.SCOD_CLIENTE_BUSQ AS SCLIENT,
+                      DECODE(TLR.NPERIODO_PROCESO, NULL, 'NNN', TLR.SESTADO_TRAT) AS SESTADO_TRAT,
+                      UPPER(DECODE(TLR.NPERIODO_PROCESO, NULL, 'No Aplica', TT.SDESESTADO_TRAT)) AS SDESESTADO_TRAT,
+                      TR.NIDREGIMEN,
+                      UPPER(TR.SDESREGIMEN) AS SDESREGIMEN,
+                      --TLR.NPERIODO_PROCESO,
+                      NVL(TLR.NIDTIPOLISTA, 0) AS NIDTIPOLISTA,
+                      UPPER(TLR.SESTADO_REVISADO) AS SESTADO_REVISADO,
+                      TLR.NTIPOCARGA,
+                      0 AS NIDTRATCLIEHIS
+        FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLR,
+             TBL_LAFT_REGIMEN                TR,
+             TBL_LAFT_TIPO_TRATAMIENTO       TT
+       WHERE TLR.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLR.NIDALERTA = P_NIDALERTA
+         AND TLR.DNULLDATE IS NULL
+         AND TR.NIDREGIMEN = TLR.NIDREGIMEN
+         AND TLR.NTIPOCARGA = 2
+         AND TT.SESTADO_TRAT(+) = TLR.SESTADO_TRAT
+         AND TLR.NIDTIPOLISTA <> 0
+         AND (SELECT COUNT(*)
+                FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLRT
+               WHERE TLRT.NPERIODO_PROCESO = TLR.NPERIODO_PROCESO
+                 AND TLRT.NIDALERTA = TLR.NIDALERTA
+                 AND TLRT.SCOD_CLIENTE_BUSQ = TLR.SCOD_CLIENTE_BUSQ
+                 AND TLRT.SESTADO_REVISADO = 2) > 0;
+  
+    CURSOR LISTAS IS
+      SELECT *
+        FROM TBL_LAFT_TIPO_LISTA TL
+       WHERE NIDTIPOLISTA <> 0;
+  
+  BEGIN
+  
+    EXECUTE IMMEDIATE 'ALTER SESSION SET NLS_DATE_FORMAT = ''DD/MM/YYYY''';
+  
+    FOR C1 IN LISTAS
+    LOOP
+      FOR C2 IN CLIENTES
+      LOOP
+        V_TABLE_LISTA_CLIENTE.EXTEND();
+        V_TABLE_LISTA_CLIENTE(V_TABLE_LISTA_CLIENTE.COUNT) := T_RECORD_LISTA_RESULTADO_CLIENTE(NTIPO_DOCUMENTO      => C2.NTIPO_DOCUMENTO,
+                                                                                               STIPOIDEN            => C2.STIPOIDEN,
+                                                                                               SNUM_DOCUMENTO       => C2.SNUM_DOCUMENTO,
+                                                                                               SNOM_COMPLETO        => C2.SNOM_COMPLETO,
+                                                                                               DFECHA_NACIMIENTO    => C2.DFECHA_NACIMIENTO,
+                                                                                               EDAD                 => C2.EDAD,
+                                                                                               SDESESTADO           => CASE
+                                                                                                                         WHEN C2.NIDTIPOLISTA = C1.NIDTIPOLISTA THEN
+                                                                                                                          'COINCIDENCIA'
+                                                                                                                         ELSE
+                                                                                                                          'SIN COINCIDENCIA'
+                                                                                                                       END,
+                                                                                               SDESPRODUCTO         => C2.SDESPRODUCTO,
+                                                                                               SCLIENT              => C2.SCLIENT,
+                                                                                               SESTADO_TRAT         => C2.SESTADO_TRAT,
+                                                                                               SDESESTADO_TRAT      => C2.SDESESTADO_TRAT,
+                                                                                               NIDREGIMEN           => C2.NIDREGIMEN,
+                                                                                               SDESREGIMEN          => C2.SDESREGIMEN,
+                                                                                               NPERIODO_PROCESO     => C2.NPERIODO_PROCESO,
+                                                                                               NIDTIPOLISTA         => C1.NIDTIPOLISTA,
+                                                                                               SDESTIPOLISTA        => C1.SDESTIPOLISTA,
+                                                                                               SESTADO_REVISADO     => C2.SESTADO_REVISADO,
+                                                                                               NTIPOCARGA           => C2.NTIPOCARGA,
+                                                                                               NIDTRATCLIEHIS       => C2.NIDTRATCLIEHIS,
+                                                                                               SFALTA_ACEPTAR_COINC => NULL,
+                                                                                               NIDREGIMEN_VALID     => NULL);
+      
+      END LOOP;
+    END LOOP;
+  
+    OPEN RC1 FOR
+      SELECT *
+        FROM TABLE(V_TABLE_LISTA_CLIENTE);
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_INFO(P_NIDALERTA        TBL_LAFT_ALERTA_LISTA_EXTERNO.NIDALERTA%TYPE,
+                              P_NPERIODO_PROCESO TBL_LAFT_ALERTA_LISTA_EXTERNO.NPERIODO_PROCESO%TYPE,
+                              P_NIDTIPOLISTA     TBL_LAFT_ALERTA_LISTA_EXTERNO.NIDTIPOLISTA%TYPE,
+                              RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDLISTAEXT,
+             TLTL.SDESTIPOLISTA AS SORIGEN,
+             DFECHA_CARGA,
+             STIPO_DOCUMENTO,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             TLTL.SDESTIPOLISTA,
+             TLTL.NIDTIPOLISTA,
+             TLP.NIDPROVEEDOR,
+             TLP.SDESPROVEEDOR
+        FROM TBL_LAFT_ALERTA_LISTA_EXTERNO TLALE,
+             TBL_LAFT_PROVEEDOR            TLP,
+             TBL_LAFT_TIPO_LISTA           TLTL
+       WHERE TLALE.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLALE.NIDALERTA = P_NIDALERTA
+         AND TLALE.NIDTIPOLISTA = P_NIDTIPOLISTA
+         AND TLP.NIDPROVEEDOR(+) = TLALE.NIDPROVEEDOR
+         AND TLTL.NIDTIPOLISTA = TLALE.NIDTIPOLISTA;
+  
+  END;
+
+  PROCEDURE SP_GET_TRATAMIENTO_CLIENTE(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_TRATAM_CLIENTE.NPERIODO_PROCESO%TYPE,
+                                       P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE,
+                                       RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT SCLIENT,
+             DFECHA_REGISTRO,
+             NIDUSUARIO_MODIFICA
+        FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE TLATC
+       WHERE TLATC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLATC.SESTADO_TRAT = P_SESTADO_TRAT;
+  
+  END;
+
+  PROCEDURE SP_GET_TIPOS_LISTA(P_NIDALERTA        TBL_LAFT_ALERTA_LISTAS_PERIODO.NIDALERTA%TYPE,
+                               P_NPERIODO_PROCESO TBL_LAFT_ALERTA_LISTAS_PERIODO.NPERIODO_PROCESO%TYPE,
+                               P_NIDREGIMEN       TBL_LAFT_ALERTA_LISTAS_PERIODO.NIDREGIMEN%TYPE,
+                               RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+    
+    /* SELECT NIDTIPOLISTA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         SDESTIPOLISTA --,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \*SESTADO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  DFECHA_REGISTRO,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  SDESCORTALISTA*\
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    FROM TBL_LAFT_TIPO_LISTA TLTL
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   WHERE TLTL.SESTADO = '1';*/
+      SELECT *
+        FROM (SELECT TAL.NIDTIPOLISTA,
+                     TL.SDESTIPOLISTA,
+                     TAL.NCANTCLIENTES,
+                     TAL.NCANTCLIXREV,
+                     TO_CHAR(TAL.DCOMPDATE, 'DD/MM/YYYY') AS DCOMPDATE,
+                     TAL.SESTADO_REVISADO,
+                     P_NIDREGIMEN AS NIDREGIMEN
+                FROM TBL_LAFT_ALERTA_LISTAS_PERIODO TAL,
+                     TBL_LAFT_TIPO_LISTA            TL
+               WHERE TAL.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                 AND TAL.NIDALERTA = P_NIDALERTA
+                 AND TL.NIDTIPOLISTA = TAL.NIDTIPOLISTA
+                 AND TAL.NIDREGIMEN = P_NIDREGIMEN
+                 AND TL.NIDTIPOLISTA <> 0
+              UNION
+              SELECT TL.NIDTIPOLISTA,
+                     TL.SDESTIPOLISTA,
+                     0,
+                     0,
+                     NULL,
+                     NULL,
+                     P_NIDREGIMEN AS NIDREGIMEN
+                FROM TBL_LAFT_TIPO_LISTA TL
+               WHERE NOT EXISTS (SELECT 1
+                        FROM TBL_LAFT_ALERTA_LISTAS_PERIODO TAL
+                       WHERE TAL.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                         AND TAL.NIDALERTA = P_NIDALERTA
+                         AND TAL.NIDREGIMEN = P_NIDREGIMEN
+                         AND TAL.NIDTIPOLISTA = TL.NIDTIPOLISTA)
+                 AND TL.NIDTIPOLISTA <> 0)
+       ORDER BY DCOMPDATE,
+                NIDTIPOLISTA;
+  
+  END;
+
+  PROCEDURE SP_GET_TIPOS_LISTA_ALL(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT NIDTIPOLISTA,
+             SDESTIPOLISTA,
+             SESTADO,
+             DFECHA_REGISTRO,
+             SDESCORTALISTA
+        FROM TBL_LAFT_TIPO_LISTA
+       WHERE SESTADO = 1;
+  
+  END;
+
+  PROCEDURE SP_GET_LISTA_DIR_PAIS_GAFI(P_NIDALERTA        TBL_LAFT_DIRECCION_GAFI_TMP.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO TBL_LAFT_DIRECCION_GAFI_TMP.NPERIODO_PROCESO%TYPE,
+                                       RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLDG.*
+        FROM TBL_LAFT_DIRECCION_GAFI_TMP TLDG
+       WHERE TLDG.NIDALERTA = P_NIDALERTA
+         AND TLDG.NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+  END;
+
+  PROCEDURE SP_GET_CORREO_OFICIAL(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLU.SEMAIL,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             INITCAP(LP.SNAME) AS SNOMPERFIL,
+             INITCAP(TLC.SDESCARGO) AS SDESCARGO,
+             LP.NIDPROFILE,
+             --TLU.NIDPROFILE,
+             LP.NIDGRUPOSENAL,
+             (SELECT MAX(TO_CHAR(DFEEJECUTAPROCINI, 'DD/MM/YYYY')) || ' al ' || MAX(TO_CHAR(DFEEJECUTAPROCFIN))
+                FROM TBL_LAFT_ALERTA_FRECUENCIA
+               WHERE /*NPERIODO_PROCESO = TTC.NPERIODO_PROCESO
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  AND */
+               SESTADO = 1) AS SPERIODO_PROCESO
+        FROM TBL_LAFT_USUARIO  TLU,
+             TBL_LAFT_PROFILES LP,
+             TBL_LAFT_CARGO    TLC
+       WHERE LP.STIPO_USUARIO = 'OC'
+         AND TLU.ESTADO <> 2
+         AND LP.NIDPROFILE = TLU.NIDPROFILE
+         AND TLC.NIDCARGO = TLU.NIDCARGO
+         AND TLC.NIDPROFILE = LP.NIDPROFILE;
+  END;
+
+  PROCEDURE SP_GET_MONI_GESTION_ALERTA(P_FECEJE_INI  VARCHAR2,
+                                       P_FECEJE_FIN  VARCHAR2,
+                                       P_SID         VARCHAR,
+                                       P_TI_BUSQUEDA VARCHAR2,
+                                       P_NCODE       OUT NUMBER,
+                                       P_SMESSAGE    OUT VARCHAR2,
+                                       RC1           OUT SYS_REFCURSOR) IS
+  BEGIN
+    P_NCODE := 0;
+  
+    OPEN RC1 FOR
+      SELECT NULL SID
+        FROM DUAL;
+  
+    IF P_TI_BUSQUEDA = 1 THEN
+      IF P_FECEJE_INI IS NULL THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'Debe ingresar obligatoriamente la fecha inicial que ejecut� el reporte';
+        RETURN;
+      END IF;
+      IF P_FECEJE_FIN IS NULL THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'Debe ingresar obligatoriamente la fecha final que ejecut� el reporte';
+        RETURN;
+      END IF;
+    
+      IF TO_DATE(P_FECEJE_FIN, 'DD/MM/YYYY') < TO_DATE(P_FECEJE_INI, 'DD/MM/YYYY') THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'La fecha inicial no puede ser mayor que la fecha final';
+        RETURN;
+      END IF;
+    ELSE
+      IF P_SID IS NULL THEN
+        P_NCODE    := 1;
+        P_SMESSAGE := 'Debe ingresar el id del proceso obligatoriamente';
+        RETURN;
+      END IF;
+    END IF;
+  
+    OPEN RC1 FOR
+      SELECT A.SID,
+             A.DINIPROC,
+             A.DFINPROC,
+             A.NSTATUSPROC,
+             A.DCOMPDATE,
+             A.SMENSAJE,
+             A.NPERIODO_PROCESO,
+             TRIM(ST.SDESCRIPTION) AS SDESCRIPTION,
+             A.DRANGOINI,
+             A.DRANGOFIN
+        FROM TBL_LAFT_MONITOREO_ALERTA  A,
+             TBL_LAFT_STATUS_ALERT_PROC ST
+       WHERE (P_TI_BUSQUEDA = '0' OR TRUNC(A.DCOMPDATE) BETWEEN P_FECEJE_INI AND P_FECEJE_FIN)
+         AND (P_TI_BUSQUEDA = '1' OR P_SID = A.SID)
+         AND ST.NSTATUSPROC = A.NSTATUSPROC
+       ORDER BY A.SID DESC;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+  END;
+
+  PROCEDURE SP_GET_LISTA_NOTAS_CREDITO(P_NIDALERTA        TBL_LAFT_NOTAS_CREDITO_TMP.NIDALERTA%TYPE,
+                                       P_NPERIODO_PROCESO TBL_LAFT_NOTAS_CREDITO_TMP.NPERIODO_PROCESO%TYPE,
+                                       P_NIDREGIMEN       TBL_LAFT_NOTAS_CREDITO_TMP.NIDREGIMEN%TYPE,
+                                       RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLNC.*
+        FROM TBL_LAFT_NOTAS_CREDITO_TMP TLNC
+       WHERE TLNC.NIDALERTA = P_NIDALERTA
+         AND TLNC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLNC.NIDREGIMEN = P_NIDREGIMEN;
+  END;
+
+  PROCEDURE SP_GET_LISTA_DIR_DUPL(P_NIDALERTA        TBL_LAFT_DIRECCION_DUPL_TMP.NIDALERTA%TYPE,
+                                  P_NPERIODO_PROCESO TBL_LAFT_DIRECCION_DUPL_TMP.NPERIODO_PROCESO%TYPE,
+                                  RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT *
+        FROM TBL_LAFT_DIRECCION_DUPL_TMP
+       WHERE NIDALERTA = P_NIDALERTA
+         AND NPERIODO_PROCESO = P_NPERIODO_PROCESO;
+  END;
+
+  PROCEDURE SP_GET_LISTA_CLI_ALERT_RENTA(P_NIDALERTA        TBL_LAFT_ALERTA_RENTAS.NIDALERTA%TYPE,
+                                         P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RENTAS.NPERIODO_PROCESO%TYPE,
+                                         RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT *
+        FROM TBL_LAFT_ALERTA_RENTAS
+       WHERE NIDALERTA = P_NIDALERTA
+         AND NPERIODO_PROCESO = P_NPERIODO_PROCESO
+      /*AND NRISKTYPE IN (4, 5)*/
+      ;
+  END;
+
+  PROCEDURE SP_GET_COMENT_ALERTA_PERIODO(P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO_COMENT.NIDALERTA%TYPE,
+                                         P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO_COMENT.NPERIODO_PROCESO%TYPE,
+                                         RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT TO_CHAR(TLAPC.DFECHA_REGISTRO, 'DD/MM/YYYY') AS DFECHA_REGISTRO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLAPC.SCOMENTARIO
+        FROM TBL_LAFT_ALERTA_PROCESO_COMENT TLAPC,
+             TBL_LAFT_USUARIO               TLU
+       WHERE TLAPC.NIDALERTA = P_NIDALERTA
+         AND TLAPC.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLU.ID_USUARIO(+) = TLAPC.NIDUSUARIO_MODIFICA;
+  
+  END;
+
+  PROCEDURE SP_GET_ADJUNTO_ALERTA_PERIODO(P_NIDALERTA        TBL_LAFT_ALERTA_PROCESO_ADJUN.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO TBL_LAFT_ALERTA_PROCESO_ADJUN.NPERIODO_PROCESO%TYPE,
+                                          RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT TO_CHAR(TLAPA.DFECHA_REGISTRO, 'DD/MM/YYYY') AS DFECHA_REGISTRO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLAPA.SRUTA_ADJUNTO
+        FROM TBL_LAFT_ALERTA_PROCESO_ADJUN TLAPA,
+             TBL_LAFT_USUARIO              TLU
+       WHERE TLAPA.NIDALERTA = P_NIDALERTA
+         AND TLAPA.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLU.ID_USUARIO(+) = TLAPA.NIDUSUARIO_MODIFICA;
+  
+  END;
+
+  PROCEDURE SP_GET_ADJ_INFORM_ALR_PERIODO(P_NIDALERTA        TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE,
+                                          P_NPERIODO_PROCESO TBL_LAFT_ALR_PROC_ADJUN_INFORM.NPERIODO_PROCESO%TYPE,
+                                          P_STIPO_CARGA      TBL_LAFT_ALR_PROC_ADJUN_INFORM.STIPO_CARGA%TYPE,
+                                          P_NREGIMEN         TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                          RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT TO_CHAR(TLAPA.DFECHA_REGISTRO, 'DD/MM/YYYY HH:MI:SS') AS DFECHA_REGISTRO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLAPA.SRUTA_ADJUNTO
+        FROM TBL_LAFT_ALR_PROC_ADJUN_INFORM TLAPA,
+             TBL_LAFT_USUARIO               TLU
+       WHERE TLAPA.NIDALERTA = P_NIDALERTA
+         AND TLAPA.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLAPA.STIPO_CARGA = P_STIPO_CARGA
+         AND TLAPA.NREGIMEN = P_NREGIMEN
+         AND TLU.ID_USUARIO(+) = TLAPA.NIDUSUARIO_MODIFICA;
+  
+  END;
+
+  PROCEDURE SP_GET_ADJ_INFORM_ALR_PERIODO_CAB(P_NIDALERTA          TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA%TYPE,
+                                              P_NPERIODO_PROCESO   TBL_LAFT_ALR_PROC_ADJUN_INFORM.NPERIODO_PROCESO%TYPE,
+                                              P_STIPO_CARGA        TBL_LAFT_ALR_PROC_ADJUN_INFORM.STIPO_CARGA%TYPE,
+                                              P_NREGIMEN           TBL_LAFT_ALR_PROC_ADJUN_INFORM.NREGIMEN%TYPE,
+                                              P_NIDALERTA_CABECERA TBL_LAFT_ALR_PROC_ADJUN_INFORM.NIDALERTA_CABECERA%TYPE,
+                                              RC1                  OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT TO_CHAR(TLAPA.DFECHA_REGISTRO, 'DD/MM/YYYY HH:MI:SS') AS DFECHA_REGISTRO,
+             INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+             TLAPA.SRUTA_ADJUNTO,
+             TLAPA.NIDALERTA_CABECERA
+        FROM TBL_LAFT_ALR_PROC_ADJUN_INFORM TLAPA,
+             TBL_LAFT_USUARIO               TLU
+       WHERE TLAPA.NIDALERTA = P_NIDALERTA
+         AND TLAPA.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TLAPA.STIPO_CARGA = P_STIPO_CARGA
+         AND TLAPA.NREGIMEN = P_NREGIMEN
+         AND NIDALERTA_CABECERA = P_NIDALERTA_CABECERA
+         AND TLU.ID_USUARIO(+) = TLAPA.NIDUSUARIO_MODIFICA;
+  
+  END;
+
+  PROCEDURE SP_GET_DOCUMENTO_IDENTIDAD(RC1 OUT SYS_REFCURSOR) AS
+  BEGIN
+    INSUDB.PKG_BDU_CLIENTE.SP_SEL_TYPE_DOCUMENT(RC1);
+  END;
+
+  PROCEDURE SP_GET_CLIENTE_TRAT_HIS(P_NPERIODO_PROCESO TBL_LAFT_TRATAM_CLIENTE_HIS.NPERIODO_PROCESO%TYPE,
+                                    P_SCLIENT          TBL_LAFT_TRATAM_CLIENTE_HIS.SCLIENT%TYPE,
+                                    RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT TCH.NPERIODO_PROCESO,
+             TCH.SCLIENT,
+             DECODE(TCH.SESTADO_TRAT, 'PR', 'PRE REFORZADO', 'CR', 'CLIENTE REFORZADO', 'AN', 'ANULADO', 'MC', 'MONITOREO COMPLEMENTARIO', NULL) AS SESTADO_TRAT,
+             TCH.NIDUSUARIO_MODIFICA,
+             TO_CHAR(TCH.DCOMPDATE, 'DD/MM/YYYY HH:MI') AS DCOMPDATE,
+             US.NOMBRECOMPLETO
+        FROM TBL_LAFT_TRATAM_CLIENTE_HIS TCH
+       INNER JOIN TBL_LAFT_USUARIO US
+          ON US.ID_USUARIO = TCH.NIDUSUARIO_MODIFICA
+       WHERE TCH.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND TCH.SCLIENT = P_SCLIENT
+       ORDER BY TCH.DCOMPDATE DESC;
+  
+  END;
+
+  PROCEDURE SP_GET_HISTORIAL_USUARIO(P_USUARIO TBL_LAFT_USUARIO.USUARIO%TYPE,
+                                     RC1       OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT HU.ID_USUARIO,
+             HU.USUARIO,
+             HU.NOMBRECOMPLETO,
+             PRO.SNAME SPERFIL,
+             CAR.SDESCARGO SCARGO,
+             HU.SEMAIL,
+             HU.SESTADO,
+             US.NOMBRECOMPLETO SUSU_MODIFICA,
+             TO_CHAR(HU.DFECHA_REGISTRO, 'DD/MM/YYYY HH24:MI:SS') AS DFECHA_REGISTRO
+        FROM TBL_LAFT_USUARIO_HISTORIAL HU
+       INNER JOIN TBL_LAFT_USUARIO US
+          ON US.ID_USUARIO = HU.NIDUSUARIO_MODIFICA
+       INNER JOIN TBL_LAFT_PROFILES PRO
+          ON PRO.NIDPROFILE = HU.NIDPROFILE
+       INNER JOIN TBL_LAFT_CARGO CAR
+          ON CAR.NIDCARGO = HU.NIDCARGO
+       WHERE HU.USUARIO = P_USUARIO
+       ORDER BY HU.DFECHA_REGISTRO DESC;
+  
+  END;
+
+  PROCEDURE SP_GET_CONFIG_CORREO(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT NIDCORREO,
+             CO.NIDGRUPOSENAL,
+             GS.SDESGRUPO_SENAL AS SGRUPOSENAL,
+             CO.NIDPROFILE,
+             PRO.SNAME AS DESPROFILE,
+             SASUNTO_CORREO,
+             SCUERPO_CORREO,
+             TO_CHAR(CO.DFECHA_REGISTRO, 'DD/MM/YYYY HH24:MI:SS') DFECHA_REGISTRO,
+             US.NOMBRECOMPLETO AS SNOMBREUSUARIO,
+             CO.NIDUSUARIO_MODIFICA,
+             AC.NID AS NIDACCION,
+             AC.SDESCRIPT AS SDESACCION,
+             CO.SCUERPO_TEXTO
+        FROM TBL_LAFT_CONFIGURACION_CORREO CO
+       INNER JOIN TBL_LAFT_USUARIO US
+          ON US.ID_USUARIO = CO.NIDUSUARIO_MODIFICA
+       INNER JOIN TBL_LAFT_PROFILES PRO
+          ON PRO.NIDPROFILE = CO.NIDPROFILE
+       INNER JOIN TBL_LAFT_GRUPO_SENALES GS
+          ON GS.NIDGRUPOSENAL = CO.NIDGRUPOSENAL
+       INNER JOIN TBL_LAFT_ACCIONES_CORREO AC
+          ON AC.NID = CO.NIDACCION
+       ORDER BY NIDCORREO DESC;
+  
+  END;
+
+  PROCEDURE SP_GET_CORREO_CUSTOM(P_NIDPROFILE     TBL_LAFT_CONFIGURACION_CORREO.NIDPROFILE%TYPE,
+                                 P_NIDGRUPOSENAL  TBL_LAFT_CONFIGURACION_CORREO.NIDGRUPOSENAL%TYPE,
+                                 P_NIDACCION      TBL_LAFT_CONFIGURACION_CORREO.NIDACCION%TYPE,
+                                 P_SASUNTO_CORREO OUT VARCHAR2,
+                                 P_SCUERPO_CORREO OUT VARCHAR2) IS
+  BEGIN
+  
+    SELECT MAX(SASUNTO_CORREO),
+           MAX(SCUERPO_CORREO)
+      INTO P_SASUNTO_CORREO,
+           P_SCUERPO_CORREO
+      FROM TBL_LAFT_CONFIGURACION_CORREO --FOR UPDATE
+     WHERE NIDPROFILE = P_NIDPROFILE
+       AND NIDGRUPOSENAL = P_NIDGRUPOSENAL
+       AND NIDACCION = P_NIDACCION;
+  
+  END;
+
+  PROCEDURE SP_GET_DATA_USUARIO(P_NIDPROFILE TBL_LAFT_CONFIGURACION_CORREO.NIDPROFILE%TYPE,
+                                P_NIDUSUARIO TBL_LAFT_USUARIO.ID_USUARIO%TYPE,
+                                RC1          OUT SYS_REFCURSOR) IS
+  BEGIN
+  
+    OPEN RC1 FOR
+    
+      SELECT U.ID_USUARIO,
+             U.USUARIO,
+             U.NOMBRECOMPLETO AS NOMBRE_USUARIO,
+             U.SEMAIL,
+             U.NIDPROFILE,
+             P.SNAME          AS NOMBRE_PERFIL,
+             P.SDESCRIPTION,
+             P.STIPO_USUARIO,
+             P.NIDGRUPOSENAL
+        FROM TBL_LAFT_USUARIO U
+       INNER JOIN TBL_LAFT_PROFILES P
+          ON U.NIDPROFILE = P.NIDPROFILE
+       WHERE U.ID_USUARIO = P_NIDUSUARIO
+          OR (P_NIDUSUARIO IS NULL AND U.NIDPROFILE = P_NIDPROFILE);
+  END;
+
+  /*FUNCTION FN_OBT_PARAM(P_TIPO_PARAM VARCHAR2) RETURN VARCHAR2 AS
+    V_PARAMETRO_ALERTA  VARCHAR2(100);
+    V_PARAMETRO_PERIODO VARCHAR2(100);
+  BEGIN
+    BEGIN
+      SELECT NIDALERTA,
+             NPERIODO_PROCESO
+        INTO V_PARAMETRO_ALERTA,
+             V_PARAMETRO_PERIODO
+        FROM TBL_LAFT_CONFIG_PARAM;
+    EXCEPTION
+      WHEN OTHERS THEN
+        V_PARAMETRO_ALERTA  := NULL;
+        V_PARAMETRO_PERIODO := NULL;
+    END;
+  
+    IF P_TIPO_PARAM = 1 THEN
+      RETURN V_PARAMETRO_ALERTA;
+    ELSE
+      RETURN V_PARAMETRO_PERIODO;
+    END IF;
+    --RETURN 'OK';
+  END;*/
+
+  PROCEDURE SP_INS_MAE_ALERTA(P_SNOMBRE_ALERTA TBL_LAFT_MAE_ALERTA.SNOMBRE_ALERTA%TYPE,
+                              P_NCODE          OUT NUMBER,
+                              P_SMESSAGE       OUT VARCHAR2) IS
+  
+    V_SACTIVE   VARCHAR2(1);
+    V_NIDALERTA NUMBER(10);
+    --V_NUSUARIO VARCHAR2(20);
+  
+  BEGIN
+    P_NCODE     := 0;
+    V_NIDALERTA := 0;
+    --V_NUSUARIO := 0;
+    BEGIN
+      SELECT NVL(MAX(NIDALERTA), 0) + 1
+        INTO V_NIDALERTA
+        FROM TBL_LAFT_MAE_ALERTA;
+    
+      INSERT INTO TBL_LAFT_MAE_ALERTA
+        (NIDALERTA,
+         SNOMBRE_ALERTA,
+         SACTIVE)
+      VALUES
+        (V_NIDALERTA,
+         P_SNOMBRE_ALERTA,
+         '1');
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        V_SACTIVE := 0;
+        BEGIN
+          NULL;
+        EXCEPTION
+          WHEN OTHERS THEN
+            P_NCODE    := 1;
+            P_SMESSAGE := SQLERRM || '  - Comun�quese con el administrador';
+            RETURN;
+        END;
+        IF P_NCODE = 1 THEN
+          RETURN;
+        END IF;
+      WHEN OTHERS THEN
+        ROLLBACK;
+        P_NCODE    := 1;
+        P_SMESSAGE := SQLERRM || '  - Comun�quese con el administrador';
+        RETURN;
+    END;
+    P_SMESSAGE := 'Se guardaron los datos correctamente';
+    COMMIT;
+  END;
+
+  PROCEDURE SP_GET_ALERTAS_VIG(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT A.NIDALERTA,
+             A.SNOMBRE_ALERTA
+        FROM TBL_LAFT_ALERTA A
+       WHERE A.SESTADO = '1'
+         AND NVL(A.NDIASUTILREENVIO, 0) > 0;
+  
+  END;
+
+  PROCEDURE SP_GET_PERFILES(RC1 OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLP.NIDPROFILE,
+             TLP.SNAME,
+             TLP.SDESCRIPTION,
+             TLP.SACTIVE,
+             TLP.NUSERCODE,
+             TLP.DCOMPDATE,
+             TLP.STIPO_USUARIO,
+             TLPG.NIDGRUPOSENAL,
+             TLPG.DFECHA_REGISTRO,
+             TLPG.NIDUSUARIO_MODIFICA
+        FROM TBL_LAFT_PROFILES               TLP,
+             TBL_LAFT_PROFILES_X_GRUPO_SENAL TLPG
+       WHERE TLPG.NIDPROFILE(+) = TLP.NIDPROFILE
+       ORDER BY TLP.NIDPROFILE,
+                TLPG.NIDGRUPOSENAL;
+  
+  END;
+
+  PROCEDURE SP_GET_PERFIL_X_GRUPO_SENAL(P_NIDGRUPOSENAL TBL_LAFT_PROFILES_X_GRUPO_SENAL.NIDGRUPOSENAL%TYPE,
+                                        RC1             OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLP.NIDPROFILE,
+             TLP.SNAME
+        FROM TBL_LAFT_PROFILES               TLP,
+             TBL_LAFT_PROFILES_X_GRUPO_SENAL TLPG
+       WHERE TLP.NIDPROFILE = TLPG.NIDPROFILE
+         AND TLPG.NIDGRUPOSENAL = P_NIDGRUPOSENAL
+       ORDER BY TLPG.NIDPROFILE;
+  
+  END;
+
+  PROCEDURE SP_GET_GRUPO_SENAL_X_PERFIL(P_NIDPROFILE TBL_LAFT_PROFILES_X_GRUPO_SENAL.NIDPROFILE%TYPE,
+                                        RC1          OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLGS.NIDGRUPOSENAL,
+             TLGS.SDESGRUPO_SENAL
+        FROM TBL_LAFT_GRUPO_SENALES          TLGS,
+             TBL_LAFT_PROFILES_X_GRUPO_SENAL TLPG
+       WHERE TLGS.NIDGRUPOSENAL = TLPG.NIDGRUPOSENAL
+         AND TLPG.NIDPROFILE = P_NIDPROFILE
+       ORDER BY TLPG.NIDPROFILE;
+  
+  END;
+
+  PROCEDURE SP_REENVIAR_CORREO(P_NPERIODO_PROCESO NUMBER,
+                               P_NIDALERTA        NUMBER,
+                               RC1                OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT TLU.SEMAIL,
+             TLU.NOMBRECOMPLETO,
+             NIDALERTA_CAB_USUARIO
+        FROM (SELECT FN_LAFT_DIAS_LABORABLES(CU.DFECHA_REENVIO, SYSDATE - 1) AS DIAS,
+                     CU.NIDALERTA AS NIDALERTA,
+                     CU.NIDUSUARIO_ASIGNADO,
+                     CU.NIDALERTA_CAB_USUARIO
+                FROM TBL_LAFT_ALERTA_CAB_USUARIO CU
+               WHERE CU.NPERIODO_PROCESO = P_NPERIODO_PROCESO
+                 AND CU.NIDALERTA = P_NIDALERTA
+                 AND CU.SESTADO = 1) Z
+       INNER JOIN TBL_LAFT_ALERTA A
+          ON A.NIDALERTA = Z.NIDALERTA
+       INNER JOIN TBL_LAFT_USUARIO TLU
+          ON TLU.ID_USUARIO = Z.NIDUSUARIO_ASIGNADO
+       WHERE Z.DIAS >= A.NDIASUTILREENVIO;
+  
+  END;
+
+  PROCEDURE SP_UPD_FECHAREENVIO(P_NIDALERTA_CAB_USUARIO NUMBER,
+                                P_NCODE                 OUT NUMBER,
+                                P_SMESSAGE              OUT VARCHAR2) IS
+  
+  BEGIN
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Se actualiz� el registro correctamente';
+    UPDATE TBL_LAFT_ALERTA_CAB_USUARIO U
+       SET U.DFECHA_REENVIO = SYSDATE
+     WHERE U.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+    COMMIT;
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+  END;
+
+  PROCEDURE SP_GET_USUARIO_ALERTA(RC1 OUT SYS_REFCURSOR) IS
+  
+  BEGIN
+    OPEN RC1 FOR
+    
+      SELECT DISTINCT TLU.SEMAIL,
+                      INITCAP(TLU.NOMBRECOMPLETO) AS NOMBRECOMPLETO,
+                      TLC.SDESCARGO AS SCARGO,
+                      TRIM(LP.SDESCRIPTION) AS SNOMPERFIL,
+                      TLU.ID_USUARIO AS NIDUSUARIO
+        FROM TBL_LAFT_ALERTA_PERFIL TLAPF,
+             TBL_LAFT_USUARIO       TLU,
+             TBL_LAFT_ALERTA        TLA,
+             TBL_LAFT_PROFILES      LP,
+             TBL_LAFT_CARGO         TLC
+       WHERE TLAPF.NIDALERTA = TLA.NIDALERTA
+         AND TLU.NIDPROFILE(+) = TLAPF.NIDPROFILE
+         AND LP.NIDPROFILE = TLU.NIDPROFILE
+         AND TLC.NIDCARGO(+) = TLU.NIDCARGO
+         AND TLU.ESTADO = 1
+         AND TLA.SESTADO = 1
+         AND LP.SACTIVE = 1;
+  
+  END;
+
+  PROCEDURE SP_INS_CLI_REFOR(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                             P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                             P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                             P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE DEFAULT NULL,
+                             P_NCODE            OUT NUMBER,
+                             P_SMESSAGE         OUT VARCHAR2) IS
+  
+    CURSOR LISTA_TRATAM_CLIENTE IS
+      SELECT DISTINCT NIDDOC_TYPE AS NTIPOIDEN_BUSQ,
+                      SIDDOC      AS SNUM_DOCUMENTO_BUSQ,
+                      SCLIENAME   AS SNOM_COMPLETO_BUSQ,
+                      DBIRTHDAT,
+                      STIPOIDEN   AS STIPOIDEN_BUSQ
+        FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND SESTADO_TRAT = P_SESTADO_TRAT;
+  
+    V_NTIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.NTIPOIDEN_BUSQ%TYPE;
+    V_SNUM_DOCUMENTO_BUSQ TBL_LAFT_ALERTA_RESULTADOS.SNUM_DOCUMENTO_BUSQ%TYPE;
+    V_SNOM_COMPLETO_BUSQ  TBL_LAFT_ALERTA_RESULTADOS.SNOM_COMPLETO_BUSQ%TYPE;
+    V_DBIRTHDAT           TBL_LAFT_ALERTA_RESULTADOS.DBIRTHDAT%TYPE;
+    V_STIPOIDEN_BUSQ      TBL_LAFT_ALERTA_RESULTADOS.STIPOIDEN_BUSQ%TYPE;
+  
+    CURSOR LISTA_CLIE IS
+      SELECT DECODE(TLAR.NIDTIPOLISTA, NULL, V_NTIPOIDEN_BUSQ, NTIPOIDEN_BUSQ) AS NTIPOIDEN_BUSQ,
+             DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNUM_DOCUMENTO_BUSQ, SNUM_DOCUMENTO_BUSQ) AS SNUM_DOCUMENTO_BUSQ,
+             DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNOM_COMPLETO_BUSQ, SNOM_COMPLETO_BUSQ) AS SNOM_COMPLETO_BUSQ,
+             TO_CHAR(DECODE(TLAR.NIDTIPOLISTA, NULL, V_DBIRTHDAT, MAX(TLAR.DBIRTHDAT)), 'DD/MM/YYYY') AS DBIRTHDAT,
+             FLOOR((SYSDATE - DECODE(TLAR.NIDTIPOLISTA, NULL, V_DBIRTHDAT, MAX(TLAR.DBIRTHDAT))) / 30 / 12) EDAD,
+             DECODE(TLAR.NIDTIPOLISTA, NULL, V_STIPOIDEN_BUSQ, STIPOIDEN_BUSQ) AS STIPOIDEN_BUSQ,
+             TLTL.NIDTIPOLISTA,
+             TLTL.SDESTIPOLISTA,
+             CASE
+               WHEN COUNT(CASE
+                            WHEN TLAR.NIDTIPOLISTA IS NOT NULL THEN
+                             1
+                          END) > 0 THEN
+                'COINCIDENCIA'
+               ELSE
+                'NO COINCIDENCIA'
+             END AS SESTADO,
+             NVL(TLAR.NIDTIPOLISTA, TLTL.NIDTIPOLISTA),
+             ' ' AS SZONA_GEO,
+             ' ' AS SCARGO,
+             ' ' AS SOCUPACION,
+             MAX(TLAR.DFECHA_REVISADO) AS DFECHA_REVISADO,
+             MAX(TLAR.NIDUSUARIO_REVISADO) AS NIDUSUARIO_REVISADO,
+             MAX(TLAR.SESTADO_REVISADO) AS SESTADO_REVISADO,
+             CL.SCLIENT
+        FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR,
+             TBL_LAFT_TIPO_LISTA             TLTL,
+             INSUDB.CLIENT                   CL,
+             INSUDB.CLIENT_IDDOC             CLI,
+             INSUDB.TABLE5645                TD
+       WHERE TLAR.NPERIODO_PROCESO(+) = P_NPERIODO_PROCESO
+         AND TLAR.NIDALERTA(+) = P_NIDALERTA
+            --AND TLAR.NIDREGIMEN(+) = P_NIDREGIMEN
+         AND TLAR.NTIPOIDEN_BUSQ(+) = V_NTIPOIDEN_BUSQ
+         AND TLAR.SNUM_DOCUMENTO_BUSQ(+) = V_SNUM_DOCUMENTO_BUSQ
+         AND TLAR.NIDTIPOLISTA(+) = TLTL.NIDTIPOLISTA
+         AND CLI.NIDDOC_TYPE(+) = TLAR.NTIPOIDEN_BUSQ
+         AND CLI.SIDDOC(+) = TLAR.SNUM_DOCUMENTO_BUSQ
+         AND CL.SCLIENT(+) = CLI.SCLIENT
+         AND TD.NIDDOC_TYPE(+) = CLI.NIDDOC_TYPE
+         AND TLAR.NACEPTA_COINCIDENCIA = 1
+       GROUP BY NTIPOIDEN_BUSQ,
+                SNUM_DOCUMENTO_BUSQ,
+                SNOM_COMPLETO_BUSQ,
+                STIPOIDEN_BUSQ,
+                --NTIPO_DOCUMENTO,
+                TLTL.NIDTIPOLISTA,
+                TLTL.SDESTIPOLISTA,
+                TLAR.NIDTIPOLISTA,
+                CL.SCLIENT;
+  
+    --SELECT DECODE(TLAR.NIDTIPOLISTA, NULL, V_STIPOIDEN, STIPOIDEN) STIPOIDEN, DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNUM_DOCUMENTO, SNUM_DOCUMENTO) AS SNUM_DOCUMENTO, DECODE(TLAR.NIDTIPOLISTA, NULL, V_SNOM_COMPLETO, SNOM_COMPLETO) AS SNOM_COMPLETO, DECODE(TLAR.NIDTIPOLISTA, NULL, V_NTIPO_DOCUMENTO, NTIPO_DOCUMENTO) AS NTIPO_DOCUMENTO, TLTL.NIDTIPOLISTA, TLTL.SDESTIPOLISTA, CASE WHEN COUNT(CASE WHEN TLAR.NIDTIPOLISTA IS NOT NULL THEN 1 END) > 0 THEN 'CONCIDENCIA' ELSE 'NO CONCIDENCIA' END AS SESTADO, MAX(CL.DBIRTHDAT) AS DBIRTHDAT, FLOOR((SYSDATE - MAX(CL.DBIRTHDAT)) / 30 / 12) EDAD FROM LAFT.TBL_LAFT_ALERTA_RESULTADOS TLAR, TBL_LAFT_TIPO_LISTA TLTL, INSUDB.CLIENT CL, INSUDB.CLIENT_IDDOC CLI WHERE TLAR.NPERIODO_PROCESO(+) = P_NPERIODO_PROCESO AND TLAR.NIDALERTA(+) = P_NIDALERTA AND TLAR.NIDREGIMEN(+) = P_NIDREGIMEN AND TLAR.NTIPO_DOCUMENTO(+) = V_NTIPO_DOCUMENTO AND TLAR.SNUM_DOCUMENTO(+) = V_SNUM_DOCUMENTO AND TLAR.NIDTIPOLISTA(+) = TLTL.NIDTIPOLISTA AND CLI.NIDDOC_TYPE(+) = V_NTIPO_DOCUMENTO AND CLI.SIDDOC(+) = V_SNUM_DOCUMENTO AND CL.SCLIENT(+) = CLI.SCLIENT GROUP BY STIPOIDEN, SNUM_DOCUMENTO, SNOM_COMPLETO, NTIPO_DOCUMENTO, TLTL.NIDTIPOLISTA, TLTL.SDESTIPOLISTA, TLAR.NIDTIPOLISTA;
+  
+    V_TABLE_LISTA T_TABLE_LISTA_RESULTADO := T_TABLE_LISTA_RESULTADO();
+  
+  BEGIN
+    P_NCODE := 0;
+  
+    FOR C1 IN LISTA_TRATAM_CLIENTE
+    LOOP
+    
+      V_NTIPOIDEN_BUSQ      := C1.NTIPOIDEN_BUSQ;
+      V_SNUM_DOCUMENTO_BUSQ := C1.SNUM_DOCUMENTO_BUSQ;
+      V_SNOM_COMPLETO_BUSQ  := C1.SNOM_COMPLETO_BUSQ;
+      V_STIPOIDEN_BUSQ      := C1.STIPOIDEN_BUSQ;
+      V_DBIRTHDAT           := C1.DBIRTHDAT;
+    
+      FOR C2 IN LISTA_CLIE
+      LOOP
+      
+        V_TABLE_LISTA.EXTEND();
+        V_TABLE_LISTA(V_TABLE_LISTA.COUNT) := T_RECORD_LISTA_RESULTADO(SCLIENT             => C2.SCLIENT,
+                                                                       STIPOIDEN           => C2.STIPOIDEN_BUSQ,
+                                                                       SNUM_DOCUMENTO      => C2.SNUM_DOCUMENTO_BUSQ,
+                                                                       SNOM_COMPLETO       => C2.SNOM_COMPLETO_BUSQ,
+                                                                       SDESTIPOLISTA       => C2.SDESTIPOLISTA,
+                                                                       SDESESTADO          => C2.SESTADO,
+                                                                       NTIPO_DOCUMENTO     => C2.NTIPOIDEN_BUSQ,
+                                                                       DFECHA_NACIMIENTO   => C2.DBIRTHDAT,
+                                                                       EDAD                => C2.EDAD,
+                                                                       SCARGO              => C2.SCARGO,
+                                                                       SOCUPACION          => C2.SOCUPACION,
+                                                                       SZONA_GEO           => C2.SZONA_GEO,
+                                                                       SESTADO_REVISADO    => C2.SESTADO_REVISADO,
+                                                                       DFECHA_REVISADO     => C2.DFECHA_REVISADO,
+                                                                       NIDUSUARIO_REVISADO => C2.NIDUSUARIO_REVISADO);
+      END LOOP;
+    END LOOP;
+  
+    /* OPEN RC1 FOR
+    SELECT *
+      FROM TABLE(V_TABLE_LISTA);*/
+  
+    DELETE TBL_LAFT_CLIENTES_VIGENTES
+     WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND NIDALERTA = P_NIDALERTA
+       AND NTIPO_CLIENTE_REF = 1;
+  
+    INSERT INTO TBL_LAFT_CLIENTES_VIGENTES
+      (SNUM_DOCUMENTO,
+       SNOM_COMPLETO,
+       STIPO_DOCUMENTO,
+       NTIPO_CLIENTE_REF,
+       NIDREGIMEN,
+       NPERIODO_PROCESO,
+       NIDALERTA,
+       DCOMPDATE)
+      SELECT SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             NTIPO_DOCUMENTO || '',
+             1, --'CLIENTE PRE REFORZADO',
+             P_NIDREGIMEN,
+             P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             SYSDATE
+        FROM TABLE(V_TABLE_LISTA);
+  
+    COMMIT;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      ROLLBACK;
+    
+  END;
+
+  PROCEDURE SP_INS_LIST_CLI_REFOR(P_NPERIODO_PROCESO TBL_LAFT_ALERTA_RESULTADOS.NPERIODO_PROCESO%TYPE,
+                                  P_NIDALERTA        TBL_LAFT_ALERTA_RESULTADOS.NIDALERTA%TYPE,
+                                  P_NIDREGIMEN       TBL_LAFT_ALERTA_RESULTADOS.NIDREGIMEN%TYPE,
+                                  P_SESTADO_TRAT     TBL_LAFT_ALERTA_TRATAM_CLIENTE.SESTADO_TRAT%TYPE DEFAULT NULL,
+                                  P_NCODE            OUT NUMBER,
+                                  P_SMESSAGE         OUT VARCHAR2) IS
+  
+    CURSOR CLI_REFOR_VIG IS
+      SELECT *
+        FROM TBL_LAFT_ALERTA_TRATAM_CLIENTE --TBL_LAFT_CLIENTES_VIGENTES
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+      /*AND NIDALERTA = P_NIDALERTA
+      AND NIDREGIMEN = P_NIDREGIMEN
+      AND NTIPO_CLIENTE_REF = 1*/
+      ;
+  
+    CURSOR CLI_ALL_COINCID IS
+      SELECT *
+        FROM TBL_LAFT_ALERTA_LISTA_EXTERNO
+       WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+         AND NIDALERTA = P_NIDALERTA;
+    V_NPORC  NUMBER := 0;
+    CONTADOR NUMBER := 0;
+  
+  BEGIN
+  
+    P_NCODE    := 0;
+    P_SMESSAGE := 'Exito';
+    /*SP_INS_CLI_REFOR(P_NPERIODO_PROCESO => P_NPERIODO_PROCESO,
+    P_NIDALERTA        => P_NIDALERTA,
+    P_NIDREGIMEN       => P_NIDREGIMEN,
+    P_SESTADO_TRAT     => P_SESTADO_TRAT,
+    P_NCODE            => P_NCODE,
+    P_SMESSAGE         => P_SMESSAGE);*/
+  
+    DELETE TBL_LAFT_ALERTA_RESULTADOS
+     WHERE NPERIODO_PROCESO = P_NPERIODO_PROCESO
+       AND NIDALERTA = P_NIDALERTA
+       AND SNOMCARGA = 'PRE REFORZADO';
+    COMMIT;
+  
+    FOR K1 IN CLI_ALL_COINCID
+    LOOP
+      FOR K2 IN CLI_REFOR_VIG
+      LOOP
+        IF K2.SIDDOC = K1.SNUM_DOCUMENTO AND K1.SNUM_DOCUMENTO IS NOT NULL THEN
+        
+          INSERT INTO TBL_LAFT_ALERTA_RESULTADOS
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDRESULTADO,
+             --SORIGEN,
+             DFECHA_CARGA,
+             NTIPOIDEN_BUSQ,
+             SNUM_DOCUMENTO_BUSQ,
+             SNOM_COMPLETO_BUSQ,
+             SCOD_PRODUCTO,
+             SPRODUCTO,
+             SNUM_POLIZA,
+             NCERTIFICADO,
+             STIPO_CLIENTE,
+             SPARENTESCO,
+             STIPO_DOCUMENTO,
+             SCOD_CLIENTE_BUSQ,
+             STIPOIDEN_BUSQ,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             SDIRECCION,
+             DFEC_INI_POLIZA,
+             DFEC_FIN_POLIZA,
+             DINICIO_VIG_CERT,
+             DFIN_VIG_CERT,
+             DFEC_ANU,
+             NPRIMA_POLIZA,
+             DFEC_PAGO,
+             STIPO_PENSION,
+             --SDESPROVEEDOR,
+             STIPO_BUSQUEDA,
+             NIDREGIMEN,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR,
+             SNOMCARGA)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             CONTADOR, --K1.NIDRESULTADO,
+             --K1.SORIGEN,
+             SYSDATE,
+             TO_NUMBER(K1.STIPO_DOCUMENTO), --K1.NTIPOIDEN_BUSQ,
+             K1.SNUM_DOCUMENTO, --K1.SNUM_DOCUMENTO_BUSQ,
+             K1.SNOM_COMPLETO, --K1.SNOM_COMPLETO_BUSQ,
+             NULL, --K1.SPRODUCTO,
+             NULL, --K1.SPRODUCTO,
+             NULL, --K1.SNUM_POLIZA,
+             NULL, --K1.NCERTIFICADO,
+             NULL, --K1.STIPO_CLIENTE,
+             NULL, --K1.SPARENTESCO,
+             K1.STIPO_DOCUMENTO,
+             K2.SCLIENT, --K1.SCOD_CLIENTE_BUSQ,
+             K1.STIPO_DOCUMENTO, --K1.STIPOIDEN_BUSQ,
+             K1.SNUM_DOCUMENTO,
+             K1.SNOM_COMPLETO,
+             NULL, -- K1.SDIRECCION,
+             NULL, --K1.DFEC_INI_POLIZA,
+             NULL, --K1.DFEC_FIN_POLIZA,
+             NULL, --K1.DINICIO_VIG_CERT,
+             NULL, --K1.DFIN_VIG_CERT,
+             NULL, --K1.DFEC_ANU,
+             NULL, --K1.NPRIMA_POLIZA,
+             NULL, --K1.DFEC_PAGO,
+             NULL, --K1.STIPO_PENSION,
+             --K1.SDESPROVEEDOR,
+             'DOCUMENTO', --K1.STIPO_BUSQUEDA,
+             P_NIDREGIMEN,
+             K1.NIDTIPOLISTA,
+             K1.NIDPROVEEDOR,
+             'PRE REFORZADO');
+          CONTADOR := CONTADOR + 1;
+        END IF;
+      
+        SELECT UTL_MATCH.EDIT_DISTANCE_SIMILARITY(K1.SNOM_COMPLETO, K2.SCLIENAME)
+          INTO V_NPORC
+          FROM DUAL;
+      
+        IF V_NPORC >= 85 THEN
+        
+          INSERT INTO TBL_LAFT_ALERTA_RESULTADOS
+            (NPERIODO_PROCESO,
+             NIDALERTA,
+             NIDRESULTADO,
+             --SORIGEN,
+             DFECHA_CARGA,
+             NTIPOIDEN_BUSQ,
+             SNUM_DOCUMENTO_BUSQ,
+             SNOM_COMPLETO_BUSQ,
+             SCOD_PRODUCTO,
+             SPRODUCTO,
+             SNUM_POLIZA,
+             NCERTIFICADO,
+             STIPO_CLIENTE,
+             SPARENTESCO,
+             STIPO_DOCUMENTO,
+             SCOD_CLIENTE_BUSQ,
+             STIPOIDEN_BUSQ,
+             SNUM_DOCUMENTO,
+             SNOM_COMPLETO,
+             SDIRECCION,
+             DFEC_INI_POLIZA,
+             DFEC_FIN_POLIZA,
+             DINICIO_VIG_CERT,
+             DFIN_VIG_CERT,
+             DFEC_ANU,
+             NPRIMA_POLIZA,
+             DFEC_PAGO,
+             STIPO_PENSION,
+             --SDESPROVEEDOR,
+             STIPO_BUSQUEDA,
+             NIDREGIMEN,
+             NIDTIPOLISTA,
+             NIDPROVEEDOR,
+             SNOMCARGA)
+          VALUES
+            (P_NPERIODO_PROCESO,
+             P_NIDALERTA,
+             CONTADOR, --K1.NIDRESULTADO,
+             --K1.SORIGEN,
+             SYSDATE,
+             TO_NUMBER(K1.STIPO_DOCUMENTO), --K1.NTIPOIDEN_BUSQ,
+             K1.SNUM_DOCUMENTO, --K1.SNUM_DOCUMENTO_BUSQ,
+             K1.SNOM_COMPLETO, --K1.SNOM_COMPLETO_BUSQ,
+             NULL, --K1.SPRODUCTO,
+             NULL, --K1.SPRODUCTO,
+             NULL, --K1.SNUM_POLIZA,
+             NULL, --K1.NCERTIFICADO,
+             NULL, --K1.STIPO_CLIENTE,
+             NULL, --K1.SPARENTESCO,
+             K1.STIPO_DOCUMENTO,
+             K2.SCLIENT, --K1.SCOD_CLIENTE_BUSQ,
+             K1.STIPO_DOCUMENTO, --K1.STIPOIDEN_BUSQ,
+             K1.SNUM_DOCUMENTO,
+             K1.SNOM_COMPLETO,
+             NULL, -- K1.SDIRECCION,
+             NULL, --K1.DFEC_INI_POLIZA,
+             NULL, --K1.DFEC_FIN_POLIZA,
+             NULL, --K1.DINICIO_VIG_CERT,
+             NULL, --K1.DFIN_VIG_CERT,
+             NULL, --K1.DFEC_ANU,
+             NULL, --K1.NPRIMA_POLIZA,
+             NULL, --K1.DFEC_PAGO,
+             NULL, --K1.STIPO_PENSION,
+             --K1.SDESPROVEEDOR,
+             'NOMBRE', --K1.STIPO_BUSQUEDA,
+             P_NIDREGIMEN,
+             K1.NIDTIPOLISTA,
+             K1.NIDPROVEEDOR,
+             'PRE REFORZADO');
+        
+          CONTADOR := CONTADOR + 1;
+        END IF;
+        COMMIT;
+      END LOOP;
+    
+    END LOOP;
+  
+  EXCEPTION
+    WHEN OTHERS THEN
+    
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || CHR(13) || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+      --dbms_output.put_line('ERROR :'|| P_SMESSAGE); 
+      ROLLBACK;
+    
+  END;
+
+  PROCEDURE SP_UPD_STATE_CAB_USU(P_NIDALERTA_CAB_USUARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDALERTA_CAB_USUARIO%TYPE,
+                                 P_NIDUSUARIO_MODIFICA   TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDUSUARIO_MODIFICA%TYPE,
+                                 P_SESTADO               TBL_LAFT_ALERTA_CAB_USUARIO.SESTADO%TYPE,
+                                 P_SESTADO_REV_TOTAL     OUT VARCHAR2,
+                                 P_NCODE                 OUT NUMBER,
+                                 P_SMESSAGE              OUT VARCHAR2) IS
+  
+    V_NIDCOMENTARIO TBL_LAFT_ALERTA_CAB_USU_COMENT.NIDCOMENTARIO%TYPE;
+    V_NCOUNT        INTEGER;
+  
+    V_NPERIODO_PROCESO TBL_LAFT_ALERTA_CAB_USUARIO.NPERIODO_PROCESO%TYPE;
+    V_NIDALERTA        TBL_LAFT_ALERTA_CAB_USUARIO.NIDALERTA%TYPE;
+    V_NIDREGIMEN       TBL_LAFT_ALERTA_CAB_USUARIO.NIDREGIMEN%TYPE;
+  
+  BEGIN
+  
+    P_NCODE := 0;
+  
+    UPDATE TBL_LAFT_ALERTA_CAB_USUARIO CAB
+       SET CAB.DFECHA_ESTADO_MOVIMIENTO = SYSDATE,
+           CAB.SESTADO                  = P_SESTADO, --REVISADO--CERRADO
+           CAB.NIDUSUARIO_VERIFICADO    = P_NIDUSUARIO_MODIFICA
+     WHERE CAB.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+  
+    SELECT DISTINCT NPERIODO_PROCESO,
+                    NIDALERTA
+      INTO V_NPERIODO_PROCESO,
+           V_NIDALERTA
+      FROM TBL_LAFT_ALERTA_CAB_USUARIO CAB
+     WHERE CAB.NIDALERTA_CAB_USUARIO = P_NIDALERTA_CAB_USUARIO;
+  
+    SELECT COUNT(*)
+      INTO V_NCOUNT
+      FROM TBL_LAFT_ALERTA_CAB_USUARIO CAB
+     WHERE CAB.NPERIODO_PROCESO = V_NPERIODO_PROCESO
+       AND CAB.NIDALERTA = V_NIDALERTA
+       AND CAB.NIDREGIMEN = V_NIDREGIMEN
+       AND CAB.SESTADO <> 4;
+  
+    IF V_NCOUNT = 0 THEN
+      P_SESTADO_REV_TOTAL := 1;
+    
+      SP_UPD_ALERTA_PERIODO(P_NIDALERTA => V_NIDALERTA, P_NPERIODO_PROCESO => V_NPERIODO_PROCESO, P_SESTADO => 1, P_NIDREGIMEN => V_NIDREGIMEN, P_NCODE => P_NCODE, P_SMESSAGE => P_SMESSAGE);
+    
+    ELSE
+      P_SESTADO_REV_TOTAL := 2;
+    
+    END IF;
+  
+    COMMIT;
+  END;
+
+  PROCEDURE SP_GET_LIST_RESOURCE_PROFILE(P_LIST     OUT SYS_REFCURSOR,
+                                         P_NCODE    OUT NUMBER,
+                                         P_SMESSAGE OUT VARCHAR2) IS
+  BEGIN
+    P_NCODE := 0;
+  
+    BEGIN
+      OPEN P_LIST FOR
+      /*SELECT DISTINCT Z.NIDRESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.SNAMEMENU,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.SDESCRIPTION,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.SHTML,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.NTYPERESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.NORDER,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.SACTIVE,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.STAG,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.NIDFATHER,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.NIDPROFILE,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.TIENE_HIJO,
+                                                                                                                                                                                                                                                                                                                                                                                                                  Z.IDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                    FROM (SELECT Z.NIDRESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.SNAME         AS SNAMEMENU,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.SDESCRIPTION,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.SHTML,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.NTYPERESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.NORDER,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.SACTIVE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.STAG,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.NIDFATHER,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.NIDPROFILE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.TIENE_HIJO,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Z.NIDRESOURCE   AS IDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                          --               TRESOURCE.SNAMESUBMENU,
+                                                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                            FROM (SELECT R.NIDRESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.SNAME AS SNAME,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.SDESCRIPTION AS SDESCRIPTION,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.SHTML AS SHTML,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.NTYPERESOURCE AS NTYPERESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.NORDER AS NORDER,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.SACTIVE AS SACTIVE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.STAG AS STAG,
+                                                                                                                                                                                                                                                                                                                                                                                                                         R.NIDFATHER AS NIDFATHER,
+                                                                                                                                                                                                                                                                                                                                                                                                                         P.NIDPROFILE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         NVL((SELECT DECODE(Z.NIDRESOURCE, '', 0, 1)
+                                                                                                                                                                                                                                                                                                                                                                                                                               FROM (SELECT *
+                                                                                                                                                                                                                                                                                                                                                                                                                                       FROM TBL_LAFT_RESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                                                      WHERE NIDRESOURCE IN (SELECT NIDFATHER
+                                                                                                                                                                                                                                                                                                                                                                                                                                                              FROM TBL_LAFT_RESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             WHERE NIDFATHER = R.NIDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               AND SACTIVE = 1)) Z),
+                                                                                                                                                                                                                                                                                                                                                                                                                             0) AS TIENE_HIJO
+                                                                                                                                                                                                                                                                                                                                                                                                                    FROM TBL_LAFT_PROFILES_RESOURCE PR
+                                                                                                                                                                                                                                                                                                                                                                                                                    LEFT JOIN TBL_LAFT_RESOURCE R
+                                                                                                                                                                                                                                                                                                                                                                                                                      ON PR.NIDRESOURCE = R.NIDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                                    LEFT JOIN TBL_LAFT_PROFILES P
+                                                                                                                                                                                                                                                                                                                                                                                                                      ON P.NIDPROFILE = PR.NIDPROFILE
+                                                                                                                                                                                                                                                                                                                                                                                                                   WHERE P.SACTIVE = 1
+                                                                                                                                                                                                                                                                                                                                                                                                                     AND R.SACTIVE = 1
+                                                                                                                                                                                                                                                                                                                                                                                                                     AND R.NIDFATHER = 0
+                                                                                                                                                                                                                                                                                                                                                                                                                   ORDER BY R.NORDER ASC) Z
+                                                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                          UNION ALL
+                                                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                          SELECT Y.NIDRESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.SNAME,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.SDESCRIPTION,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.SHTML,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.NTYPERESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.NORDER,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.SACTIVE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.STAG,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.NIDFATHER,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.NIDPROFILE,
+                                                                                                                                                                                                                                                                                                                                                                                                                 0               AS TIENE_HIJO,
+                                                                                                                                                                                                                                                                                                                                                                                                                 Y.NIDRESOURCE   AS IDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                            FROM (SELECT LR.NIDRESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.SNAME         AS SNAME,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.SDESCRIPTION  AS SDESCRIPTION,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.SHTML         AS SHTML,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.NTYPERESOURCE AS NTYPERESOURCE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.NORDER        AS NORDER,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.SACTIVE       AS SACTIVE,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.STAG          AS STAG,
+                                                                                                                                                                                                                                                                                                                                                                                                                         LR.NIDFATHER     AS NIDFATHER,
+                                                                                                                                                                                                                                                                                                                                                                                                                         P.NIDPROFILE
+                                                                                                                                                                                                                                                                                                                                                                                                                    FROM TBL_LAFT_PROFILES_RESOURCE PR
+                                                                                                                                                                                                                                                                                                                                                                                                                    LEFT JOIN TBL_LAFT_RESOURCE R
+                                                                                                                                                                                                                                                                                                                                                                                                                      ON PR.NIDRESOURCE = R.NIDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                                    LEFT JOIN TBL_LAFT_PROFILES P
+                                                                                                                                                                                                                                                                                                                                                                                                                      ON P.NIDPROFILE = PR.NIDPROFILE
+                                                                                                                                                                                                                                                                                                                                                                                                                    LEFT JOIN TBL_LAFT_RESOURCE LR
+                                                                                                                                                                                                                                                                                                                                                                                                                      ON LR.NIDFATHER = R.NIDRESOURCE
+                                                                                                                                                                                                                                                                                                                                                                                                                  --LEFT JOIN LAFT_PROFILES_RESOURCE PRL
+                                                                                                                                                                                                                                                                                                                                                                                                                  --ON PRL.NIDRESOURCE = LR.NIDRESOURCE 
+                                                                                                                                                                                                                                                                                                                                                                                                                   WHERE P.SACTIVE = 1
+                                                                                                                                                                                                                                                                                                                                                                                                                     AND R.SACTIVE = 1
+                                                                                                                                                                                                                                                                                                                                                                                                                     AND LR.NIDFATHER <> 0
+                                                                                                                                                                                                                                                                                                                                                                                                                     AND LR.SACTIVE = 1
+                                                                                                                                                                                                                                                                                                                                                                                                                   ORDER BY LR.NORDER ASC) Y) Z;*/
+      
+        SELECT TRESOURCE.IDRESOURCE,
+               TRESOURCE.SNAMEMENU,
+               TRESOURCE.NIDRESOURCE,
+               TRESOURCE.SNAMESUBMENU,
+               TRESOURCE.NIDFATHER,
+               TRESOURCE.SDESCRIPTION,
+               TRESOURCE.SACTIVE,
+               NVL(TLPR.NIDPROFILE, 0) AS NIDPROFILE
+          FROM (SELECT T.SNAMEMENU,
+                       T.IDRESOURCE,
+                       T.NIDRESOURCE,
+                       T.SNAMESUBMENU,
+                       T.NIDFATHER,
+                       T.SDESCRIPTION,
+                       T.SACTIVE
+                  FROM (SELECT TLR.SNAME AS SNAMEMENU,
+                               TLR.NIDRESOURCE AS IDRESOURCE,
+                               TLR.NIDRESOURCE,
+                               (SELECT SNAME
+                                  FROM TBL_LAFT_RESOURCE T
+                                 WHERE T.NIDRESOURCE = TLR.NIDFATHER) AS SNAMESUBMENU,
+                               TLR.NIDFATHER,
+                               TLR.SDESCRIPTION,
+                               TLR.SACTIVE
+                          FROM TBL_LAFT_RESOURCE TLR
+                         WHERE TLR.NIDFATHER = 0
+                           AND TLR.SACTIVE = 1
+                           AND TLR.NIDRESOURCE NOT IN (SELECT NIDFATHER
+                                                         FROM TBL_LAFT_RESOURCE)
+                        UNION ALL
+                        SELECT (SELECT SNAME
+                                  FROM TBL_LAFT_RESOURCE T
+                                 WHERE T.NIDRESOURCE = TLR.NIDFATHER) AS SNAMEMENU,
+                               TLR.NIDRESOURCE AS IDRESOURCE,
+                               TLR.NIDFATHER,
+                               TLR.SNAME AS SNAMESUBMENU,
+                               TLR.NIDRESOURCE,
+                               TLR.SDESCRIPTION,
+                               TLR.SACTIVE
+                          FROM TBL_LAFT_RESOURCE TLR
+                         WHERE TLR.NIDFATHER > 0
+                           AND TLR.SACTIVE = 1) T) TRESOURCE
+          LEFT JOIN TBL_LAFT_PROFILES_RESOURCE TLPR
+            ON TRESOURCE.IDRESOURCE = TLPR.NIDRESOURCE
+         ORDER BY TRESOURCE.SNAMEMENU;
+    EXCEPTION
+      WHEN OTHERS THEN
+        ROLLBACK;
+        P_NCODE    := 1;
+        P_SMESSAGE := SQLERRM || '  - Comun�quese con el administrador';
+    END;
+    P_SMESSAGE := 'Se consulto los datos correctamente';
+    COMMIT;
+  END;
+
+  PROCEDURE SP_GET_HISTORIAL_RESOURCE_PROFILE(P_NIDPROFILE IN NUMBER,
+                                              RC1          OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN RC1 FOR
+      SELECT PRO.SNAME         AS PROFILENAME,
+             H.SOPCION,
+             H.SMENU,
+             H.SSUBMENU,
+             H.SACCION,
+             H.DFECHA_REGISTRO,
+             US.NOMBRECOMPLETO AS USUARIONAME
+        FROM TBL_LAFT_RESOURCE_PROFILE_HISTORIAL H
+       INNER JOIN TBL_LAFT_USUARIO US
+          ON US.ID_USUARIO = H.NIDUSUARIO_MODIFICA
+       INNER JOIN TBL_LAFT_PROFILES PRO
+          ON PRO.NIDPROFILE = H.NIDPROFILE
+       WHERE (CASE P_NIDPROFILE
+               WHEN -1 THEN
+                P_NIDPROFILE
+               ELSE
+                H.NIDPROFILE
+             END) = P_NIDPROFILE
+       ORDER BY H.DFECHA_REGISTRO DESC;
+  END;
+
+  PROCEDURE SP_INS_RESOURCE_PROFILE(P_NIDPROFILE     IN NUMBER,
+                                    P_NIDPROFILEUSER IN NUMBER,
+                                    P_NIDRESOURCE    IN NUMBER,
+                                    P_NIDUSER        IN NUMBER,
+                                    P_SMENU          IN VARCHAR2,
+                                    P_SSUBMENU       IN VARCHAR2,
+                                    P_SOPCION        IN VARCHAR2,
+                                    P_SACCION        IN VARCHAR2,
+                                    P_ISCHECK        IN NUMBER,
+                                    P_NCODE          OUT NUMBER,
+                                    P_SMESSAGE       OUT VARCHAR2) IS
+    V_USERCODE  VARCHAR2(20);
+    V_NIDFATHER NUMBER;
+    V_NCOUNT    NUMBER;
+    V_NCHILD    NUMBER;
+  BEGIN
+    P_NCODE := 0;
+    SELECT NIDFATHER
+      INTO V_NIDFATHER
+      FROM TBL_LAFT_RESOURCE
+     WHERE NIDRESOURCE = P_NIDRESOURCE;
+    --OBTERNER SI EL PADRE ESTA O NO RELACIONADO
+    SELECT COUNT(*)
+      INTO V_NCOUNT
+      FROM TBL_LAFT_PROFILES_RESOURCE
+     WHERE NIDRESOURCE = V_NIDFATHER
+       AND NIDPROFILE = P_NIDPROFILE;
+    --OBTERNER CANTIDAD DE HIJOS RELACIONADOS
+    SELECT COUNT(*)
+      INTO V_NCHILD
+      FROM TBL_LAFT_PROFILES_RESOURCE
+     WHERE NIDRESOURCE IN (SELECT NIDRESOURCE
+                             FROM TBL_LAFT_RESOURCE
+                            WHERE NIDFATHER = V_NIDFATHER)
+       AND NIDPROFILE = P_NIDPROFILE;
+  
+    SELECT USER_REG
+      INTO V_USERCODE
+      FROM TBL_LAFT_USUARIO
+     WHERE ID_USUARIO = P_NIDUSER;
+    BEGIN
+      IF P_ISCHECK = 1 THEN
+        IF V_NCOUNT = 0 THEN
+          -- INSERTA EL MENU PADRE
+          INSERT INTO TBL_LAFT_PROFILES_RESOURCE
+            (NIDPROFILE,
+             NIDRESOURCE,
+             NUSERCODE,
+             DCOMPDATE,
+             DEFFECDATE,
+             NIDUSER)
+          VALUES
+            (P_NIDPROFILE,
+             V_NIDFATHER,
+             V_USERCODE,
+             SYSDATE,
+             SYSDATE,
+             P_NIDUSER);
+        END IF;
+        --INSERTA EL SUBMENU
+        INSERT INTO TBL_LAFT_PROFILES_RESOURCE
+          (NIDPROFILE,
+           NIDRESOURCE,
+           NUSERCODE,
+           DCOMPDATE,
+           DEFFECDATE,
+           NIDUSER)
+        VALUES
+          (P_NIDPROFILE,
+           P_NIDRESOURCE,
+           V_USERCODE,
+           SYSDATE,
+           SYSDATE,
+           P_NIDUSER);
+        -- CUANDO ESTA EN FALSO
+      ELSE
+        IF V_NCHILD > 1 THEN
+          DELETE FROM TBL_LAFT_PROFILES_RESOURCE TLP
+           WHERE TLP.NIDPROFILE = P_NIDPROFILE
+             AND TLP.NIDRESOURCE = P_NIDRESOURCE;
+        ELSIF V_NCHILD = 1 THEN
+          DELETE FROM TBL_LAFT_PROFILES_RESOURCE TLP
+           WHERE TLP.NIDPROFILE = P_NIDPROFILE
+             AND TLP.NIDRESOURCE IN (V_NIDFATHER, P_NIDRESOURCE);
+        END IF;
+      END IF;
+      INSERT INTO TBL_LAFT_RESOURCE_PROFILE_HISTORIAL
+        (NIDPROFILE,
+         SMENU,
+         SSUBMENU,
+         SOPCION,
+         SACCION,
+         DFECHA_REGISTRO,
+         NIDUSUARIO_MODIFICA)
+      VALUES
+        (P_NIDPROFILE,
+         P_SMENU,
+         P_SSUBMENU,
+         P_SOPCION,
+         P_SACCION,
+         SYSDATE,
+         P_NIDUSER);
+    END;
+  EXCEPTION
+    WHEN OTHERS THEN
+      ROLLBACK;
+      P_NCODE    := 1;
+      P_SMESSAGE := SQLERRM || '  - Comun�quese con el administrador';
+      COMMIT;
+    
+  END;
+
+  FUNCTION FN_OBT_PRODUCTO(P_SCLIENT VARCHAR2) RETURN VARCHAR2 AS
+    V_PRODUCTO_DATO VARCHAR2(150);
+    V_COUNT_DATA    NUMBER;
+  BEGIN
+  
+    --V_DEV_DATO := 0;
+  
+    SELECT COUNT(*)
+      INTO V_COUNT_DATA
+      FROM (SELECT DISTINCT DESRAMO RAMO
+              FROM TBL_LAFT_CLIENTES_VIGENTES
+             WHERE NPERIODO_PROCESO = 20200930
+               AND NIDALERTA = 2
+               AND SIDCLIENTE = P_SCLIENT) Z;
+  
+    IF (V_COUNT_DATA = 1) THEN
+      SELECT MAX(DESRAMO)
+        INTO V_PRODUCTO_DATO
+        FROM TBL_LAFT_CLIENTES_VIGENTES
+       WHERE NPERIODO_PROCESO = 20200930
+         AND NIDALERTA = 2
+         AND SIDCLIENTE = P_SCLIENT;
+    
+    ELSIF (V_COUNT_DATA = 0) THEN
+      SELECT ''
+        INTO V_PRODUCTO_DATO
+        FROM DUAL;
+    ELSE
+      SELECT 'VARIOS'
+        INTO V_PRODUCTO_DATO
+        FROM DUAL;
+    END IF;
+  
+    RETURN V_PRODUCTO_DATO;
+  
+  END;
+
+END;
+/
